@@ -1,0 +1,8 @@
+{
+    "name": "prespay_project",
+    "private": true,
+    "workspaces": [
+        "packages/*",
+        "apps/*"
+    ]
+}
