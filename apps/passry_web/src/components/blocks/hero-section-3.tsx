@@ -58,8 +58,7 @@ export function HeroSection() {
                   </h1>
 
                   <p className="mt-6 max-w-2xl text-left text-pretty text-lg">
-                    Join the waitlist to be the first to get access to events
-                    when we go live. We'll notify you when we go live.
+                    We’re cooking up something epic! Join the waitlist and be front row when the app goes live. Events, excitement, and exclusive access await!
                   </p>
 
                   <div className="justify-start grid">
