@@ -31,7 +31,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'Passry - delightful events',
+        title: 'Passry - One app, All access',
       },
     ],
     links: [
