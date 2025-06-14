@@ -8,7 +8,7 @@ import {
 
 // import Header from '../components/Header'
 
-// import TanStackQueryLayout from '../integrations/tanstack-query/layout.tsx'
+import TanStackQueryLayout from '../integrations/tanstack-query/layout.tsx'
 
 import appCss from '../styles.css?url'
 
@@ -16,7 +16,8 @@ import type { QueryClient } from '@tanstack/react-query'
 import { Layout } from '@/components/craft.tsx'
 import { ThemeProvider } from '@/components/theme-provider.tsx'
 
-import FaviconLogoMark from "@/assets/PASSRY_LogoMark.svg?url"
+import FaviconLogoMark from '@/assets/PASSRY_LogoMark.svg?url'
+import { Toaster } from '@/components/ui/sonner.tsx'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -44,8 +45,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       {
         rel: 'icon',
         type: 'image/svg+xml',
-        href: FaviconLogoMark
-      }
+        href: FaviconLogoMark,
+      },
     ],
   }),
 
@@ -54,9 +55,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       {/* <Header /> */}
 
       <Outlet />
-      {/* <TanStackRouterDevtools />
-
-      <TanStackQueryLayout /> */}
+      {/* <TanStackRouterDevtools /> */}
+      <Toaster />
+      <TanStackQueryLayout />
     </RootDocument>
   ),
 })

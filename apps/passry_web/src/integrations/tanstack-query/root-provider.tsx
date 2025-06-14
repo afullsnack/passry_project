@@ -8,7 +8,11 @@ export function getContext() {
   }
 }
 
-export function Provider({ children }: { children: React.ReactNode }) {
+interface Props {
+  children: React.ReactNode
+}
+
+export function Provider({ children }: Props) {
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   )

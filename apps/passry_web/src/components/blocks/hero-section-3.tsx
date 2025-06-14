@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Mail, SendHorizonal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
@@ -10,6 +10,9 @@ import type { Variants } from 'framer-motion'
 import LogoMark from '@/assets/PASSRY_LogoMark.svg?url'
 import PASSRY_Hero from '@/assets/Passry_Hero.gif?url'
 import { ThemeToggle } from '../theme-toggle'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { subscribe } from '@/actions/subscribe'
 
 const transitionVariants: Variants = {
   hidden: {
@@ -30,6 +33,22 @@ const transitionVariants: Variants = {
 }
 
 export function HeroSection() {
+  const [email, setEmail] = useState<string>()
+  const { isPending, error, mutateAsync } = useMutation({
+    mutationKey: ['subscribe'],
+    mutationFn: async (params: {
+      email: string
+      subscribed: boolean
+      data?: Record<string, any>
+    }) => subscribe({ data: params }),
+    onSuccess() {
+      setEmail('')
+    },
+    onError() {
+      setEmail('')
+    },
+  })
+
   return (
     <>
       <HeroHeader />
@@ -58,7 +77,9 @@ export function HeroSection() {
                   </h1>
 
                   <p className="mt-6 max-w-2xl text-left text-pretty text-lg">
-                    We’re cooking up something epic! Join the waitlist and be front row when the app goes live. Events, excitement, and exclusive access await!
+                    We’re cooking up something epic! Join the waitlist and be
+                    front row when the app goes live. Events, excitement, and
+                    exclusive access await!
                   </p>
 
                   <div className="justify-start grid">
@@ -70,6 +91,8 @@ export function HeroSection() {
                           placeholder="Your mail address"
                           className="h-12 w-full bg-transparent pl-12 focus:outline-none"
                           type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                         />
 
                         <div className="md:pr-1.5 lg:pr-0">
@@ -78,9 +101,34 @@ export function HeroSection() {
                             size="sm"
                             type="submit"
                             className="rounded-[0.5rem]"
+                            disabled={isPending}
                             onClick={(e) => {
                               e.preventDefault()
                               e.stopPropagation()
+                              if (!email) {
+                                return toast.error('Email is required', {
+                                  description:
+                                    'Please enter your email address, to join our waitlist',
+                                })
+                              }
+
+                              toast.promise(
+                                mutateAsync({
+                                  email,
+                                  subscribed: true,
+                                }),
+                                {
+                                  success:
+                                    'You have been added to the waitlist',
+                                  error:
+                                    typeof error === 'string'
+                                      ? error
+                                      : error instanceof Error
+                                        ? error?.message
+                                        : 'Something went wrong',
+                                  loading: 'Adding to waitlist...',
+                                },
+                              )
                             }}
                           >
                             <span className="hidden md:block">
