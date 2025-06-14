@@ -21,13 +21,14 @@ export const subscribe = createServerFn({
           },
           body: JSON.stringify({ email, subscribed, data }),
         })
-        if (response.ok) {
-          throw new Error('Failed to subscribe')
+        if (!response.ok) {
+            const json = await response.json()
+            console.log('JSON', json)
+            if('code' in json && json.code !== 200) {
+                throw new Error(json?.message ?? 'Failed to subscribe')
+            } else {
+                throw new Error('Failed to subscribe')
+            }
         }
-        const json = await response.json()
-        console.log('JSON', json)
-        if('code' in json && json.code !== 200) {
-            throw new Error(json?.message)
-        }
-        return json;
+        return await response.json();
     })

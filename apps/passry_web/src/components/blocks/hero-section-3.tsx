@@ -44,10 +44,12 @@ export function HeroSection() {
     onSuccess() {
       setEmail('')
     },
-    onError() {
+    onError(error) {
+      toast.error(error.message)
       setEmail('')
     },
   })
+  console.log('Error object', error)
 
   return (
     <>
@@ -120,12 +122,7 @@ export function HeroSection() {
                                 {
                                   success:
                                     'You have been added to the waitlist',
-                                  error:
-                                    typeof error === 'string'
-                                      ? error
-                                      : error instanceof Error
-                                        ? error?.message
-                                        : 'Something went wrong',
+                                  error: 'Something went wrong',
                                   loading: 'Adding to waitlist...',
                                 },
                               )
