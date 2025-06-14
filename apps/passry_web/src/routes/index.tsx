@@ -49,7 +49,7 @@ function App() {
         ]}
         legalLinks={[]}
         copyright={{
-          text: `© 2024 Passry LLC`,
+          text: `© 2025 Passry LLC`,
           license: `All rights reserved.`,
         }}
       />
