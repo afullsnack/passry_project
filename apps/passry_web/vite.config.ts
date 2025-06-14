@@ -11,9 +11,7 @@ const config = defineConfig({
     }),
     tailwindcss(),
     tanstackStart({
-        server: {
-
-        }
+      target: 'vercel'
     }),
   ],
 })
