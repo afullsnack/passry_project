@@ -16,6 +16,8 @@ import type { QueryClient } from '@tanstack/react-query'
 import { Layout } from '@/components/craft.tsx'
 import { ThemeProvider } from '@/components/theme-provider.tsx'
 
+import FaviconLogoMark from "@/assets/PASSRY_LogoMark.svg?url"
+
 interface MyRouterContext {
   queryClient: QueryClient
 }
@@ -39,6 +41,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         rel: 'stylesheet',
         href: appCss,
       },
+      {
+        rel: 'icon',
+        type: 'image/svg+xml',
+        href: FaviconLogoMark
+      }
     ],
   }),
 
