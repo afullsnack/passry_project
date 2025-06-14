@@ -1,5 +1,5 @@
 import React from 'react'
-import { Mail, SendHorizonal, Menu, X } from 'lucide-react'
+import { Mail, SendHorizonal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'

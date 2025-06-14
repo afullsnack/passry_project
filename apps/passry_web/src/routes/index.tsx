@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { Container, Main, Section } from '@/components/craft'
+import { Main} from '@/components/craft'
 import { HeroSection } from '@/components/blocks/hero-section-3'
 import { FooterSection } from '@/components/blocks/footer-section'
 import LogoTextMark from '@/assets/PASSRY_Logo_TextMark.svg?url'
