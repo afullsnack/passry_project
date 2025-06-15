@@ -13,13 +13,13 @@ export const subscribe = createServerFn({
     )
     .handler(async ({ data: functionData }) => {
         const { email, subscribed, data } = functionData
-        const response = await fetch(`${env.PLUNK_API_URL}/contacts`, {
+        const response = await fetch(`${env.PLUNK_API_URL}/track`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${env.PLUNK_API_KEY}`,
           },
-          body: JSON.stringify({ email, subscribed, data }),
+          body: JSON.stringify({ event: 'subscribe-user', email, subscribed, data }),
         })
         if (!response.ok) {
             const json = await response.json()

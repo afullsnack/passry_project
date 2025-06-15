@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Mail, SendHorizonal } from 'lucide-react'
+import { Mail, SendHorizonal, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
@@ -34,6 +34,8 @@ const transitionVariants: Variants = {
 
 export function HeroSection() {
   const [email, setEmail] = useState<string>()
+  const [name, setName] = useState<string>()
+
   const { isPending, error, mutateAsync } = useMutation({
     mutationKey: ['subscribe'],
     mutationFn: async (params: {
@@ -43,10 +45,12 @@ export function HeroSection() {
     }) => subscribe({ data: params }),
     onSuccess() {
       setEmail('')
+      setName('')
     },
     onError(error) {
       toast.error(error.message)
       setEmail('')
+      setName('')
     },
   })
   console.log('Error object', error)
@@ -87,6 +91,16 @@ export function HeroSection() {
                   <div className="justify-start grid">
                     <form action="" className="mt-12 mx-auto max-w-sm">
                       <div className="bg-background has-[input:focus]:ring-muted relative grid grid-cols-[1fr_auto] pr-1.5 items-center rounded-[1rem] border shadow shadow-zinc-950/5 has-[input:focus]:ring-2 lg:pr-0">
+                        <User className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4" />
+                        <input
+                          placeholder="Your name"
+                          className="h-12 w-full bg-transparent pl-12 focus:outline-none"
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                      </div>
+                      <div className="bg-background has-[input:focus]:ring-muted relative grid grid-cols-[1fr_auto] pr-1.5 items-center rounded-[1rem] border shadow shadow-zinc-950/5 has-[input:focus]:ring-2 lg:pr-0">
                         <Mail className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4" />
 
                         <input
@@ -114,10 +128,19 @@ export function HeroSection() {
                                 })
                               }
 
+                              if (!name) {
+                                return toast.error('Name is required', {
+                                  description: 'Please enter your name, to join our waitlist'
+                                })
+                              }
+
                               toast.promise(
                                 mutateAsync({
                                   email,
                                   subscribed: true,
+                                  data: {
+                                    name
+                                  }
                                 }),
                                 {
                                   success:
@@ -257,7 +280,7 @@ const HeroHeader = () => {
           className={cn(
             'mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12',
             isScrolled &&
-              'bg-background/50 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5',
+            'bg-background/50 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5',
           )}
         >
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
