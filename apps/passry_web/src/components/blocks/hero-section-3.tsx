@@ -83,9 +83,10 @@ export function HeroSection() {
                   </h1>
 
                   <p className="mt-6 max-w-2xl text-left text-pretty text-lg">
-                    We’re cooking up something epic! Join the waitlist and be
-                    front row when the app goes live. Events, excitement, and
-                    exclusive access await!
+                    Passry is a digital platform for creating events, selling tickets, and managing access.
+                  </p>
+                  <p className="mt-6 max-w-2xl text-left text-pretty text-lg">
+                    We’re creating something amazing! Join the waitlist to be front row when the app launches.
                   </p>
 
                   <div className="justify-start grid">
