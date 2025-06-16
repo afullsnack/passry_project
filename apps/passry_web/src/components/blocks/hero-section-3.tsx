@@ -105,7 +105,7 @@ export function HeroSection() {
                         <Mail className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4" />
 
                         <input
-                          placeholder="Your mail address"
+                          placeholder="Your email address"
                           className="h-12 w-full bg-transparent pl-12 focus:outline-none"
                           type="email"
                           value={email}
