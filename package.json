@@ -1,0 +1,8 @@
+{
+  "name": "passry",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
+}
