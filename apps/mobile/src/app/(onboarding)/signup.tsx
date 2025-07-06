@@ -1,41 +1,31 @@
-import { Screen, Text } from "@/components"
-import { ThemedStyle } from "@/theme"
+import { Button, ButtonProps, Screen, Text } from "@/components"
+import { $styles, ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils/useAppTheme"
 import { useHeader } from "@/utils/useHeader"
 import { useNavigation } from "expo-router"
-import { View, ViewStyle } from "react-native"
+import { Image, ImageStyle, TextStyle, View, ViewStyle, useWindowDimensions } from "react-native"
 
-export default function AboutScreen() {
+const topConfetti = require("../../../assets/images/onboarding-slider-top.png")
+
+export default function SignupScreen() {
   const { themed } = useAppTheme()
   const router = useNavigation()
-  useHeader(
-    {
-      title: "About screen",
-      titleMode: "center",
-    },
-    [router],
-  )
 
   return (
     <Screen
       ScrollViewProps={{ horizontal: false, scrollEnabled: true }}
-      preset="scroll"
       safeAreaEdges={["top"]}
-      contentContainerStyle={[themed($container)]}
+      contentContainerStyle={[$styles.flex1, themed($container)]}
     >
       <View style={themed($screenContainer)}>
-        {Array.from({ length: 40 }).map((_, index) => (
-          <Text key={index} text="About Us" preset="heading" />
-        ))}
+        <Image style={$styles.topConfetti} source={topConfetti} resizeMode="contain" />
+        <Text text="Sign up" />
       </View>
     </Screen>
   )
 }
 
-AboutScreen.title = "About screen"
-
 const $container: ThemedStyle<ViewStyle> = ({ colors }) => ({
-  flex: 1,
   backgroundColor: colors.background,
 })
 

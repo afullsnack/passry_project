@@ -58,8 +58,6 @@ export default function Root() {
     return null
   }
 
-  console.log("Theme", themeScheme)
-
   return (
     <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>
       <KeyboardProvider>
