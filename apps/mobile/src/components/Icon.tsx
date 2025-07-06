@@ -9,6 +9,7 @@ import {
   ViewStyle,
 } from "react-native"
 import { useAppTheme } from "@/utils/useAppTheme"
+import { Text, TextProps } from "./Text"
 
 export type IconTypes = keyof typeof iconRegistry
 
@@ -27,6 +28,16 @@ type BaseIconProps = {
    * An optional size for the icon. If not provided, the icon will be sized to the icon's resolution.
    */
   size?: number
+
+  /**
+   * An optional label for the icon. If not provided, the icon will be rendered.
+   */
+  label?: string
+
+  /**
+   * Style overrides for the label
+   */
+  labelProps?: TextProps
 
   /**
    * Style overrides for the icon image
@@ -54,6 +65,8 @@ export function PressableIcon(props: PressableIconProps) {
     icon,
     color,
     size,
+    label,
+    labelProps: $labelProps,
     style: $imageStyleOverride,
     containerStyle: $containerStyleOverride,
     ...pressableProps
@@ -70,6 +83,7 @@ export function PressableIcon(props: PressableIconProps) {
 
   return (
     <TouchableOpacity {...pressableProps} style={$containerStyleOverride}>
+      {label && <Text text={label} {...$labelProps} />}
       <Image style={$imageStyle} source={iconRegistry[icon]} />
     </TouchableOpacity>
   )
