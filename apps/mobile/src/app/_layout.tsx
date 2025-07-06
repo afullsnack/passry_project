@@ -14,6 +14,7 @@ if (__DEV__) {
   // Load Reactotron configuration in development. We don't want to
   // include this in our production bundle, so we are using `if (__DEV__)`
   // to only execute this in development.
+  console.log("Running in dev mode...")
   require("src/devtools/ReactotronConfig.ts")
 }
 
@@ -22,7 +23,7 @@ export { ErrorBoundary } from "@/components/ErrorBoundary/ErrorBoundary"
 export default function Root() {
   const [fontsLoaded, fontError] = useFonts(customFontsToLoad)
   const [isI18nInitialized, setIsI18nInitialized] = useState(false)
-  const { themeScheme, setThemeContextOverride, ThemeProvider } = useThemeProvider()
+  const { themeScheme, setThemeContextOverride, ThemeProvider } = useThemeProvider("light")
 
   useEffect(() => {
     initI18n()
@@ -48,7 +49,7 @@ export default function Root() {
       if (loaded) {
         SplashScreen.hideAsync()
       }
-    }, 60000 * 2)
+    }, 1000 * 2)
 
     return () => clearTimeout(timeout)
   }, [loaded])
@@ -56,6 +57,8 @@ export default function Root() {
   if (!loaded) {
     return null
   }
+
+  console.log("Theme", themeScheme)
 
   return (
     <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>

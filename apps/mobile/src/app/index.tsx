@@ -1,57 +1,165 @@
-import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { Button, Screen, Switch, Text } from "@/components"
+import { Alert, Image, ImageStyle, View, ViewStyle } from "react-native"
+import { Button, Screen, Text, PressableIcon } from "@/components"
 import { isRTL } from "@/i18n"
 import { ThemedStyle } from "@/theme"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { useAppTheme } from "@/utils/useAppTheme"
-import { useState } from "react"
-import { router } from "expo-router"
+import PagerView from "react-native-pager-view"
 
-const welcomeLogo = require("../../assets/images/logo.png")
-const welcomeFace = require("../../assets/images/welcome-face.png")
+const welcomeSlider1 = require("../../assets/images/slider-1-hero.png")
+const welcomeSlider2 = require("../../assets/images/slider-2-hero.png")
+const welcomeSlider3 = require("../../assets/images/slider-3-hero.png")
+const sliderTop = require("../../assets/images/onboarding-slider-top.png")
 
 export default function WelcomeScreen() {
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
-  const { theme, themed, setThemeContextOverride } = useAppTheme()
-  const [toggle, setToggle] = useState(false)
+  const { themed } = useAppTheme()
 
   return (
     <Screen safeAreaEdges={["top"]} contentContainerStyle={themed($container)}>
-      <View style={themed($topContainer)}>
-        <Image style={themed($welcomeLogo)} source={welcomeLogo} resizeMode="contain" />
-        <Text
+      <PagerView style={{}} initialPage={0}>
+        <View key="1">
+          <View style={themed($topContainer)}>
+            <Image
+              style={$sliderTop}
+              source={sliderTop}
+              resizeMode="contain"
+              // tintColor={theme.colors.palette.neutral900}
+            />
+
+            <PressableIcon
+              icon="back"
+              style={$skipIcon}
+              label="Skip"
+              labelProps={{ size: "lg", weight: "bold" }}
+              containerStyle={$skipIconContainer}
+              onPress={() => {
+                Alert.alert("Skip welcome screen?", "This will sskip welcome screen")
+              }}
+            />
+            {/* <Image
+          style={$skipIcon}
+          source={skipIcon}
+          resizeMode="contain"
+          // tintColor={theme.colors.palette.neutral900}
+        /> */}
+            <Image style={themed($welcomeSlider1)} source={welcomeSlider1} resizeMode="contain" />
+            {/* <Text
           testID="welcome-heading"
           style={themed($welcomeHeading)}
           tx="welcomeScreen:readyForLaunch"
           preset="heading"
         />
-        <Text tx="welcomeScreen:exciting" preset="subheading" />
-        <Image
-          style={$welcomeFace}
-          source={welcomeFace}
-          resizeMode="contain"
-          tintColor={theme.colors.palette.neutral900}
-        />
-      </View>
+        <Text tx="welcomeScreen:exciting" preset="subheading" /> */}
+          </View>
 
-      <View style={[themed($bottomContainer), $bottomContainerInsets]}>
-        <Text tx="welcomeScreen:postscript" size="md" />
-        <Button
-          text="Sign up with Email"
-          onPress={() => {
-            router.push("/about")
-          }}
+          <View style={[themed($bottomContainer), $bottomContainerInsets]}>
+            <Text tx="welcomeScreen:slide1Title" preset="bold" size="xl" />
+            <Text tx="welcomeScreen:slide1SubText" size="md" style={{ textAlign: "center" }} />
+            <Button
+              text="Next"
+              style={{ width: "100%" }}
+              onPress={() => {
+                // TODO: animate to next slide
+              }}
+            />
+          </View>
+        </View>
+        <View key="2">
+          <View style={themed($topContainer)}>
+            <Image
+              style={$sliderTop}
+              source={sliderTop}
+              resizeMode="contain"
+              // tintColor={theme.colors.palette.neutral900}
+            />
+
+            <PressableIcon
+              icon="back"
+              style={$skipIcon}
+              label="Skip"
+              labelProps={{ size: "lg", weight: "bold" }}
+              containerStyle={$skipIconContainer}
+              onPress={() => {
+                Alert.alert("Skip welcome screen?", "This will sskip welcome screen")
+              }}
+            />
+            {/* <Image
+          style={$skipIcon}
+          source={skipIcon}
+          resizeMode="contain"
+          // tintColor={theme.colors.palette.neutral900}
+        /> */}
+            <Image style={themed($welcomeSlider1)} source={welcomeSlider2} resizeMode="contain" />
+            {/* <Text
+          testID="welcome-heading"
+          style={themed($welcomeHeading)}
+          tx="welcomeScreen:readyForLaunch"
+          preset="heading"
         />
-        <Switch
-          label="Change theme"
-          value={toggle}
-          onValueChange={(value) => {
-            console.log("Toggle value", value)
-            setThemeContextOverride(value ? "dark" : "light")
-            setToggle(value)
-          }}
+        <Text tx="welcomeScreen:exciting" preset="subheading" /> */}
+          </View>
+
+          <View style={[themed($bottomContainer), $bottomContainerInsets]}>
+            <Text tx="welcomeScreen:slide1Title" preset="bold" size="xl" />
+            <Text tx="welcomeScreen:slide1SubText" size="md" style={{ textAlign: "center" }} />
+            <Button
+              text="Next"
+              style={{ width: "100%" }}
+              onPress={() => {
+                // TODO: animate to next slide
+              }}
+            />
+          </View>
+        </View>
+        <View key="2">
+          <View style={themed($topContainer)}>
+            <Image
+              style={$sliderTop}
+              source={sliderTop}
+              resizeMode="contain"
+              // tintColor={theme.colors.palette.neutral900}
+            />
+
+            <PressableIcon
+              icon="back"
+              style={$skipIcon}
+              label="Skip"
+              labelProps={{ size: "lg", weight: "bold" }}
+              containerStyle={$skipIconContainer}
+              onPress={() => {
+                Alert.alert("Skip welcome screen?", "This will sskip welcome screen")
+              }}
+            />
+            {/* <Image
+          style={$skipIcon}
+          source={skipIcon}
+          resizeMode="contain"
+          // tintColor={theme.colors.palette.neutral900}
+        /> */}
+            <Image style={themed($welcomeSlider1)} source={welcomeSlider3} resizeMode="contain" />
+            {/* <Text
+          testID="welcome-heading"
+          style={themed($welcomeHeading)}
+          tx="welcomeScreen:readyForLaunch"
+          preset="heading"
         />
-      </View>
+        <Text tx="welcomeScreen:exciting" preset="subheading" /> */}
+          </View>
+
+          <View style={[themed($bottomContainer), $bottomContainerInsets]}>
+            <Text tx="welcomeScreen:slide1Title" preset="bold" size="xl" />
+            <Text tx="welcomeScreen:slide1SubText" size="md" style={{ textAlign: "center" }} />
+            <Button
+              text="Get started"
+              style={{ width: "100%" }}
+              onPress={() => {
+                // TODO: animate to next slide
+              }}
+            />
+          </View>
+        </View>
+      </PagerView>
     </Screen>
   )
 }
@@ -73,28 +181,45 @@ const $bottomContainer: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   flexShrink: 1,
   flexGrow: 0,
   flexBasis: "43%",
-  backgroundColor: colors.palette.secondary200,
-  borderTopLeftRadius: 16,
-  borderTopRightRadius: 16,
+  backgroundColor: colors.palette.primary600,
+  borderTopLeftRadius: 0,
+  borderTopRightRadius: 0,
   paddingHorizontal: spacing.lg,
-  justifyContent: "space-around",
+  alignItems: "center",
+  justifyContent: "space-evenly",
 })
 
-const $welcomeLogo: ThemedStyle<ImageStyle> = ({ spacing }) => ({
-  height: 88,
+const $welcomeSlider1: ThemedStyle<ImageStyle> = ({ spacing }) => ({
+  height: 288,
   width: "100%",
-  marginBottom: spacing.xxl,
+  marginBottom: -spacing.xxxl,
 })
 
-const $welcomeFace: ImageStyle = {
-  height: 169,
-  width: 269,
+const $sliderTop: ImageStyle = {
+  height: 129,
+  width: 229,
   position: "absolute",
-  bottom: -47,
-  right: -80,
+  top: -32,
+  left: 15,
   transform: [{ scaleX: isRTL ? -1 : 1 }],
 }
 
-const $welcomeHeading: ThemedStyle<TextStyle> = ({ spacing }) => ({
-  marginBottom: spacing.md,
-})
+const $skipIcon: ImageStyle = {
+  height: 20,
+  width: 20,
+  transform: [{ rotate: "180deg" }],
+}
+
+const $skipIconContainer: ViewStyle = {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "flex-start",
+  gap: 2,
+  position: "absolute",
+  right: 20,
+  top: 20,
+}
+
+// const $welcomeHeading: ThemedStyle<TextStyle> = ({ spacing }) => ({
+//   marginBottom: spacing.md,
+// })
