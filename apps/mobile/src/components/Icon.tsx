@@ -35,6 +35,11 @@ type BaseIconProps = {
   label?: string
 
   /**
+   * An optional label for the icon. If not provided, the icon will be rendered.
+   */
+  labelRight?: string
+
+  /**
    * Style overrides for the label
    */
   labelProps?: TextProps
@@ -66,6 +71,7 @@ export function PressableIcon(props: PressableIconProps) {
     color,
     size,
     label,
+    labelRight,
     labelProps: $labelProps,
     style: $imageStyleOverride,
     containerStyle: $containerStyleOverride,
@@ -85,6 +91,7 @@ export function PressableIcon(props: PressableIconProps) {
     <TouchableOpacity {...pressableProps} style={$containerStyleOverride}>
       {label && <Text text={label} {...$labelProps} />}
       <Image style={$imageStyle} source={iconRegistry[icon]} />
+      {labelRight && <Text text={labelRight} {...$labelProps} />}
     </TouchableOpacity>
   )
 }
@@ -136,6 +143,9 @@ export const iconRegistry = {
   settings: require("../../assets/icons/settings.png"),
   view: require("../../assets/icons/view.png"),
   x: require("../../assets/icons/x.png"),
+  apple: require("../../assets/icons/apple.png"),
+  google: require("../../assets/icons/google.png"),
+  facebook: require("../../assets/icons/facebook.png"),
 }
 
 const $imageStyleBase: ImageStyle = {

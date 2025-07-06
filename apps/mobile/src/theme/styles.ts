@@ -1,4 +1,4 @@
-import { ViewStyle } from "react-native"
+import { ImageStyle, ViewStyle } from "react-native"
 
 /* Use this file to define styles that are used in multiple places in your app. */
 export const $styles = {
@@ -13,4 +13,24 @@ export const $styles = {
     justifyContent: "center",
     overflow: "hidden",
   } as ViewStyle,
+
+  topConfetti: {
+      height: 110,
+      width: 210,
+      position: "absolute",
+      top: -2,
+      left: -2,
+  } as ImageStyle,
+
+  alignFlexLeft: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    width: "100%",
+  } as ViewStyle,
+
+  alignFlexRight: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "100%",
+  } as ViewStyle
 }
