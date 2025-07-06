@@ -8,7 +8,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "icon": "./assets/images/app-icon-all.png",
+    "icon": "./assets/images/passry-logo-mark.png",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -16,18 +16,14 @@
     "jsEngine": "hermes",
     "assetBundlePatterns": ["**/*"],
     "android": {
-      "icon": "./assets/images/app-icon-android-legacy.png",
-      "package": "com.prespay",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/app-icon-android-adaptive-foreground.png",
-        "backgroundImage": "./assets/images/app-icon-android-adaptive-background.png"
-      },
+      "icon": "./assets/images/passry-logo-mark.png",
+      "package": "com.passry",
       "allowBackup": false
     },
     "ios": {
-      "icon": "./assets/images/app-icon-ios.png",
+      "icon": "./assets/images/passry-logo-mark.png",
       "supportsTablet": true,
-      "bundleIdentifier": "com.prespay",
+      "bundleIdentifier": "com.passry",
       "privacyManifests": {
         "NSPrivacyAccessedAPITypes": [
           {
@@ -41,7 +37,7 @@
       }
     },
     "web": {
-      "favicon": "./assets/images/app-icon-web-favicon.png",
+      "favicon": "./assets/images/passry-logo-mark.png",
       "bundler": "metro"
     },
     "plugins": [
@@ -50,10 +46,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/app-icon-android-adaptive-foreground.png",
-          "imageWidth": 300,
+          "image": "./assets/images/passry-logo-mark.png",
           "resizeMode": "contain",
-          "backgroundColor": "#191015"
+          "imageWidth": 300,
+          "backgroundColor": "#080034"
         }
       ],
       "expo-router"
