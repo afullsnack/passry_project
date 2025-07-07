@@ -17,12 +17,7 @@ export default function SigninScreen() {
       <View style={themed($screenContainer)}>
         <Image style={$styles.topConfetti} source={topConfetti} resizeMode="contain" />
 
-        <View
-          style={{
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <View style={$formView}>
           <Text preset="heading" text="SIGN IN" />
           <Text preset="subheading" text="Welcome back!" />
 
@@ -30,14 +25,14 @@ export default function SigninScreen() {
             label="Email"
             placeholder="Enter info"
             inputMode="email"
-            containerStyle={{ width: "100%", marginVertical: 10 }}
+            containerStyle={themed($textInputStyle)}
           />
           <TextField
             label="Password"
             placeholder="Enter info"
             inputMode="text"
             secureTextEntry
-            containerStyle={{ width: "100%", marginVertical: 10 }}
+            containerStyle={themed($textInputStyle)}
           />
           <Pressable
             style={$styles.alignFlexLeft}
@@ -55,20 +50,12 @@ export default function SigninScreen() {
           </View>
 
           {/* Social login */}
-          <View style={[$styles.row, { alignItems: "center", marginVertical: 20 }]}>
-            <View style={{ flex: 1, height: 1, backgroundColor: "#000000" }} />
-            <Text text="OR" style={{ marginHorizontal: 20 }} />
-            <View style={{ flex: 1, height: 1, backgroundColor: "#000000" }} />
+          <View style={[$styles.row, $styles.horizontalRule.container]}>
+            <View style={$styles.horizontalRule.lines} />
+            <Text text="OR" style={$styles.horizontalRule.text} />
+            <View style={$styles.horizontalRule.lines} />
           </View>
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "flex-start",
-              justifyContent: "flex-end",
-              marginBottom: -40,
-              gap: 20,
-            }}
-          >
+          <View style={$socialButtonsContainerStyle}>
             {[
               { icon: "apple", label: "Continue with Apple" },
               { icon: "google", label: "Continue with Google" },
@@ -124,3 +111,17 @@ const $signUpStyle: ThemedStyle<TextStyle> = ({ colors }) => ({
   fontWeight: "bold",
   textDecorationLine: "underline",
 })
+
+const $textInputStyle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+  width: "100%",
+  marginVertical: spacing.md,
+})
+const $formView: ViewStyle = { flexDirection: "column", alignItems: "center" }
+
+const $socialButtonsContainerStyle: ViewStyle = {
+  flexDirection: "column",
+  alignItems: "flex-start",
+  justifyContent: "flex-end",
+  marginBottom: -40,
+  gap: 20,
+}
