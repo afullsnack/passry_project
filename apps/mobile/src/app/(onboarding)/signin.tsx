@@ -1,24 +1,12 @@
-import { Button, ButtonProps, Icon, PressableIcon, Screen, Text, TextField } from "@/components"
+import { Button, PressableIcon, Screen, Text, TextField } from "@/components"
 import { $styles, ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils/useAppTheme"
-import { useHeader } from "@/utils/useHeader"
-import { useNavigation } from "expo-router"
-import {
-  Alert,
-  Image,
-  ImageStyle,
-  Pressable,
-  TextStyle,
-  View,
-  ViewStyle,
-  useWindowDimensions,
-} from "react-native"
+import { Alert, Image, Pressable, TextStyle, View, ViewStyle } from "react-native"
 
 const topConfetti = require("../../../assets/images/onboarding-slider-top.png")
 
 export default function SigninScreen() {
   const { themed } = useAppTheme()
-  const router = useNavigation()
 
   return (
     <Screen
