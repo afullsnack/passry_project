@@ -1,4 +1,4 @@
-import { ImageStyle, ViewStyle } from "react-native"
+import { ImageStyle, TextStyle, ViewStyle } from "react-native"
 
 /* Use this file to define styles that are used in multiple places in your app. */
 export const $styles = {
@@ -33,4 +33,11 @@ export const $styles = {
     justifyContent: "flex-end",
     width: "100%",
   } as ViewStyle,
+
+  // HOorizontal rule style
+  horizontalRule: {
+    lines: { flex: 1, height: 1, backgroundColor: "#000000" } as ViewStyle,
+    text: { marginHorizontal: 20 } as TextStyle,
+    container: { alignItems: "center", marginVertical: 20 } as ViewStyle,
+  },
 }
