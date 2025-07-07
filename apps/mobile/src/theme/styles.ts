@@ -15,11 +15,11 @@ export const $styles = {
   } as ViewStyle,
 
   topConfetti: {
-      height: 110,
-      width: 210,
-      position: "absolute",
-      top: -2,
-      left: -2,
+    height: 110,
+    width: 210,
+    position: "absolute",
+    top: -2,
+    left: -2,
   } as ImageStyle,
 
   alignFlexLeft: {
@@ -32,5 +32,5 @@ export const $styles = {
     flexDirection: "row",
     justifyContent: "flex-end",
     width: "100%",
-  } as ViewStyle
+  } as ViewStyle,
 }
