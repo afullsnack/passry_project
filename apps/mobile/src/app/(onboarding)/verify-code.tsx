@@ -1,6 +1,7 @@
 import { Button, Screen, Text, TextField } from "@/components"
 import { $styles, ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils/useAppTheme"
+import { router } from "expo-router"
 import { useState } from "react"
 import { Alert, Image, Pressable, TextStyle, View, ViewStyle } from "react-native"
 import { OtpInput } from "react-native-otp-entry"
@@ -57,7 +58,9 @@ export default function VerifyCodeScreen() {
             text="Verify Code"
             preset="reversed"
             style={themed($ctaStyle)}
-            onPress={() => {}}
+            onPress={() => {
+              router.push("/(onboarding)/welcome-modal")
+            }}
           />
         </View>
       </View>
