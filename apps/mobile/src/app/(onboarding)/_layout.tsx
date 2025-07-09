@@ -6,6 +6,10 @@ export default function OnboardLayout() {
       <Stack.Screen name="signin" options={{ headerShown: false }} />
       <Stack.Screen name="signup" options={{ headerShown: false }} />
       <Stack.Screen name="verify-code" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="welcome-modal"
+        options={{ headerShown: false, presentation: "containedTransparentModal" }}
+      />
     </Stack>
   )
 }
