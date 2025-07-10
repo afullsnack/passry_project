@@ -1,13 +1,14 @@
 import { Image, ImageStyle, TextStyle, View, ViewStyle, useWindowDimensions } from "react-native"
 import { Button, Screen, Text, PressableIcon } from "@/components"
-import { TxKeyPath, isRTL } from "@/i18n"
-import { ThemedStyle } from "@/theme"
+import { TxKeyPath } from "@/i18n"
+import { $styles, ThemedStyle } from "@/theme"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { useAppTheme } from "@/utils/useAppTheme"
 import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel"
 import { useMemo, useRef } from "react"
 import { useSharedValue } from "react-native-reanimated"
 import { router } from "expo-router"
+import { DotStyle } from "react-native-reanimated-carousel/lib/typescript/components/Pagination/Custom/PaginationItem"
 
 const welcomeSlider1 = require("../../assets/images/slider-1-hero.png")
 const welcomeSlider2 = require("../../assets/images/slider-2-hero.png")
@@ -63,7 +64,7 @@ export default function WelcomeScreen() {
         data={data}
         onSnapToItem={onPressPagination}
         renderItem={({ index, item }) => (
-          <View style={{ flex: 1 }}>
+          <View style={$styles.flex1}>
             <View style={themed($topContainer)}>
               <Image
                 style={$sliderTop}
@@ -92,9 +93,9 @@ export default function WelcomeScreen() {
               <Pagination.Basic
                 progress={progress}
                 data={data}
-                dotStyle={{ backgroundColor: "rgba(255,255,255,0.4)", borderRadius: 50 }}
-                activeDotStyle={{ backgroundColor: "rgba(255, 255, 255, 1)" }}
-                containerStyle={{ gap: 5, marginTop: 10 }}
+                dotStyle={$dotStyle}
+                activeDotStyle={$activeDotStyle}
+                containerStyle={$paginationContainerStyle}
                 onPress={onPressPagination}
               />
               <Button
@@ -116,6 +117,10 @@ export default function WelcomeScreen() {
     </Screen>
   )
 }
+
+const $paginationContainerStyle: ViewStyle = { gap: 5, marginTop: 10 }
+const $activeDotStyle: DotStyle = { backgroundColor: "rgba(255, 255, 255, 1)" }
+const $dotStyle: DotStyle = { backgroundColor: "rgba(255,255,255,0.4)", borderRadius: 50 }
 
 const $container: ThemedStyle<ViewStyle> = ({ colors }) => ({
   flex: 1,
@@ -142,7 +147,7 @@ const $bottomContainer: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   justifyContent: "space-evenly",
 })
 
-const $welcomeSlider: ThemedStyle<ImageStyle> = ({ spacing }) => ({
+const $welcomeSlider: ThemedStyle<ImageStyle> = ({}) => ({
   height: 200,
   width: "100%",
   marginBottom: -125,
