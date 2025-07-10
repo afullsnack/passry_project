@@ -36,8 +36,8 @@ export default function SignupScreen() {
       <View style={themed($screenContainer)}>
         <Image style={$styles.topConfetti} source={topConfetti} resizeMode="contain" />
         <View style={$formView}>
-          <Text preset="heading" text="SIGN IN" />
-          <Text preset="subheading" text="Welcome back!" />
+          <Text preset="heading" text="SIGN UP" />
+          <Text preset="subheading" text="Create an account and join passry today!" />
 
           <TextField
             label="Name"

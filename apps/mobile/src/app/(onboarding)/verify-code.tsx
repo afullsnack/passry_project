@@ -1,16 +1,20 @@
-import { Button, Screen, Text, TextField } from "@/components"
+import { Button, Screen, Text } from "@/components"
 import { $styles, ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils/useAppTheme"
-import { router } from "expo-router"
+// import { router } from "expo-router"
 import { useState } from "react"
 import { Alert, Image, Pressable, TextStyle, View, ViewStyle } from "react-native"
 import { OtpInput } from "react-native-otp-entry"
+import { useModal } from "react-native-modalfy"
 
 const topConfetti = require("../../../assets/images/onboarding-slider-top.png")
 
 export default function VerifyCodeScreen() {
   const { themed, theme } = useAppTheme()
   const [_, setCode] = useState<string>("")
+  const { openModal } = useModal()
+
+  const verificationSuccessful = () => openModal("OnboardingSuccessModal", { name: "John Doe" })
 
   return (
     <Screen safeAreaEdges={["top"]} contentContainerStyle={[$styles.flex1, themed($container)]}>
@@ -47,8 +51,8 @@ export default function VerifyCodeScreen() {
             }}
           />
 
-          <View style={[$styles.row, { alignItems: "center" }]}>
-            <Text text="Resend code in: " preset="default" style={{ fontSize: 14 }} />
+          <View style={[$styles.row, $styles.alignCenter]}>
+            <Text text="Resend code in: " preset="default" style={$resentTextStyle} />
             <Pressable onPress={() => Alert.alert("Sure you want to signup?")}>
               <Text text="00:15" preset="subheading" style={themed($signUpStyle)} />
             </Pressable>
@@ -58,9 +62,7 @@ export default function VerifyCodeScreen() {
             text="Verify Code"
             preset="reversed"
             style={themed($ctaStyle)}
-            onPress={() => {
-              router.push("/(onboarding)/welcome-modal")
-            }}
+            onPress={verificationSuccessful}
           />
         </View>
       </View>
@@ -85,13 +87,7 @@ const $ctaStyle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   marginVertical: spacing.sm,
 })
 
-const $forgotPasswordStyle: ThemedStyle<TextStyle> = ({ colors }) => ({
-  color: colors.palette.primary500,
-  fontSize: 14,
-  fontWeight: "bold",
-  textDecorationLine: "underline",
-  textAlign: "left",
-})
+const $resentTextStyle: TextStyle = { fontSize: 14 }
 const $signUpStyle: ThemedStyle<TextStyle> = ({ colors }) => ({
   color: colors.palette.primary500,
   fontSize: 14,
@@ -99,16 +95,4 @@ const $signUpStyle: ThemedStyle<TextStyle> = ({ colors }) => ({
   textDecorationLine: "underline",
 })
 
-const $textInputStyle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  width: "100%",
-  marginVertical: spacing.md,
-})
 const $formView: ViewStyle = { flexDirection: "column", alignItems: "center" }
-
-const $socialButtonsContainerStyle: ViewStyle = {
-  flexDirection: "column",
-  alignItems: "flex-start",
-  justifyContent: "flex-end",
-  marginBottom: -40,
-  gap: 20,
-}
