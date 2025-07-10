@@ -1,12 +1,4 @@
-import {
-  Alert,
-  Image,
-  ImageStyle,
-  TextStyle,
-  View,
-  ViewStyle,
-  useWindowDimensions,
-} from "react-native"
+import { Image, ImageStyle, TextStyle, View, ViewStyle, useWindowDimensions } from "react-native"
 import { Button, Screen, Text, PressableIcon } from "@/components"
 import { TxKeyPath, isRTL } from "@/i18n"
 import { ThemedStyle } from "@/theme"

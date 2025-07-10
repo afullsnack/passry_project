@@ -7,6 +7,9 @@ import { customFontsToLoad } from "@/theme"
 import { initI18n } from "@/i18n"
 import { loadDateFnsLocale } from "@/utils/formatDate"
 import { useThemeProvider } from "@/utils/useAppTheme"
+import { ModalProvider, createModalStack } from "react-native-modalfy"
+import OnboardingSuccessModal from "@/components/Modals/OnboardingSuccess"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -58,11 +61,19 @@ export default function Root() {
     return null
   }
 
+  const modalConfig = { OnboardingSuccessModal }
+  const defaultOptions = { backdropOpacity: 0.6 }
+  const modalStack = createModalStack(modalConfig, defaultOptions)
+
   return (
-    <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>
-      <KeyboardProvider>
-        <Slot />
-      </KeyboardProvider>
-    </ThemeProvider>
+    <GestureHandlerRootView>
+      <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>
+        <KeyboardProvider>
+          <ModalProvider stack={modalStack}>
+            <Slot />
+          </ModalProvider>
+        </KeyboardProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   )
 }
