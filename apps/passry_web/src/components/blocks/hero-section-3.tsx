@@ -83,10 +83,12 @@ export function HeroSection() {
                   </h1>
 
                   <p className="mt-6 max-w-2xl text-left text-pretty text-lg">
-                    Passry is a digital platform for creating events, selling tickets, and managing access.
+                    Passry is a digital platform for creating events, selling
+                    tickets, and managing access.
                   </p>
                   <p className="mt-6 max-w-2xl text-left text-pretty text-lg">
-                    We’re creating something amazing! Join the waitlist to be front row when the app launches.
+                    We’re creating something amazing! Join the waitlist to be
+                    front row when the app launches.
                   </p>
 
                   <div className="justify-start grid">
@@ -131,7 +133,8 @@ export function HeroSection() {
 
                               if (!name) {
                                 return toast.error('Name is required', {
-                                  description: 'Please enter your name, to join our waitlist'
+                                  description:
+                                    'Please enter your name, to join our waitlist',
                                 })
                               }
 
@@ -140,8 +143,8 @@ export function HeroSection() {
                                   email,
                                   subscribed: true,
                                   data: {
-                                    name
-                                  }
+                                    name,
+                                  },
                                 }),
                                 {
                                   success:
@@ -281,7 +284,7 @@ const HeroHeader = () => {
           className={cn(
             'mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12',
             isScrolled &&
-            'bg-background/50 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5',
+              'bg-background/50 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5',
           )}
         >
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
@@ -347,6 +350,10 @@ const HeroHeader = () => {
                   </a>
                 </Button> */}
                 <ThemeToggle />
+                <Button asChild variant="outline" size="sm">
+                  <Link to="/signup">Sign Up</Link>
+                </Button>
+
                 {/* <Button
                   asChild
                   size="sm"

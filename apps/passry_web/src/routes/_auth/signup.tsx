@@ -1,6 +1,7 @@
 import { SignUpForm } from '@/components/blocks/signup-form'
 import { Container, Main, Section } from '@/components/craft'
-import { createFileRoute } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
+import { Link, createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth/signup')({
   component: Signup,
@@ -20,11 +21,13 @@ function Signup() {
             }}
           >
             {/* Overlay */}
-            <div className="absolute inset-0 bg-slate-900/60" />
+            <div className="absolute inset-0 bg-slate-900/60 z-[1]" />
 
             {/* Logo */}
-            <div className="absolute top-8 left-8 z-10">
-              <div className="text-2xl font-bold text-cyan-400">PASSRY</div>
+            <div className="z-20 absolute top-8 left-8">
+              <Link to="/">
+                <div className="text-2xl font-bold text-cyan-400">PASSRY</div>
+              </Link>
             </div>
 
             {/* Content */}

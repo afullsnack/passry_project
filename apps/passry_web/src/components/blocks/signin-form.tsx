@@ -8,15 +8,17 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Apple, Chrome, Facebook } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 
 interface SignInFormProps {
-  onSwitchToSignUp: () => void
+  onSwitchToSignUp?: () => void
 }
 
 export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -103,7 +105,7 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
           {"Don't have an account? - "}
         </span>
         <button
-          onClick={onSwitchToSignUp}
+          onClick={() => navigate({ to: '/signup' })}
           className="text-cyan-500 hover:text-cyan-600 font-medium"
         >
           Sign Up

@@ -1,6 +1,6 @@
 import { SignInForm } from '@/components/blocks/signin-form'
 import { Container, Main, Section } from '@/components/craft'
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth/login')({
   component: Login,
@@ -20,11 +20,13 @@ function Login() {
             }}
           >
             {/* Overlay */}
-            <div className="absolute inset-0 bg-slate-900/60" />
+            <div className="absolute inset-0 bg-slate-900/60  z-[1]" />
 
             {/* Logo */}
-            <div className="absolute top-8 left-8 z-10">
-              <div className="text-2xl font-bold text-cyan-400">PASSRY</div>
+            <div className="absolute top-8 left-8 z-20">
+              <Link to="/">
+                <div className="text-2xl font-bold text-cyan-400">PASSRY</div>
+              </Link>
             </div>
 
             {/* Content */}
@@ -52,7 +54,7 @@ function Login() {
             <div className="lg:hidden text-center mb-8">
               <div className="text-2xl font-bold text-cyan-400">PASSRY</div>
             </div>
-            <SignInForm onSwitchToSignUp={() => {}} />
+            <SignInForm />
           </div>
         </Container>
       </Section>
