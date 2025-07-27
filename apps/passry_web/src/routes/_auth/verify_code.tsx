@@ -1,7 +1,7 @@
 import { Container, Main, Section } from '@/components/craft'
 import { createFileRoute } from '@tanstack/react-router'
 
-const Route = createFileRoute('/_auth/verify_code')({
+export const Route = createFileRoute('/_auth/verify_code')({
   component: VerifyCode,
 })
 
