@@ -1,25 +1,26 @@
 import { betterAuth } from "better-auth";
-import env from "@/env";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import db from "@/db";
-import { phoneNumber, emailOTP } from "better-auth/plugins";
-import * as globalSchema from "@/db/schema/global-schema";
-import * as authSchema from "@/db/schema/auth-schema";
-import { sendEmail } from "./email";
+import { emailOTP, phoneNumber } from "better-auth/plugins";
 
+import db from "@/db";
+import * as authSchema from "@/db/schema/auth-schema";
+import * as globalSchema from "@/db/schema/global-schema";
+import env from "@/env";
+
+import { sendEmail } from "./email";
 
 export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
-  baseURL: env.BETTER_AUTH_URL,
+  basePath: "/api/auth",
 
   database: drizzleAdapter(db, {
     provider: "sqlite",
-    schema: {...authSchema, ...globalSchema } // add schemas as app grows
+    schema: { ...authSchema, ...globalSchema }, // add schemas as app grows
   }),
 
   // Email password
   emailAndPassword: {
-    enabled: true
+    enabled: true,
   },
   socialProviders: {
     facebook: {
@@ -32,36 +33,36 @@ export const auth = betterAuth({
       enabled: false,
       clientId: ``,
       clientSecret: ``,
-      clientKey: ``
+      clientKey: ``,
     },
     google: {
       enabled: false,
       clientId: ``,
       clientSecret: ``,
-      clientKey: ``
-    }
+      clientKey: ``,
+    },
   },
 
   plugins: [
     phoneNumber(),
     emailOTP({
-      sendVerificationOTP: async ({ email, otp, type}) => {
-        if(type === "sign-in") {
-          console.log("Sending OTP to email:", email);
-          console.log("OTP:", otp);
+      overrideDefaultEmailVerification: true,
+      sendVerificationOTP: async ({ email, otp, type }) => {
+        if (type === "email-verification") {
+          console.warn("Sending OTP to email:", email);
+          console.warn("OTP:", otp);
 
           await sendEmail({
             to: email,
             subject: "Verify New User Email",
             body: `Your OTP is ${otp}`,
-          })
+          });
         }
       },
       sendVerificationOnSignUp: true,
       otpLength: 6,
-      allowedAttempts: 3,
-      storeOTP: "hashed"
-    })
+      storeOTP: "hashed",
+    }),
   ],
-  trustedOrigins: ["http://localhost:3000"]
-})
+  trustedOrigins: ["*", "http://localhost:3000"],
+});

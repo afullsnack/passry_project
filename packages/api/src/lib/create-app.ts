@@ -19,13 +19,14 @@ export function createRouter() {
 
 export default function createApp() {
   const app = createRouter();
-  app.use(cors({
-    origin: "*",
-    allowMethods: ["GET", "POST", "OPTIONS"],
-  }))
+  app
     .use(requestId())
     .use(serveEmojiFavicon("📝"))
-    .use(pinoLogger());
+    .use(pinoLogger())
+    .use(cors({
+      origin: ["*", "http://localhost:3000"],
+      credentials: true,
+    }));
 
   app.notFound(notFound);
   app.onError(onError);
