@@ -17,7 +17,7 @@ routes.forEach((route) => {
   app.route("/", route);
 });
 
-app.on(["POST", "GET", "OPTION"], "/auth/*", c => auth.handler(c.req.raw));
+app.on(["POST", "GET", "OPTIONS"], "/auth/*", c => auth.handler(c.req.raw));
 
 export type AppType = typeof routes[number];
 
