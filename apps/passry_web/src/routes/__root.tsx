@@ -10,6 +10,8 @@ import {
 
 import TanStackQueryLayout from '../integrations/tanstack-query/layout.tsx'
 
+import ogLogoMark from '@/assets/PASSRY_LogoMark.svg'
+
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
@@ -18,6 +20,7 @@ import { ThemeProvider } from '@/components/theme-provider.tsx'
 
 import FaviconLogoMark from '@/assets/PASSRY_LogoMark.svg?url'
 import { Toaster } from '@/components/ui/sonner.tsx'
+import { seo } from '@/lib/utils.ts'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -33,9 +36,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
-      {
+      ...seo({
         title: 'Passry - One app, All access',
-      },
+        description:
+          'Passry is an all inclusive app for event organizers, and attendees.',
+        image: `https://passry.com${ogLogoMark}`,
+        keywords: 'events,organizers,users,lu.ma,event website,passry',
+      }),
     ],
     links: [
       {
