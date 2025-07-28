@@ -9,6 +9,13 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Apple, Chrome, Facebook } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select'
 
 interface SignUpFormProps {
   onSwitchToSignIn?: () => void
@@ -18,6 +25,7 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     password: '',
     confirmPassword: '',
   })
@@ -99,6 +107,19 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
         </div>
 
         <div className="space-y-2">
+          <Label htmlFor="signup-email">Phone</Label>
+          <Input
+            id="signup-phone"
+            type="tel"
+            placeholder="Enter phone"
+            value={formData.phone}
+            onChange={(e) => handleInputChange('phone', e.target.value)}
+            required
+            className="h-12"
+          />
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="signup-password">Password</Label>
           <Input
             id="signup-password"
@@ -126,9 +147,14 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
           />
         </div>
 
+        <div className="space-y-2">
+          <Label htmlFor="confirm-password">Signing Up As*</Label>
+          <AccountSelector />
+        </div>
+
         <Button
           type="submit"
-          className="w-full h-12 bg-cyan-500 hover:bg-cyan-600 text-white font-medium"
+          className="w-full h-12 bg-cyan-500 hover:bg-cyan-600 text-white font-medium mt-12"
           disabled={isLoading}
         >
           {isLoading ? 'Creating account...' : 'Sign Up'}
@@ -185,5 +211,19 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
         </Button>
       </div>
     </div>
+  )
+}
+
+const AccountSelector = () => {
+  return (
+    <Select>
+      <SelectTrigger className="w-full py-1">
+        <SelectValue placeholder="Select Account Type" className="w-full" />
+      </SelectTrigger>
+      <SelectContent className="">
+        <SelectItem value="attendee">Attendee</SelectItem>
+        <SelectItem value="organiser">Organiser</SelectItem>
+      </SelectContent>
+    </Select>
   )
 }

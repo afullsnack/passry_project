@@ -82,7 +82,7 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
           />
         </div>
 
-        <div className="text-right">
+        <div className="text-left">
           <button
             type="button"
             className="text-sm text-cyan-500 hover:text-cyan-600 font-medium"
