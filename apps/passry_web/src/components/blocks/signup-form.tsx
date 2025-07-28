@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Apple, Chrome, Facebook } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { z } from 'zod'
+import { useForm } from '@tanstack/react-form'
 import {
   Select,
   SelectContent,
@@ -16,47 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
+import { authClient } from '@/lib/auth-client'
 
-interface SignUpFormProps {
-  onSwitchToSignIn?: () => void
-}
-
-export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
-  })
-  const [isLoading, setIsLoading] = useState(false)
+export function SignUpForm() {
   const navigate = useNavigate()
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-
-    try {
-      if (formData.password !== formData.confirmPassword) {
-        throw new Error("Passwords don't match")
-      }
-
-      // Better Auth integration would go here
-      // Example: await signUp.email({
-      //   email: formData.email,
-      //   password: formData.password,
-      //   name: formData.name
-      // })
-      console.log('Sign up with:', formData)
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-    } catch (error) {
-      console.error('Sign up error:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const handleSocialSignUp = async (provider: string) => {
     try {
@@ -68,9 +33,43 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+  const form = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      password: '',
+      confirmPassword: '',
+      accountType: '',
+    },
+    validators: {
+      onChange: z.object({
+        name: z.string().min(1),
+        email: z.string().email(),
+        phone: z.string().min(10),
+        password: z.string().min(8),
+        confirmPassword: z.string().min(8),
+        accountType: z.enum(['attendee', 'organizer']),
+      }),
+    },
+    onSubmit: async ({ value }) => {
+      console.log('Values', value)
+      const { data, error } = await authClient.signUp.email({
+        email: value.email,
+        password: value.password,
+        phoneNumber: value.phone,
+        name: value.name,
+      })
+
+      if (error) {
+        console.error('Erorr signing up', error)
+        return
+      }
+
+      console.log('data', data)
+      navigate({ to: '/verify_code' })
+    },
+  })
 
   return (
     <div className="space-y-6">
@@ -79,86 +78,150 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
         <p className="text-sm text-muted-foreground">Create your account</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          form.handleSubmit()
+        }}
+        className="space-y-4"
+      >
         <div className="space-y-2">
           <Label htmlFor="name">Full Name</Label>
-          <Input
-            id="name"
-            type="text"
-            placeholder="Enter your name"
-            value={formData.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
-            required
-            className="h-12"
+          <form.Field
+            name="name"
+            children={(field) => (
+              <Input
+                id="name"
+                type="text"
+                placeholder="Enter your name"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                required
+                className="h-12"
+              />
+            )}
           />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="signup-email">Email</Label>
-          <Input
-            id="signup-email"
-            type="email"
-            placeholder="Enter info"
-            value={formData.email}
-            onChange={(e) => handleInputChange('email', e.target.value)}
-            required
-            className="h-12"
+          <form.Field
+            name="email"
+            children={(field) => (
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                required
+                className="h-12"
+              />
+            )}
           />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="signup-email">Phone</Label>
-          <Input
-            id="signup-phone"
-            type="tel"
-            placeholder="Enter phone"
-            value={formData.phone}
-            onChange={(e) => handleInputChange('phone', e.target.value)}
-            required
-            className="h-12"
+          <form.Field
+            name="phone"
+            children={(field) => (
+              <Input
+                id="phone"
+                type="text"
+                placeholder="Enter your phone"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                required
+                className="h-12"
+              />
+            )}
           />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="signup-password">Password</Label>
-          <Input
-            id="signup-password"
-            type="password"
-            placeholder="Enter info"
-            value={formData.password}
-            onChange={(e) => handleInputChange('password', e.target.value)}
-            required
-            className="h-12"
+          <form.Field
+            name="password"
+            children={(field) => (
+              <Input
+                id="password"
+                type="text"
+                placeholder="Enter your password"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                required
+                className="h-12"
+              />
+            )}
           />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="confirm-password">Confirm Password</Label>
-          <Input
-            id="confirm-password"
-            type="password"
-            placeholder="Confirm password"
-            value={formData.confirmPassword}
-            onChange={(e) =>
-              handleInputChange('confirmPassword', e.target.value)
-            }
-            required
-            className="h-12"
+          <form.Field
+            name="confirmPassword"
+            children={(field) => (
+              <Input
+                id="confirmPassword"
+                type="text"
+                placeholder="Confirm your password"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                required
+                className="h-12"
+              />
+            )}
           />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="confirm-password">Signing Up As*</Label>
-          <AccountSelector />
+          <form.Field
+            name="accountType"
+            children={(field) => (
+              <>
+                <Select
+                  value={field.state.value}
+                  onValueChange={(value) => field.handleChange(value)}
+                  onOpenChange={field.handleBlur}
+                >
+                  <SelectTrigger className="w-full py-1">
+                    <SelectValue
+                      placeholder="Select Account Type"
+                      className="w-full"
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="attendee">Attendee</SelectItem>
+                    <SelectItem value="organizer">Organizer</SelectItem>
+                  </SelectContent>
+                </Select>
+                {!!field.state.meta.errors.length && (
+                  <span>{field.state.meta.errors.join(',')}</span>
+                )}
+              </>
+            )}
+          />
         </div>
 
-        <Button
-          type="submit"
-          className="w-full h-12 bg-cyan-500 hover:bg-cyan-600 text-white font-medium mt-12"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Creating account...' : 'Sign Up'}
-        </Button>
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isSubmitting]}
+          children={([canSubmit, isSubmitting]) => (
+            <Button
+              type="submit"
+              className="w-full h-12 bg-cyan-500 disabled:bg-cyan-600/30 hover:bg-cyan-600 text-white font-medium mt-12"
+              disabled={!canSubmit}
+            >
+              {isSubmitting ? 'Creating account...' : 'Sign Up'}
+            </Button>
+          )}
+        />
       </form>
 
       <div className="text-center text-sm">
@@ -211,19 +274,5 @@ export function SignUpForm({ onSwitchToSignIn }: SignUpFormProps) {
         </Button>
       </div>
     </div>
-  )
-}
-
-const AccountSelector = () => {
-  return (
-    <Select>
-      <SelectTrigger className="w-full py-1">
-        <SelectValue placeholder="Select Account Type" className="w-full" />
-      </SelectTrigger>
-      <SelectContent className="">
-        <SelectItem value="attendee">Attendee</SelectItem>
-        <SelectItem value="organiser">Organiser</SelectItem>
-      </SelectContent>
-    </Select>
   )
 }

@@ -1,6 +1,6 @@
 import { useStore } from '@tanstack/react-form'
 
-import { useFieldContext, useFormContext } from '../hooks/demo.form-context'
+import { useFieldContext, useFormContext } from '../hooks/form-context'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,8 +15,12 @@ export function SubscribeButton({ label }: { label: string }) {
   return (
     <form.Subscribe selector={(state) => state.isSubmitting}>
       {(isSubmitting) => (
-        <Button type="submit" disabled={isSubmitting}>
-          {label}
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full h-12 bg-cyan-500 hover:bg-cyan-600 text-white font-medium"
+        >
+          {isSubmitting ? 'Submitting...' : label}
         </Button>
       )}
     </form.Subscribe>

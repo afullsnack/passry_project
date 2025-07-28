@@ -1,6 +1,6 @@
 'use client'
 
-import type React from 'react'
+// import type React from 'react'
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -9,20 +9,21 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Apple, Chrome, Facebook } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { useForm } from '@tanstack/react-form'
+import { z } from 'zod'
 
-interface SignInFormProps {
-  onSwitchToSignUp?: () => void
-}
-
-export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+export function SignInForm() {
   const navigate = useNavigate()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+  const handleSubmit = async ({
+    email,
+    password,
+  }: {
+    email: string
+    password: string
+  }) => {
+    // e.preventDefault()
+    // setIsLoading(true)
 
     try {
       // Better Auth integration would go here
@@ -34,7 +35,7 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
     } catch (error) {
       console.error('Sign in error:', error)
     } finally {
-      setIsLoading(false)
+      // setIsLoading(false)
     }
   }
 
@@ -48,6 +49,23 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
     }
   }
 
+  const form = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: async ({ value }) => {
+      console.log('Values', value)
+      handleSubmit(value)
+    },
+    validators: {
+      onChange: z.object({
+        email: z.string().email(),
+        password: z.string().min(8),
+      }),
+    },
+  })
+
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
@@ -55,30 +73,48 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
         <p className="text-sm text-muted-foreground">Welcome back!</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          form.handleSubmit()
+        }}
+        className="space-y-4"
+      >
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="Enter info"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="h-12"
+          <form.Field
+            name="email"
+            children={(field) => (
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter email address"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                required
+                className="h-12"
+              />
+            )}
           />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="Enter info"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="h-12"
+          <form.Field
+            name="password"
+            children={(field) => (
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter password"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                required
+                className="h-12"
+              />
+            )}
           />
         </div>
 
@@ -91,13 +127,18 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
           </button>
         </div>
 
-        <Button
-          type="submit"
-          className="w-full h-12 bg-cyan-500 hover:bg-cyan-600 text-white font-medium"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Signing in...' : 'Login'}
-        </Button>
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isSubmitting]}
+          children={([canSubmit, isSubmitting]) => (
+            <Button
+              type="submit"
+              className="w-full h-12 bg-cyan-500 hover:bg-cyan-600 disabled:bg-cyan-600/30 text-white font-medium"
+              disabled={!canSubmit}
+            >
+              {isSubmitting ? 'Signing in...' : 'Login'}
+            </Button>
+          )}
+        />
       </form>
 
       <div className="text-center text-sm">
