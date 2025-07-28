@@ -7,7 +7,7 @@ import { z } from "zod";
 expand(config({
   path: path.resolve(
     process.cwd(),
-    process.env.NODE_ENV === "test" ? ".env.test" : ".env",
+    process.env.NODE_ENV === "test" ? ".env.test" : ".env.local",
   ),
 }));
 
@@ -17,6 +17,14 @@ const EnvSchema = z.object({
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]),
   DATABASE_URL: z.string().url(),
   DATABASE_AUTH_TOKEN: z.string().optional(),
+
+  // Better auth
+  BETTER_AUTH_URL: z.string().url(),
+  BETTER_AUTH_SECRET: z.string().min(18).max(128),
+
+  // Plunk mailing service
+  PLUNK_API_URL: z.string().url(),
+  PLUNK_API_KEY: z.string().min(1)
 }).superRefine((input, ctx) => {
   if (input.NODE_ENV === "production" && !input.DATABASE_AUTH_TOKEN) {
     ctx.addIssue({
