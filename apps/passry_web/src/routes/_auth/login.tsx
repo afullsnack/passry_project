@@ -2,6 +2,8 @@ import { SignInForm } from '@/components/blocks/signin-form'
 import { Container, Main, Section } from '@/components/craft'
 import { Link, createFileRoute } from '@tanstack/react-router'
 
+import logoMark from '@/assets/PASSRY_Logo_TextMark.svg'
+
 export const Route = createFileRoute('/_auth/login')({
   component: Login,
 })
@@ -52,7 +54,9 @@ function Login() {
           <div className="w-full max-w-md mx-auto flex flex-col justify-center px-6 py-12">
             {/* Mobile logo */}
             <div className="lg:hidden text-center mb-8">
-              <div className="text-2xl font-bold text-cyan-400">PASSRY</div>
+              <div className="lg:hidden grid justify-center mb-8">
+                <img src={logoMark} className="object-cover w-32" />
+              </div>
             </div>
             <SignInForm />
           </div>

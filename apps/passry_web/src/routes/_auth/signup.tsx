@@ -3,6 +3,8 @@ import { Container, Main, Section } from '@/components/craft'
 import { Button } from '@/components/ui/button'
 import { Link, createFileRoute } from '@tanstack/react-router'
 
+import logoMark from '@/assets/PASSRY_Logo_TextMark.svg'
+
 export const Route = createFileRoute('/_auth/signup')({
   component: Signup,
 })
@@ -21,12 +23,14 @@ function Signup() {
             }}
           >
             {/* Overlay */}
-            <div className="absolute inset-0 bg-slate-900/60 z-[1]" />
+            <div className="absolute inset-0 dark:bg-slate-900/60 z-[1]" />
 
             {/* Logo */}
             <div className="z-20 absolute top-8 left-8">
               <Link to="/">
-                <div className="text-2xl font-bold text-cyan-400">PASSRY</div>
+                <div className="text-2xl font-bold text-cyan-400">
+                  <img src={logoMark} className="object-cover w-24" />
+                </div>
               </Link>
             </div>
 
@@ -52,8 +56,8 @@ function Signup() {
         <Container className="w-full lg:w-1/2 flex">
           <div className="w-full max-w-md mx-auto flex flex-col justify-center px-6 py-12">
             {/* Mobile logo */}
-            <div className="lg:hidden text-center mb-8">
-              <div className="text-2xl font-bold text-cyan-400">PASSRY</div>
+            <div className="lg:hidden grid justify-center mb-8">
+              <img src={logoMark} className="object-cover w-32" />
             </div>
             <SignUpForm onSwitchToSignIn={() => {}} />
           </div>
