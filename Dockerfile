@@ -34,9 +34,11 @@ COPY --from=builder /app/packages/api/package.json ./packages/api/package.json
 
 ARG DATABASE_URL
 ARG DATABASE_AUTH_TOKEN
+ARG NODE_ENV
 
 RUN echo "DATABASE_URL=$DATABASE_URL" >> .env
 RUN echo "DATABASE_AUTH_TOKEN=$DATABASE_AUTH_TOKEN" >> .env
+RUN echo "NODE_ENV=$NODE_ENV" >> .env
 
 RUN npm install -g pnpm
 
