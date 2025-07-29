@@ -297,15 +297,12 @@ const HeroHeader = () => {
                 <Logo />
               </Link>
 
-              <ThemeToggle className="lg:hidden" />
-              {/* <button
-                onClick={() => setMenuState(!menuState)}
-                aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
-                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden"
-              >
-                <Menu className="group-data-[state=active]:rotate-180 group-data-[state=active]:scale-0 group-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
-                <X className="group-data-[state=active]:rotate-0 group-data-[state=active]:scale-100 group-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
-              </button> */}
+              <div className="flex justify-center gap-4">
+                <ThemeToggle className="lg:hidden" />
+                <Button asChild variant="outline" size="sm">
+                  <Link to="/login">Sign In</Link>
+                </Button>
+              </div>
             </div>
 
             <div className="absolute inset-0 m-auto hidden size-fit lg:block">
