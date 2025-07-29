@@ -36,7 +36,8 @@ COPY --from=builder /app/packages/api/drizzle.config.ts ./packages/api/drizzle.c
 
 RUN npm install -g pnpm
 
-RUN pnpm install --prod
+RUN pnpm install
+
 RUN pnpm run db:generate
 RUN pnpm run db:migrate
 
