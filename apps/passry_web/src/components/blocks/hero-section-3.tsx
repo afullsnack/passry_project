@@ -351,7 +351,7 @@ const HeroHeader = () => {
                 </Button> */}
                 <ThemeToggle />
                 <Button asChild variant="outline" size="sm">
-                  <Link to="/signup">Sign Up</Link>
+                  <Link to="/login">Sign In</Link>
                 </Button>
 
                 {/* <Button

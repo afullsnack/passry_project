@@ -1,6 +1,5 @@
 import { SignUpForm } from '@/components/blocks/signup-form'
 import { Container, Main, Section } from '@/components/craft'
-import { Button } from '@/components/ui/button'
 import { Link, createFileRoute } from '@tanstack/react-router'
 
 import logoMark from '@/assets/PASSRY_Logo_TextMark.svg'
@@ -59,7 +58,7 @@ function Signup() {
             <div className="lg:hidden grid justify-center mb-8">
               <img src={logoMark} className="object-cover w-32" />
             </div>
-            <SignUpForm onSwitchToSignIn={() => {}} />
+            <SignUpForm />
           </div>
         </Container>
       </Section>

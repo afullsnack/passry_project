@@ -8,6 +8,7 @@ import { Apple, Chrome, Facebook } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
+import { authClient } from '@/lib/auth-client'
 
 export function SignInForm() {
   const navigate = useNavigate()
@@ -19,16 +20,38 @@ export function SignInForm() {
     email: string
     password: string
   }) => {
-    // e.preventDefault()
-    // setIsLoading(true)
-
     try {
-      // Better Auth integration would go here
-      // Example: await signIn.email({ email, password })
       console.log('Sign in with:', { email, password })
 
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+        rememberMe: true,
+      })
+
+      if (error) {
+        console.log('Error signing in', error)
+        return
+      }
+
+      console.log('Data', data)
+
+      if (!data.user.emailVerified) {
+        try {
+          await authClient.emailOtp.sendVerificationOtp({
+            email,
+            type: 'email-verification',
+          })
+          navigate({ to: '/verify_code', search: { email } })
+        } catch (error: any) {
+          console.error('Error sending verification OTP', error)
+          return
+        }
+      } else {
+        // TODO: navigate to dashboard
+        navigate({ to: '/dashboard' })
+      }
     } catch (error) {
       console.error('Sign in error:', error)
     } finally {
