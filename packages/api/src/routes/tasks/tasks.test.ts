@@ -73,7 +73,6 @@ describe("tasks routes", () => {
   it("get /tasks/{id} validates the id param", async () => {
     const response = await client.tasks[":id"].$get({
       param: {
-        // @ts-expect-error
         id: "wat",
       },
     });
@@ -132,7 +131,7 @@ describe("tasks routes", () => {
   it("patch /tasks/{id} validates the id param", async () => {
     const response = await client.tasks[":id"].$patch({
       param: {
-        // @ts-expect-error
+
         id: "wat",
       },
       json: {},
@@ -179,7 +178,7 @@ describe("tasks routes", () => {
   it("delete /tasks/{id} validates the id when deleting", async () => {
     const response = await client.tasks[":id"].$delete({
       param: {
-        // @ts-expect-error
+
         id: "wat",
       },
     });

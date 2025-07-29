@@ -7,7 +7,7 @@ import { z } from "zod";
 expand(config({
   path: path.resolve(
     process.cwd(),
-    process.env.NODE_ENV === "test" ? ".env.test" : ".env.local",
+    process.env.NODE_ENV === "test" ? ".env.test" : process.env.NODE_ENV === "development"? ".env.local" : ".env",
   ),
 }));
 
@@ -26,7 +26,7 @@ const EnvSchema = z.object({
   PLUNK_API_URL: z.string().url(),
   PLUNK_API_KEY: z.string().min(1),
 }).superRefine((input, ctx) => {
-  if (input.NODE_ENV === "production" && !input.DATABASE_AUTH_TOKEN) {
+  if (input.NODE_ENV === "production" || input.NODE_ENV === "staging" && !input.DATABASE_AUTH_TOKEN) {
     ctx.addIssue({
       code: z.ZodIssueCode.invalid_type,
       expected: "string",
