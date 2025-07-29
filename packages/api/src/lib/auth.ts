@@ -66,5 +66,5 @@ export const auth = betterAuth({
       storeOTP: "hashed",
     }),
   ],
-  trustedOrigins: ["*", "http://localhost:3000"],
+  trustedOrigins: ["*", "http://localhost:3000", "https://passry.com", "https://www.passry.com"],
 } satisfies BetterAuthOptions);

@@ -24,7 +24,7 @@ export default function createApp() {
     .use(serveEmojiFavicon("📝"))
     .use(pinoLogger())
     .use(cors({
-      origin: ["*", "http://localhost:3000"],
+      origin: ["*", "http://localhost:3000", "https://passry.com", "https://www.passry.com"],
       credentials: true,
     }));
 
