@@ -64,7 +64,7 @@ export function SignUpForm() {
       }
 
       console.log('data', data)
-      navigate({ to: '/verify_code' })
+      navigate({ to: '/verify_code', search: { email: value.email } })
     },
   })
 
