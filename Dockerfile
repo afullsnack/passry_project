@@ -5,7 +5,6 @@ FROM node:20-alpine AS builder
 # Set the working directory inside the container
 WORKDIR /app
 
-RUN echo $(pwd)
 # Copy package.json and package-lock.json (if present) to the working directory
 COPY pnpm-lock.yaml package*.json ./
 
@@ -13,6 +12,7 @@ COPY pnpm-lock.yaml package*.json ./
 RUN npm install -g pnpm
 
 # Copy the entire application code to the working directory
+COPY ./.env ./.env
 COPY . .
 
 # Install application dependencies
@@ -32,6 +32,7 @@ COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/packages/api/dist ./packages/api/dist
 COPY --from=builder /app/packages/api/package.json ./packages/api/package.json
+COPY --from=builder /app/.env ./.env
 
 RUN npm install -g pnpm
 
