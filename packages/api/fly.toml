@@ -7,7 +7,7 @@ app = 'passry-api'
 primary_region = 'lhr'
 
 [deploy]
-  release_command = "/app/packages/api/script.sh"
+  release_command = "./app/packages/api/script.sh"
 
 [http_service]
   internal_port = 9999
