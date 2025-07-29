@@ -14,17 +14,17 @@ expand(config({
 const EnvSchema = z.object({
   NODE_ENV: z.string().default("development"),
   PORT: z.coerce.number().default(9999),
-  LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]),
+  LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("debug"),
   DATABASE_URL: z.string().url(),
   DATABASE_AUTH_TOKEN: z.string().optional(),
 
   // Better auth
-  BETTER_AUTH_URL: z.string().url(),
-  BETTER_AUTH_SECRET: z.string().min(18).max(128),
+  BETTER_AUTH_URL: z.string().url().optional(),
+  BETTER_AUTH_SECRET: z.string().min(18).max(128).optional(),
 
   // Plunk mailing service
-  PLUNK_API_URL: z.string().url(),
-  PLUNK_API_KEY: z.string().min(1),
+  PLUNK_API_URL: z.string().url().optional(),
+  PLUNK_API_KEY: z.string().min(1).optional(),
 }).superRefine((input, ctx) => {
   if (input.NODE_ENV === "production" || input.NODE_ENV === "staging" && !input.DATABASE_AUTH_TOKEN) {
     ctx.addIssue({
