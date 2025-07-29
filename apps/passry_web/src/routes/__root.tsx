@@ -67,7 +67,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       <TanStackQueryLayout />
     </RootDocument>
   ),
-  notFoundComponent: undefined,
+  notFoundComponent: () => <div>Not Found In Root</div>,
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {

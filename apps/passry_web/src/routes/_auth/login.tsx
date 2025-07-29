@@ -1,14 +1,26 @@
 import { SignInForm } from '@/components/blocks/signin-form'
 import { Container, Main, Section } from '@/components/craft'
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import logoMark from '@/assets/PASSRY_Logo_TextMark.svg'
+import { useSession } from '@/hooks/session'
 
 export const Route = createFileRoute('/_auth/login')({
   component: Login,
 })
 
 function Login() {
+  const navigate = useNavigate()
+  const { data: session, error } = useSession()
+
+  if (session) {
+    navigate({ to: '/dashboard' })
+  }
+
+  if (error) {
+    console.error('Error: ', error)
+  }
+
   return (
     <Main>
       <Section className="!w-full !mx-0 !p-0 min-h-screen flex">
