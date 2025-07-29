@@ -12,7 +12,6 @@ COPY pnpm-lock.yaml package*.json ./
 RUN npm install -g pnpm
 
 # Copy the entire application code to the working directory
-COPY .env ./
 COPY . .
 
 # Install application dependencies
@@ -32,7 +31,12 @@ COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/packages/api/dist ./packages/api/dist
 COPY --from=builder /app/packages/api/package.json ./packages/api/package.json
-COPY --from=builder /app/.env ./.env
+
+ARG DATABASE_URL
+ARG DATABASE_AUTH_TOKEN
+
+RUN echo "DATABASE_URL=$DATABASE_URL" >> .env
+RUN echo "DATABASE_AUTH_TOKEN=$DATABASE_AUTH_TOKEN" >> .env
 
 RUN npm install -g pnpm
 
