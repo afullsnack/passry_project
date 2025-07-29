@@ -6,7 +6,8 @@
 app = 'passry-api'
 primary_region = 'lhr'
 
-[build]
+[deploy]
+  release_command = "pnpm run db:generate && pnpm run db:migrate"
 
 [http_service]
   internal_port = 9999
