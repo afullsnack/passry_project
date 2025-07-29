@@ -10,6 +10,7 @@
     "start:api": "pnpm run --filter @passry/api start",
     "db:generate": "pnpm run --filter @passry/api db:generate",
     "db:migrate": "pnpm run --filter @passry/api db:migrate",
+    "db": "pnpm run db:generate && pnpm run db:migrate",
     "deploy:api": "flyctl deploy --config ./packages/api/fly.toml --dockerfile ./Dockerfile"
   },
   "dependencies": {
