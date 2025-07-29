@@ -36,6 +36,8 @@ COPY --from=builder /app/packages/api/package.json ./packages/api/package.json
 RUN npm install -g pnpm
 
 RUN pnpm install --prod
+RUN pnpm run db:generate
+RUN pnpm run db:migrate
 
 # Expose the port your Hono.js application listens on
 EXPOSE 9999
