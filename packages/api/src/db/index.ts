@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/libsql";
 
 import env from "@/env";
 
+import * as appSchema from "./schema/app-schema";
 import * as authSchema from "./schema/auth-schema";
 import * as globalSchema from "./schema/global-schema";
 
@@ -12,7 +13,7 @@ const client = createClient({
 });
 
 const db = drizzle(client, {
-  schema: { ...globalSchema, ...authSchema }, // add schemas as app grows
+  schema: { ...globalSchema, ...authSchema, ...appSchema }, // add schemas as app grows
 });
 
 export default db;

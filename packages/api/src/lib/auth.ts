@@ -5,6 +5,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { emailOTP, phoneNumber } from "better-auth/plugins";
 
 import db from "@/db";
+import * as appSchema from "@/db/schema/app-schema";
 import * as authSchema from "@/db/schema/auth-schema";
 import * as globalSchema from "@/db/schema/global-schema";
 import env from "@/env";
@@ -17,7 +18,7 @@ export const auth = betterAuth({
 
   database: drizzleAdapter(db, {
     provider: "sqlite",
-    schema: { ...authSchema, ...globalSchema }, // add schemas as app grows
+    schema: { ...authSchema, ...globalSchema, ...appSchema }, // add schemas as app grows
   }),
 
   // Email password
