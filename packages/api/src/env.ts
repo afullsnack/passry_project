@@ -25,6 +25,16 @@ const EnvSchema = z.object({
   // Plunk mailing service
   PLUNK_API_URL: z.string().url().optional(),
   PLUNK_API_KEY: z.string().min(1).optional(),
+
+  // Bucket ENv
+  AWS_ACCESS_KEY_ID: z.string().min(1),
+  AWS_ENDPOINT_URL_S3: z.url(),
+  AWS_REGION: z.string(),
+  AWS_SECRET_ACCESS_KEY: z.string(),
+  BUCKET_NAME: z.string(),
+
+  // Redis
+  REDIS_URL: z.url()
 }).superRefine((input, ctx) => {
   if ((input.NODE_ENV === "production" || input.NODE_ENV === "staging") && !input.DATABASE_AUTH_TOKEN) {
     ctx.addIssue({

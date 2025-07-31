@@ -10,16 +10,18 @@ export const organization = sqliteTable("organization", {
   ownerId: text("owner_id")
     .notNull()
     .references(() => user.id, { onDelete: "set null" }),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  followers: integer("followers"),
+  likes: integer("likes"),
+  coverImageUrl: text("cover_image"),
+  coverImageKey: text("cover_image_key"),
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
     () => /* @__PURE__ */ new Date(),
   ),
   updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(
     () => /* @__PURE__ */ new Date(),
   ),
-  name: text("name").notNull(),
-  description: text("description").notNull(),
-  followers: integer("followers"),
-  likes: integer("likes"),
 });
 
 export const selectOrgSchema = createSelectSchema(organization);
@@ -47,7 +49,8 @@ export const event = sqliteTable("event", {
   dateTime: integer("date_time", { mode: "timestamp" }).$defaultFn(() => new Date()),
   venueName: text("venue_name").notNull(),
   address: text("full_address").notNull(),
-  coverUrl: text("cover_url").notNull(),
+  coverKey: text("cover_key"),
+  coverUrl: text("cover_url"),
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
     () => /* @__PURE__ */ new Date(),
   ),
@@ -61,6 +64,7 @@ export const insertEventSchema = createInsertSchema(event, {
   title: schema => schema.title.min(6),
 }).required({
   title: true,
+  orgId: true
 }).omit({
   id: true,
   createdAt: true,
@@ -76,8 +80,10 @@ export const ticket = sqliteTable("ticket", {
   saleStart: integer("sale_start", { mode: "timestamp" }),
   saleEnd: integer("sale_end", { mode: "timestamp" }),
   isFree: integer("is_free", { mode: "boolean" }).default(false),
+  imageKey: text("image_key"),
   imageUrl: text("image_url"),
   eventId: text("event_id").references(() => event.id, { onDelete: "cascade" }),
+  orgId: text("org_id").references(() => organization.id, {onDelete: "cascade"}),
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
     () => /* @__PURE__ */ new Date(),
   ),
@@ -94,6 +100,7 @@ export const insertTicketSchema = createInsertSchema(ticket, {
     price: true,
     quantity: true,
     eventId: true,
+    orgId: true
   })
   .omit({
     id: true,

@@ -125,8 +125,8 @@ export class TigrisClient {
         ContentDisposition: options.contentDisposition,
         ContentEncoding: options.contentEncoding,
         Expires: options.expires,
-        ServerSideEncryption: options.serverSideEncryption,
-        StorageClass: options.storageClass,
+        // ServerSideEncryption: options.serverSideEncryption,
+        // StorageClass: options.storageClass,
       };
 
       // For large files, use multipart upload
@@ -139,6 +139,7 @@ export class TigrisClient {
         });
 
         const result = await upload.done();
+        console.log('Upload result', result);
         return result.ETag || '';
       } else {
         const command = new PutObjectCommand(uploadParams);
@@ -284,7 +285,7 @@ export class TigrisClient {
     try {
       const params: CreateBucketCommandInput = {
         Bucket: bucketName,
-        CreateBucketConfiguration: region ? { LocationConstraint: region } : undefined,
+        // CreateBucketConfiguration: region ? { LocationConstraint: region } : undefined,
       };
 
       const command = new CreateBucketCommand(params);
@@ -380,7 +381,7 @@ export class TigrisClient {
       }
 
       const signedUrl = await getSignedUrl(this.s3Client, command, {
-        expiresIn: options.expiresIn || 3600, // 1 hour default
+        expiresIn: options.expiresIn, // expiresIn udefined for indefinite
       });
 
       return signedUrl;
@@ -550,16 +551,16 @@ export class TigrisService {
   /**
    * Example: Create a temporary download link
    */
-  async createTemporaryDownloadLink(
+  async createDownloadLink(
     bucket: string,
     key: string,
-    expiresInMinutes: number = 60
+    expiresInMinutes?: number
   ): Promise<string> {
     return await this.client.generatePresignedUrl({
       bucket,
       key,
       operation: 'GET',
-      expiresIn: expiresInMinutes * 60, // Convert minutes to seconds
+      expiresIn: expiresInMinutes? expiresInMinutes * 60 : undefined, // Convert minutes to seconds
     });
   }
 }
