@@ -12,7 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthedRouteRouteImport } from './routes/_authed/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedExploreRouteImport } from './routes/_authed/explore'
-import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
+import { Route as AuthedAnalyticsRouteImport } from './routes/_authed/analytics'
 import { Route as AuthVerify_codeRouteImport } from './routes/_auth/verify_code'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
@@ -31,9 +31,9 @@ const AuthedExploreRoute = AuthedExploreRouteImport.update({
   path: '/explore',
   getParentRoute: () => AuthedRouteRoute,
 } as any)
-const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AuthedAnalyticsRoute = AuthedAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => AuthedRouteRoute,
 } as any)
 const AuthVerify_codeRoute = AuthVerify_codeRouteImport.update({
@@ -57,7 +57,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/verify_code': typeof AuthVerify_codeRoute
-  '/dashboard': typeof AuthedDashboardRoute
+  '/analytics': typeof AuthedAnalyticsRoute
   '/explore': typeof AuthedExploreRoute
 }
 export interface FileRoutesByTo {
@@ -65,7 +65,7 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
   '/verify_code': typeof AuthVerify_codeRoute
-  '/dashboard': typeof AuthedDashboardRoute
+  '/analytics': typeof AuthedAnalyticsRoute
   '/explore': typeof AuthedExploreRoute
 }
 export interface FileRoutesById {
@@ -75,7 +75,7 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_auth/verify_code': typeof AuthVerify_codeRoute
-  '/_authed/dashboard': typeof AuthedDashboardRoute
+  '/_authed/analytics': typeof AuthedAnalyticsRoute
   '/_authed/explore': typeof AuthedExploreRoute
 }
 export interface FileRouteTypes {
@@ -85,10 +85,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/verify_code'
-    | '/dashboard'
+    | '/analytics'
     | '/explore'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/signup' | '/verify_code' | '/dashboard' | '/explore'
+  to: '/' | '/login' | '/signup' | '/verify_code' | '/analytics' | '/explore'
   id:
     | '__root__'
     | '/'
@@ -96,7 +96,7 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/signup'
     | '/_auth/verify_code'
-    | '/_authed/dashboard'
+    | '/_authed/analytics'
     | '/_authed/explore'
   fileRoutesById: FileRoutesById
 }
@@ -131,11 +131,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedExploreRouteImport
       parentRoute: typeof AuthedRouteRoute
     }
-    '/_authed/dashboard': {
-      id: '/_authed/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthedDashboardRouteImport
+    '/_authed/analytics': {
+      id: '/_authed/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthedAnalyticsRouteImport
       parentRoute: typeof AuthedRouteRoute
     }
     '/_auth/verify_code': {
@@ -163,12 +163,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthedRouteRouteChildren {
-  AuthedDashboardRoute: typeof AuthedDashboardRoute
+  AuthedAnalyticsRoute: typeof AuthedAnalyticsRoute
   AuthedExploreRoute: typeof AuthedExploreRoute
 }
 
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
-  AuthedDashboardRoute: AuthedDashboardRoute,
+  AuthedAnalyticsRoute: AuthedAnalyticsRoute,
   AuthedExploreRoute: AuthedExploreRoute,
 }
 

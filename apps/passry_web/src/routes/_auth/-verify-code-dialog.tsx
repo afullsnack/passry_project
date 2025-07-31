@@ -23,7 +23,7 @@ export default function VerifyOTPDialog({ open, name }: IProps) {
         </DialogHeader>
         <DialogFooter>
           <Button asChild className="w-full" variant="default" size="lg">
-            <Link to="/dashboard">Go to Dashboard</Link>
+            <Link to="/explore">Go to Dashboard</Link>
           </Button>
         </DialogFooter>
       </DialogContent>

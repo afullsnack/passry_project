@@ -1,11 +1,11 @@
-import { useSession } from '@/hooks/session'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useSession } from '@/hooks/session'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { DataTable } from '@/components/data-table'
 import { SectionCards } from '@/components/section-cards'
 import data from '@/app/dashboard/data.json'
 
-export const Route = createFileRoute('/_authed/dashboard')({
+export const Route = createFileRoute('/_authed/analytics')({
   component: RouteComponent,
   errorComponent: ({ error }) => <div>Error: {error.message}</div>,
   notFoundComponent: () => <div>Not Found</div>,

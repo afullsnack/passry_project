@@ -14,7 +14,7 @@ function Login() {
   const { data: session, error } = useSession()
 
   if (session) {
-    navigate({ to: '/dashboard' })
+    navigate({ to: '/explore' })
   }
 
   if (error) {

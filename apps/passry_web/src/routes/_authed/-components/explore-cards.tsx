@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Heart } from 'lucide-react'
+import { Heart, Ticket } from 'lucide-react'
 
 interface IProps {
   event: {
@@ -35,24 +35,26 @@ export default function ExploreCards({ event }: IProps) {
             }}
           >
             <Heart
-              className={`h-4 w-4 ${true ? 'fill-red-500 text-red-500' : 'text-white'}`}
+              className={`h-4 w-4 ${false ? 'fill-red-500 text-red-500' : 'text-white'}`}
             />
           </Button>
         </div>
       </div>
       <CardContent className="p-4">
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1">
+        <h3 className="font-semibold dark:text-gray-300 mb-2 line-clamp-1">
           {event.title}
         </h3>
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">{event.date}</span>
+          <span className="dark:text-gray-400">{event.date}</span>
           <div className="flex items-center gap-1">
             {event.price === 'Free' ? (
               <Badge variant="secondary" className="text-green-600 bg-green-50">
                 Free
               </Badge>
             ) : (
-              <span className="font-semibold text-gray-900">{event.price}</span>
+              <span className="font-semibold text-gray-900 dark:text-gray-400 flex items-center justify-center gap-2">
+                <Ticket className="size-4 -rotate-45" /> #{event.price}
+              </span>
             )}
           </div>
         </div>
