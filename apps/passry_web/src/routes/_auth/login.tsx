@@ -19,6 +19,7 @@ function Login() {
 
   if (error) {
     console.error('Error: ', error)
+    navigate({ to: '/login' })
   }
 
   return (

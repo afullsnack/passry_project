@@ -10,7 +10,7 @@ import {
 
 import TanStackQueryLayout from '../integrations/tanstack-query/layout.tsx'
 
-import ogLogoMark from '@/assets/PASSRY_LogoMark.svg'
+import ogLogo from '@/assets/PASSRY_Logo.png?url'
 
 import appCss from '../styles.css?url'
 
@@ -40,7 +40,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         title: 'Passry - One app, All access',
         description:
           'Passry is an all inclusive app for event organizers, and attendees.',
-        image: `https://passry.com${ogLogoMark}`,
+        image: `https://passry.com/${ogLogo}`,
         keywords: 'events,organizers,users,lu.ma,event website,passry',
       }),
     ],

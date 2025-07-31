@@ -1,5 +1,5 @@
 import { useSession } from '@/hooks/session'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { DataTable } from '@/components/data-table'
 import { SectionCards } from '@/components/section-cards'
@@ -13,10 +13,13 @@ export const Route = createFileRoute('/_authed/dashboard')({
 
 function RouteComponent() {
   const { data: session, error, isPending } = useSession()
+  const navigate = useNavigate()
 
   console.log('Session', session)
 
-  if (error) return <div>Error: {error.message}</div>
+  if (error || !session) {
+    navigate({ to: '/login' })
+  }
 
   if (isPending) return <div>Loading...</div>
 
