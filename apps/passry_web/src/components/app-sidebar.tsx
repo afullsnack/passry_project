@@ -8,11 +8,11 @@ import {
   IconFileDescription,
   // IconFileWord,
   IconFolder,
-  IconHelp,
+  // IconHelp,
   // IconInnerShadowTop,
   IconListDetails,
   // IconReport,
-  IconSearch,
+  // IconSearch,
   IconSettings,
   IconUsers,
 } from '@tabler/icons-react'
@@ -156,7 +156,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate()
 
   if (error || !session) {
-    console.log('Error in app sidebar', error)
+    console.log('Error in app sidebar', error, session)
     navigate({ to: '/login' })
   }
 
@@ -169,7 +169,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!px-3.5 data-[slot=sidebar-menu-button]:!py-20.5"
             >
-              <Link to="/dashboard">
+              <Link to="/explore">
                 <img src={LogoTextMark} className="object-cover h-8 w-28" />
                 {/* <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">Acme Inc.</span> */}

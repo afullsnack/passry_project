@@ -13,6 +13,8 @@ function Login() {
   const navigate = useNavigate()
   const { data: session, error } = useSession()
 
+  console.log("Session in login", session)
+  console.log("error in login", error)
   if (session) {
     navigate({ to: '/explore' })
   }

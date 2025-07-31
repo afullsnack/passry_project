@@ -28,7 +28,8 @@ router
                   type: 'string', // OpenAPI requires 'string' for binary data
                   format: 'binary',
                 }),
-                type: z.string()
+                type: z.string(),
+                identifier: z.string()
               })
             }
           }
@@ -38,7 +39,8 @@ router
         [HttpStatusCodes.OK]: jsonContent(
           z.object({
             message: z.string(),
-            link: z.string()
+            link: z.string(),
+            key: z.string()
           }),
           "Successful upload response"
         ),
@@ -53,6 +55,7 @@ router
       const body = await c.req.parseBody();
       const file = body['file'];
       const type = body['type'];
+      const identifier = body['identifier'];
 
       const tigrisService = new TigrisService({
         accessKeyId: env.AWS_ACCESS_KEY_ID,
@@ -63,7 +66,7 @@ router
 
 
       if (file instanceof File) {
-        const keyToStore = `${type}/${file.name}`;
+        const keyToStore = `${type}/${identifier}`;
         const keyToGet = `images/${keyToStore}`;
 
         const result = await tigrisService.uploadImageFile(
@@ -79,7 +82,8 @@ router
         console.log("Signed link", link)
         return c.json({
           message: "Upload successful",
-          link
+          link,
+          key: keyToGet
         }, HttpStatusCodes.OK)
       }
 

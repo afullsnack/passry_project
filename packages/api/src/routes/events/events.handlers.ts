@@ -31,6 +31,7 @@ export const list: AppRouteHandler<ListEvents> = async (c) => {
     return c.json(events, HttpStatusCodes.OK);
   }
   catch (error: any) {
+    console.log("error geting events", error);
     return c.json({ ...error }, HttpStatusCodes.INTERNAL_SERVER_ERROR);
   }
 };

@@ -17,23 +17,35 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { IconPlus } from '@tabler/icons-react'
-import { createFileRoute, MatchRoute } from '@tanstack/react-router'
+// import { IconPlus } from '@tabler/icons-react'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { Filter } from 'lucide-react'
 import ExploreCards from './-components/explore-cards'
+import { client } from '@/lib/api-client'
+import { authClient } from '@/lib/auth-client'
 
 export const Route = createFileRoute('/_authed/explore')({
   component: RouteComponent,
   loader: async () => {
-    const events = Array.from({ length: 8 }, () => ({
-      id: Math.random().toString(16),
-      date: '2-01-2025',
-      title: 'Event one',
-      price: '100',
-      image: 'https://via.placeholder.com/150',
-    }))
+    const { data: session, error } = await authClient.getSession()
+    if (error || !session) {
+      throw redirect({ to: '/login' })
+    }
+    const response = await client.event.$get()
+    if (response.ok) {
+      const events = await response.json()
+      console.log('Events server side', events)
+      return { events }
+    }
 
-    return { events }
+    throw new Error('Could not get events')
+    // const events = Array.from({ length: 8 }, () => ({
+    //   id: Math.random().toString(16),
+    //   date: '2-01-2025',
+    //   title: 'Event one',
+    //   price: '100',
+    //   image: 'https://via.placeholder.com/150',
+    // }))
   },
 })
 
@@ -76,13 +88,13 @@ function RouteComponent() {
             <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
               <TabsTrigger value="events">Events</TabsTrigger>
               <TabsTrigger value="organizers">
-                Organizers <Badge variant="secondary">3</Badge>
+                Organizers <Badge variant="secondary">0</Badge>
               </TabsTrigger>
               <TabsTrigger value="liked">
-                Liked <Badge variant="secondary">2</Badge>
+                Liked <Badge variant="secondary">0</Badge>
               </TabsTrigger>
               <TabsTrigger value="my-tickets">
-                My Tickets <Badge variant="secondary">2</Badge>
+                My Tickets <Badge variant="secondary">0</Badge>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -91,18 +103,22 @@ function RouteComponent() {
             className="flex flex-col gap-4 overflow-auto px-4 lg:px-6"
           >
             <div className="overflow-hidden rounded-lg grid gap-4.5 border p-3 lg:grid-cols-4 md:grid-cols-3 grid-cols-1">
-              {events.map((_, index) => (
-                <ExploreCards
-                  key={index}
-                  event={{
-                    id: index.toString(),
-                    date: '2-01-2025',
-                    title: 'Event one',
-                    price: '100',
-                    image: 'https://via.placeholder.com/150',
-                  }}
-                />
-              ))}
+              {!!events.length ? (
+                events.map((event) => (
+                  <ExploreCards
+                    key={event.id}
+                    event={{
+                      id: event.id,
+                      date: event.dateTime!,
+                      title: event.title,
+                      price: '100',
+                      image: event.coverUrl,
+                    }}
+                  />
+                ))
+              ) : (
+                <div>No events found</div>
+              )}
             </div>
           </TabsContent>
           <TabsContent

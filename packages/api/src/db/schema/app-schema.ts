@@ -46,10 +46,10 @@ export const event = sqliteTable("event", {
   description: text("description").notNull(),
   country: text("country").notNull(),
   city: text("city").notNull(),
-  dateTime: integer("date_time", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  dateTime: integer("date_time", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
   venueName: text("venue_name").notNull(),
   address: text("full_address").notNull(),
-  coverKey: text("cover_key"),
+  coverUrlKey: text("cover_url_key"),
   coverUrl: text("cover_url"),
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
     () => /* @__PURE__ */ new Date(),
@@ -114,11 +114,9 @@ export const organizationRelations = relations(organization, ({ one, many }) => 
     fields: [organization.ownerId],
     references: [user.id],
   }),
-  events: many(event),
 }));
 
 export const eventRelations = relations(event, ({ one, many }) => ({
-  tickets: many(ticket),
   organization: one(organization, {
     fields: [event.orgId],
     references: [organization.id],

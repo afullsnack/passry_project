@@ -4,8 +4,8 @@ import { z } from 'zod'
 export const env = createEnv({
   server: {
     SERVER_URL: z.string().url().optional(),
-    PLUNK_API_KEY: z.string().min(1),
-    PLUNK_API_URL: z.string().url(),
+    // PLUNK_API_KEY: z.string().min(1),
+    // PLUNK_API_URL: z.string().url(),
   },
 
   /**
