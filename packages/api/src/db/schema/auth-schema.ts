@@ -7,7 +7,7 @@ export const user = sqliteTable("user", {
   emailVerified: integer("email_verified", { mode: "boolean" })
     .$defaultFn(() => false)
     .notNull(),
-  accountType: text("account_type"),
+  accountType: text("account_type", { enum: ["attendee", "organizer"] }).default("attendee"),
   image: text("image"),
   phoneNumber: text("phone_number").unique(),
   phoneNumberVerified: integer("phone_number_verified", { mode: "boolean" }),
