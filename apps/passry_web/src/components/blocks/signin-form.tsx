@@ -50,7 +50,7 @@ export function SignInForm() {
         }
       } else {
         // TODO: navigate to dashboard
-        navigate({ to: '/dashboard' })
+        navigate({ to: '/explore' })
       }
     } catch (error) {
       console.error('Sign in error:', error)

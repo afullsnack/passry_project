@@ -42,28 +42,28 @@ const data = {
   },
   navMain: [
     {
-      title: 'Dashboard',
-      url: '/dashboard',
-      icon: IconDashboard,
-    },
-    {
       title: 'Explore',
       url: '/explore',
       icon: IconListDetails,
     },
     {
+      title: 'Analytics',
+      url: '/analytics',
+      icon: IconDashboard,
+    },
+    {
       title: 'Events',
-      url: '#',
+      url: '/events',
       icon: IconChartBar,
     },
     {
       title: 'Stats',
-      url: '#',
+      url: '/stats',
       icon: IconFolder,
     },
     {
       title: 'Team',
-      url: '#',
+      url: '/team',
       icon: IconUsers,
     },
   ],
@@ -118,19 +118,19 @@ const data = {
   navSecondary: [
     {
       title: 'Settings',
-      url: '#',
+      url: '/settings',
       icon: IconSettings,
     },
-    {
-      title: 'Get Help',
-      url: '#',
-      icon: IconHelp,
-    },
-    {
-      title: 'Search',
-      url: '#',
-      icon: IconSearch,
-    },
+    // {
+    //   title: 'Get Help',
+    //   url: '#',
+    //   icon: IconHelp,
+    // },
+    // {
+    //   title: 'Search',
+    //   url: '#',
+    //   icon: IconSearch,
+    // },
   ],
   // documents: [
   //   {
