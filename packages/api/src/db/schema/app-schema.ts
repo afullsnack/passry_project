@@ -1,11 +1,12 @@
 import { relations } from "drizzle-orm";
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 import { user } from "./auth-schema";
 
 // Organization
 export const organization = sqliteTable("organization", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   ownerId: text("owner_id")
     .notNull()
     .references(() => user.id, { onDelete: "set null" }),
@@ -21,8 +22,20 @@ export const organization = sqliteTable("organization", {
   likes: integer("likes"),
 });
 
+export const selectOrgSchema = createSelectSchema(organization);
+export const insertOrgSchema = createInsertSchema(organization, {
+  name: schema => schema.name.min(6),
+}).required({
+  ownerId: true,
+}).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export const patchOrgSchema = insertOrgSchema.partial();
+
 export const event = sqliteTable("event", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   orgId: text("org_id")
     .notNull()
     .references(() => organization.id, { onDelete: "cascade" }),
@@ -43,8 +56,20 @@ export const event = sqliteTable("event", {
   ),
 });
 
+export const selectEventSchema = createSelectSchema(event);
+export const insertEventSchema = createInsertSchema(event, {
+  title: schema => schema.title.min(6),
+}).required({
+  title: true,
+}).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export const patchEventSchema = insertEventSchema.partial();
+
 export const ticket = sqliteTable("ticket", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   price: real("price").notNull(),
   quantity: integer("quantity").notNull(),
@@ -60,6 +85,22 @@ export const ticket = sqliteTable("ticket", {
     () => /* @__PURE__ */ new Date(),
   ),
 });
+
+export const selectTicketSchema = createSelectSchema(ticket);
+export const insertTicketSchema = createInsertSchema(ticket, {
+  name: schema => schema.name.min(6),
+})
+  .required({
+    price: true,
+    quantity: true,
+    eventId: true,
+  })
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  });
+export const patchTicketSchema = insertEventSchema.partial();
 
 export const organizationRelations = relations(organization, ({ one, many }) => ({
   owner: one(user, {

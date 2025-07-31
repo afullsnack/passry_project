@@ -1,122 +1,122 @@
 import { createRoute, z } from "@hono/zod-openapi";
 import * as HttpStatusCodes from "stoker/http-status-codes";
 import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers";
-import { createErrorSchema, IdParamsSchema } from "stoker/openapi/schemas";
+import { createErrorSchema, IdUUIDParamsSchema } from "stoker/openapi/schemas";
 
-import { insertTasksSchema, patchTasksSchema, selectTasksSchema } from "@/db/schema/global-schema";
+import { insertOrgSchema, patchOrgSchema, selectOrgSchema } from "@/db/schema/app-schema";
 import { notFoundSchema } from "@/lib/constants";
 
-const tags = ["Tasks"];
+const tags = ["Organization"];
 
 export const list = createRoute({
-  path: "/tasks",
+  path: "/orgs",
   method: "get",
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      z.array(selectTasksSchema),
-      "The list of tasks",
+      z.array(selectOrgSchema),
+      "The list of orgs",
     ),
   },
 });
 
 export const create = createRoute({
-  path: "/tasks",
+  path: "/orgs",
   method: "post",
   request: {
     body: jsonContentRequired(
-      insertTasksSchema,
-      "The task to create",
+      insertOrgSchema,
+      "The organization to create",
     ),
   },
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      selectTasksSchema,
-      "The created task",
+      selectOrgSchema,
+      "The created organization",
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(insertTasksSchema),
+      createErrorSchema(insertOrgSchema),
       "The validation error(s)",
     ),
   },
 });
 
 export const getOne = createRoute({
-  path: "/tasks/{id}",
+  path: "/orgs/{id}",
   method: "get",
   request: {
-    params: IdParamsSchema,
+    params: IdUUIDParamsSchema,
   },
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      selectTasksSchema,
-      "The requested task",
+      selectOrgSchema,
+      "The requested organization",
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       notFoundSchema,
-      "Task not found",
+      "organization not found",
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(IdParamsSchema),
+      createErrorSchema(IdUUIDParamsSchema),
       "Invalid id error",
     ),
   },
 });
 
 export const patch = createRoute({
-  path: "/tasks/{id}",
+  path: "/orgs/{id}",
   method: "patch",
   request: {
-    params: IdParamsSchema,
+    params: IdUUIDParamsSchema,
     body: jsonContentRequired(
-      patchTasksSchema,
-      "The task updates",
+      patchOrgSchema,
+      "The organization updates",
     ),
   },
   tags,
   responses: {
     [HttpStatusCodes.OK]: jsonContent(
-      selectTasksSchema,
-      "The updated task",
+      selectOrgSchema,
+      "The updated organization",
     ),
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       notFoundSchema,
-      "Task not found",
+      "organization not found",
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(patchTasksSchema)
-        .or(createErrorSchema(IdParamsSchema)),
+      createErrorSchema(patchOrgSchema)
+        .or(createErrorSchema(IdUUIDParamsSchema)),
       "The validation error(s)",
     ),
   },
 });
 
 export const remove = createRoute({
-  path: "/tasks/{id}",
+  path: "/orgs/{id}",
   method: "delete",
   request: {
-    params: IdParamsSchema,
+    params: IdUUIDParamsSchema,
   },
   tags,
   responses: {
     [HttpStatusCodes.NO_CONTENT]: {
-      description: "Task deleted",
+      description: "organization deleted",
     },
     [HttpStatusCodes.NOT_FOUND]: jsonContent(
       notFoundSchema,
-      "Task not found",
+      "organization not found",
     ),
     [HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-      createErrorSchema(IdParamsSchema),
+      createErrorSchema(IdUUIDParamsSchema),
       "Invalid id error",
     ),
   },
 });
 
-export type ListRoute = typeof list;
-export type CreateRoute = typeof create;
-export type GetOneRoute = typeof getOne;
-export type PatchRoute = typeof patch;
-export type RemoveRoute = typeof remove;
+export type ListOrg = typeof list;
+export type CreateOrg = typeof create;
+export type GetOneOrg = typeof getOne;
+export type PatchOrg = typeof patch;
+export type RemoveOrg = typeof remove;

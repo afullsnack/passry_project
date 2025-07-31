@@ -10,7 +10,7 @@ import env from "@/env";
 import { ZOD_ERROR_CODES, ZOD_ERROR_MESSAGES } from "@/lib/constants";
 import { createTestApp } from "@/lib/create-app";
 
-import router from "./tasks.index";
+import router from "./organization.index";
 
 if (env.NODE_ENV !== "test") {
   throw new Error("NODE_ENV must be 'test'");
@@ -18,7 +18,7 @@ if (env.NODE_ENV !== "test") {
 
 const client = testClient(createTestApp(router));
 
-describe("tasks routes", () => {
+describe("organization routes", () => {
   beforeAll(async () => {
     execSync("pnpm drizzle-kit push");
   });
@@ -27,8 +27,8 @@ describe("tasks routes", () => {
     fs.rmSync("test.db", { force: true });
   });
 
-  it("post /tasks validates the body when creating", async () => {
-    const response = await client.tasks.$post({
+  it("post /orgs validates the body when creating", async () => {
+    const response = await client.orgs.$post({
       // @ts-expect-error
       json: {
         done: false,
@@ -42,11 +42,11 @@ describe("tasks routes", () => {
     }
   });
 
-  const id = 1;
+  const id = crypto.randomUUID();
   const name = "Learn vitest";
 
-  it("post /tasks creates a task", async () => {
-    const response = await client.tasks.$post({
+  it("post /orgs creates a task", async () => {
+    const response = await client.orgs.$post({
       json: {
         name,
         done: false,
@@ -60,8 +60,23 @@ describe("tasks routes", () => {
     }
   });
 
-  it("get /tasks lists all tasks", async () => {
-    const response = await client.tasks.$get();
+  it("post /orgs creates a task", async () => {
+    const response = await client.orgs.$post({
+      json: {
+        name,
+        done: false,
+      },
+    });
+    expect(response.status).toBe(200);
+    if (response.status === 200) {
+      const json = await response.json();
+      expect(json.name).toBe(name);
+      expect(json.done).toBe(false);
+    }
+  });
+
+  it("get /orgs lists all tasks", async () => {
+    const response = await client.orgs.$get();
     expect(response.status).toBe(200);
     if (response.status === 200) {
       const json = await response.json();
@@ -70,8 +85,8 @@ describe("tasks routes", () => {
     }
   });
 
-  it("get /tasks/{id} validates the id param", async () => {
-    const response = await client.tasks[":id"].$get({
+  it("get /orgs/{id} validates the id param", async () => {
+    const response = await client.orgs[":id"].$get({
       param: {
         id: "wat",
       },
@@ -84,10 +99,10 @@ describe("tasks routes", () => {
     }
   });
 
-  it("get /tasks/{id} returns 404 when task not found", async () => {
-    const response = await client.tasks[":id"].$get({
+  it("get /orgs/{id} returns 404 when task not found", async () => {
+    const response = await client.orgs[":id"].$get({
       param: {
-        id: 999,
+        id: "999",
       },
     });
     expect(response.status).toBe(404);
@@ -97,8 +112,8 @@ describe("tasks routes", () => {
     }
   });
 
-  it("get /tasks/{id} gets a single task", async () => {
-    const response = await client.tasks[":id"].$get({
+  it("get /orgs/{id} gets a single task", async () => {
+    const response = await client.orgs[":id"].$get({
       param: {
         id,
       },
@@ -107,12 +122,12 @@ describe("tasks routes", () => {
     if (response.status === 200) {
       const json = await response.json();
       expect(json.name).toBe(name);
-      expect(json.done).toBe(false);
+      expect(json.followers).toBe(100);
     }
   });
 
-  it("patch /tasks/{id} validates the body when updating", async () => {
-    const response = await client.tasks[":id"].$patch({
+  it("patch /orgs/{id} validates the body when updating", async () => {
+    const response = await client.orgs[":id"].$patch({
       param: {
         id,
       },
@@ -128,8 +143,8 @@ describe("tasks routes", () => {
     }
   });
 
-  it("patch /tasks/{id} validates the id param", async () => {
-    const response = await client.tasks[":id"].$patch({
+  it("patch /orgs/{id} validates the id param", async () => {
+    const response = await client.orgs[":id"].$patch({
       param: {
 
         id: "wat",
@@ -144,8 +159,8 @@ describe("tasks routes", () => {
     }
   });
 
-  it("patch /tasks/{id} validates empty body", async () => {
-    const response = await client.tasks[":id"].$patch({
+  it("patch /orgs/{id} validates empty body", async () => {
+    const response = await client.orgs[":id"].$patch({
       param: {
         id,
       },
@@ -159,24 +174,24 @@ describe("tasks routes", () => {
     }
   });
 
-  it("patch /tasks/{id} updates a single property of a task", async () => {
-    const response = await client.tasks[":id"].$patch({
+  it("patch /orgs/{id} updates a single property of an organization", async () => {
+    const response = await client.orgs[":id"].$patch({
       param: {
         id,
       },
       json: {
-        done: true,
+        name: "New Name",
       },
     });
     expect(response.status).toBe(200);
     if (response.status === 200) {
       const json = await response.json();
-      expect(json.done).toBe(true);
+      expect(json.name).toBe("New Name");
     }
   });
 
-  it("delete /tasks/{id} validates the id when deleting", async () => {
-    const response = await client.tasks[":id"].$delete({
+  it("delete /orgs/{id} validates the id when deleting", async () => {
+    const response = await client.orgs[":id"].$delete({
       param: {
 
         id: "wat",
@@ -190,8 +205,8 @@ describe("tasks routes", () => {
     }
   });
 
-  it("delete /tasks/{id} removes a task", async () => {
-    const response = await client.tasks[":id"].$delete({
+  it("delete /orgs/{id} removes an organization", async () => {
+    const response = await client.orgs[":id"].$delete({
       param: {
         id,
       },
