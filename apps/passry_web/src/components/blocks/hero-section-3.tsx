@@ -299,7 +299,12 @@ const HeroHeader = () => {
 
               <div className="flex justify-center gap-4">
                 <ThemeToggle className="lg:hidden" />
-                <Button asChild variant="outline" size="sm">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="lg:hidden"
+                >
                   <Link to="/login">Sign In</Link>
                 </Button>
               </div>

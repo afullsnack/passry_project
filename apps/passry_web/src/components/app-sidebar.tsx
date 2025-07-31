@@ -30,8 +30,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import LogoTextMark from '@/assets/PASSRY_Logo_TextMark.svg?url'
+import { useSession } from '@/hooks/session'
 
 const data = {
   user: {
@@ -47,7 +48,7 @@ const data = {
     },
     {
       title: 'Explore',
-      url: '#',
+      url: '/explore',
       icon: IconListDetails,
     },
     {
@@ -151,6 +152,14 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session, error } = useSession()
+  const navigate = useNavigate()
+
+  if (error || !session) {
+    console.log('Error in app sidebar', error)
+    navigate({ to: '/login' })
+  }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -175,7 +184,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser
+          user={{
+            name: session?.user.name!,
+            email: session?.user.email!,
+            avatar: session?.user.image!,
+          }}
+        />
       </SidebarFooter>
     </Sidebar>
   )
