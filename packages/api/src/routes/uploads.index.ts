@@ -58,8 +58,8 @@ router
       const identifier = body['identifier'];
 
       const tigrisService = new TigrisService({
-        accessKeyId: env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+        accessKeyId: env.AWS_ACCESS_KEY_ID || "",
+        secretAccessKey: env.AWS_SECRET_ACCESS_KEY || "",
         endpoint: env.AWS_ENDPOINT_URL_S3,
         region: env.AWS_REGION
       })
@@ -70,7 +70,7 @@ router
         const keyToGet = `images/${keyToStore}`;
 
         const result = await tigrisService.uploadImageFile(
-          env.BUCKET_NAME,
+          env.BUCKET_NAME || "",
           keyToStore,
           Buffer.from(await file.arrayBuffer()),
           file.type
@@ -78,7 +78,7 @@ router
         console.log("Uploaded", result)
 
         // TODO: store link in db
-        const link = await tigrisService.createDownloadLink(env.BUCKET_NAME, keyToGet)
+        const link = await tigrisService.createDownloadLink(env.BUCKET_NAME || "", keyToGet)
         console.log("Signed link", link)
         return c.json({
           message: "Upload successful",
