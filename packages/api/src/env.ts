@@ -27,14 +27,14 @@ const EnvSchema = z.object({
   PLUNK_API_KEY: z.string().min(1).optional(),
 
   // Bucket ENv
-  AWS_ACCESS_KEY_ID: z.string().min(1),
-  AWS_ENDPOINT_URL_S3: z.url(),
-  AWS_REGION: z.string(),
-  AWS_SECRET_ACCESS_KEY: z.string(),
-  BUCKET_NAME: z.string(),
+  AWS_ACCESS_KEY_ID: z.string().min(1).optional(),
+  AWS_ENDPOINT_URL_S3: z.url().optional(),
+  AWS_REGION: z.string().optional(),
+  AWS_SECRET_ACCESS_KEY: z.string().optional(),
+  BUCKET_NAME: z.string().optional(),
 
   // Redis
-  REDIS_URL: z.url()
+  REDIS_URL: z.url().optional()
 }).superRefine((input, ctx) => {
   if ((input.NODE_ENV === "production" || input.NODE_ENV === "staging") && !input.DATABASE_AUTH_TOKEN) {
     ctx.addIssue({
