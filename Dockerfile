@@ -21,14 +21,15 @@ RUN pnpm install
 # Replace 'npm run build' with your specific build command if needed
 RUN pnpm run build:api
 
+RUN ls /app/packages/api
+RUN ls /app/packages/api/dist
+RUN ls ./packages/api/dist
 # Production stage
 
 FROM node:20-alpine
 
 WORKDIR /app
 
-RUN --from=builder ls /app/packages/api
-RUN --from=builder ls /app/packages/api/dist
 
 COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder /app/package.json ./package.json
