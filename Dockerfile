@@ -33,20 +33,20 @@ COPY --from=builder /app/packages/api/dist ./packages/api/dist
 COPY --from=builder /app/packages/api/src/db/migrations ./packages/api/dist/src/db/migrations
 COPY --from=builder /app/packages/api/package.json ./packages/api/package.json
 
-# ARG DATABASE_URL
-# ARG DATABASE_AUTH_TOKEN
-# ARG NODE_ENV
+ARG DATABASE_URL
+ARG DATABASE_AUTH_TOKEN
+ARG NODE_ENV
 
-# RUN echo "DATABASE_URL=$DATABASE_URL" >> .env
-# RUN echo "DATABASE_AUTH_TOKEN=$DATABASE_AUTH_TOKEN" >> .env
-# RUN echo "NODE_ENV=$NODE_ENV" >> .env
+ENV DATABASE_URL=$DATABASE_URL
+ENV DATABASE_AUTH_TOKEN=$DATABASE_AUTH_TOKEN
+ENV NODE_ENV="staging"
 
 RUN npm install -g pnpm
 
 RUN pnpm install
 
-# RUN pnpm run db:generate
-# RUN pnpm run db:migrate
+RUN pnpm run db:generate
+RUN pnpm run db:migrate
 
 # Expose the port your Hono.js application listens on
 EXPOSE 9999

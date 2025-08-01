@@ -6,9 +6,6 @@
 app = 'passry-api'
 primary_region = 'lhr'
 
-[deploy]
-  release_command = "pnpm run db"
-
 [http_service]
   internal_port = 9999
   force_https = true
