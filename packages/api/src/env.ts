@@ -38,7 +38,8 @@ const EnvSchema = z.object({
 }).superRefine((input, ctx) => {
   if ((input.NODE_ENV === "production" || input.NODE_ENV === "staging") && !input.DATABASE_AUTH_TOKEN) {
     ctx.addIssue({
-      code: z.ZodIssueCode.invalid_type,
+      code: "invalid_type",
+      input: "process.env",
       expected: "string",
       received: "undefined",
       path: ["DATABASE_AUTH_TOKEN"],
