@@ -11,7 +11,7 @@
     "db:generate": "pnpm run --filter @passry/api db:generate",
     "db:migrate": "pnpm run --filter @passry/api db:migrate",
     "db": "pnpm run db:generate && pnpm run db:migrate",
-    "deploy:api": "flyctl deploy --config ./packages/api/fly.toml --dockerfile ./Dockerfile"
+    "deploy:api": "flyctl deploy --config ./packages/api/fly.toml --dockerfile ./Dockerfile --remote-only --build-arg DATABASE_URL=$DATABASE_URL --build-arg DATABASE_AUTH_TOKEN=$DATABASE_AUTH_TOKEN"
   },
   "dependencies": {
     "@better-fetch/fetch": "^1.1.18",

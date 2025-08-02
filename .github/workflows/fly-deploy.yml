@@ -21,6 +21,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --config ./packages/api/fly.toml --dockerfile ./Dockerfile --remote-only --build-arg DATABASE_URL=$DATABASE_URL --build-arg DATABASE_AUTH_TOKEN=$DATABASE_AUTH_TOKEN
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - run: pnpm run deploy:api
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
