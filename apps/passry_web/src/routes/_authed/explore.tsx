@@ -27,8 +27,8 @@ import { authClient } from '@/lib/auth-client'
 export const Route = createFileRoute('/_authed/explore')({
   component: RouteComponent,
   loader: async () => {
-    const { data: session, error } = await authClient.getSession()
-    if (error || !session) {
+    const { data: session } = await authClient.getSession()
+    if (!session) {
       throw redirect({ to: '/login' })
     }
     const response = await client.event.$get()

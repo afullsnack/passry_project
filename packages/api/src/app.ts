@@ -16,14 +16,15 @@ const routes = [
   orgs,
   events,
   tickets,
-  uploads
+  uploads,
 ] as const;
+
+app.on(["POST", "GET", "DELETE", "PUT"], "/api/auth/*", async c => await auth.handler(c.req.raw));
 
 routes.forEach((route) => {
   app.route("/", route);
 });
 
-app.on(["POST", "GET", "DELETE", "PUT"], "/api/auth/*", async c => await auth.handler(c.req.raw));
 
 export type AppType = typeof routes[number];
 

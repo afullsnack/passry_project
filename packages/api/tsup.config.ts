@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["./src/app.ts"],
+  entry: ["./src/app.ts", "./src/lib/auth.ts"],
   format: ["esm", "cjs"],
   dts: true,
   outExtension({ format }) {

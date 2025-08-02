@@ -13,6 +13,9 @@
     },
     "./app-type": {
       "types": "./dist/app.d.ts"
+    },
+    "./auth-type": {
+      "types": "./dist/lib/auth.d.ts"
     }
   },
   "scripts": {

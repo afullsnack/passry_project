@@ -1,11 +1,5 @@
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -18,6 +12,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Switch } from '@/components/ui/switch'
+import { useSession } from '@/hooks/session'
+import { client } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useForm } from '@tanstack/react-form'
 import { X } from 'lucide-react'
@@ -31,8 +27,29 @@ interface IProps {
 
 export default function CreateEventDialog({ openTrigger }: IProps) {
   const [step, setStep] = useState(0)
+  const { data: session } = useSession()
+  console.log('Session', session)
 
   const totalSteps = 3
+
+  const orgForm = useForm({
+    defaultValues: {
+      name: '',
+      description: '',
+    },
+    validators: {
+      onChange: z.object({
+        name: z.string().min(4),
+        description: z.string().min(8),
+      }),
+    },
+    async onSubmit(props) {
+      try {
+      } catch (error: any) {
+        toast.error('Failed to create organization, try again')
+      }
+    },
+  })
 
   const form = useForm({
     defaultValues: {
@@ -109,6 +126,105 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
     }
   }
 
+  if (!session?.org) {
+    return (
+      <Dialog>
+        <DialogTrigger asChild>{openTrigger}</DialogTrigger>
+        <DialogContent className="overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Create organization</DialogTitle>
+            <DialogDescription>
+              Create organization to enable event creation
+            </DialogDescription>
+          </DialogHeader>
+          <div className="container">
+            <div className="space-y-4">
+              <div className="flex items-center justify-center">
+                <Card className="shadow-sm">
+                  <CardHeader>
+                    <CardTitle className="text-lg">
+                      Create organization
+                    </CardTitle>
+                  </CardHeader>
+
+                  <CardContent className="overflow-y-auto h-full">
+                    <ScrollArea className="h-full w-full">
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault()
+                          orgForm.handleSubmit()
+                        }}
+                        className="space-y-4"
+                      >
+                        <orgForm.Field
+                          name="name"
+                          children={(field) => (
+                            <>
+                              <Label>Organization name</Label>
+                              <Input
+                                onBlur={field.handleBlur}
+                                onChange={(e) =>
+                                  field.handleChange(e.target.value)
+                                }
+                                placeholder="Enter organization name"
+                                autoComplete="off"
+                              />
+                            </>
+                          )}
+                        />
+
+                        <orgForm.Field
+                          name="description"
+                          children={(field) => (
+                            <>
+                              <Label>Organization description</Label>
+
+                              <Input
+                                onBlur={field.handleBlur}
+                                onChange={(e) =>
+                                  field.handleChange(e.target.value)
+                                }
+                                placeholder="Enter organization description"
+                                autoComplete="off"
+                              />
+                            </>
+                          )}
+                        />
+
+                        <div className="flex justify-start">
+                          <orgForm.Subscribe
+                            selector={(state) => [
+                              state.canSubmit,
+                              state.isSubmitting,
+                            ]}
+                            children={([canSubmit, isSubmitting]) => (
+                              <Button
+                                type="button"
+                                className="font-medium"
+                                variant="outline"
+                                size="sm"
+                                onClick={handleBack}
+                                disabled={!canSubmit}
+                              >
+                                {isSubmitting
+                                  ? 'Creating organziation...'
+                                  : 'Create Organization'}
+                              </Button>
+                            )}
+                          />
+                        </div>
+                      </form>
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>{openTrigger}</DialogTrigger>
@@ -163,6 +279,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                       e.preventDefault()
                       form.handleSubmit()
                     }}
+                    className="space-y-4"
                   >
                     {step === 0 && (
                       <>
@@ -380,7 +497,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                             <div>
                               {field.state.value.map((_, i) => {
                                 return (
-                                  <div className="border border-gray-700 rounded-md p-4 my-4 border-dashed">
+                                  <div className="border border-gray-700 rounded-md p-4 my-4 border-dashed space-y-3">
                                     <div className="w-full flex items-center justify-end mx-3">
                                       <Button
                                         size="sm"

@@ -6,6 +6,7 @@ import db from "@/db";
 import { event } from "@/db/schema/app-schema";
 
 import type { CreateEvent, GetOneEvent, ListEvents } from "./events.routes";
+import { auth } from "@/lib/auth";
 
 export const getOne: AppRouteHandler<GetOneEvent> = async (c) => {
   // const { id } = c.req.valid("param");
@@ -27,7 +28,16 @@ export const getOne: AppRouteHandler<GetOneEvent> = async (c) => {
 
 export const list: AppRouteHandler<ListEvents> = async (c) => {
   try {
-    const events = await db.query.event.findMany();
+    const session = await auth.api.getSession({ headers: c.req.raw.headers })
+    console.log("session", session)
+    const events = await db.query.event.findMany({
+      where(fields, operators) {
+        if (!session?.org) {
+          return operators.eq(event.orgId, "")
+        }
+        return operators.eq(event.orgId, session?.org?.id)
+      },
+    });
     return c.json(events, HttpStatusCodes.OK);
   }
   catch (error: any) {

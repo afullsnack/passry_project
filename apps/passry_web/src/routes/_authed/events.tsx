@@ -18,9 +18,10 @@ import { Plus } from 'lucide-react'
 import CreateEventDialog from './-components/events/create-event-dialog'
 export const Route = createFileRoute('/_authed/events')({
   component: RouteComponent,
-  loader: async () => {
-    const { data: session, error } = await authClient.getSession()
-    if (error || !session) {
+  loader: async (ctx) => {
+    console.log("Header data in loader", ctx.route.options.headers)
+    const { data: session } = await authClient.getSession()
+    if (!session) {
       throw redirect({ to: '/login' })
     }
     const response = await client.event.$get()

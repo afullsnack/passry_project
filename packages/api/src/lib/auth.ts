@@ -2,7 +2,7 @@ import type { BetterAuthOptions } from "better-auth";
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { emailOTP, phoneNumber } from "better-auth/plugins";
+import { emailOTP, phoneNumber, customSession } from "better-auth/plugins";
 
 import db from "@/db";
 import * as appSchema from "@/db/schema/app-schema";
@@ -47,6 +47,32 @@ export const auth = betterAuth({
   },
 
   plugins: [
+    customSession(async ({ user, session }) => {
+      const org = await db.query.organization.findFirst({
+        where(fields, operators) {
+            return operators.eq(fields.ownerId, user.id)
+        },
+      }).catch((error: any) => {
+        console.log("error fetching org", error)
+        return undefined
+      })
+
+      if(!org) {
+        return {
+          user,
+          session
+        }
+      }
+
+      return {
+        org,
+        user: {
+          ...user,
+          orgId: org.id
+        },
+        session
+      }
+    }),
     phoneNumber(),
     emailOTP({
       overrideDefaultEmailVerification: true,
@@ -69,3 +95,5 @@ export const auth = betterAuth({
   ],
   trustedOrigins: ["*", "http://localhost:3000", "https://passry.com", "https://www.passry.com"],
 } satisfies BetterAuthOptions);
+
+export type AuthType = typeof auth;

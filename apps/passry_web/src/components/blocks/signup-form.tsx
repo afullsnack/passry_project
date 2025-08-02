@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '../ui/select'
 import { authClient } from '@/lib/auth-client'
+import { toast } from 'sonner'
 
 export function SignUpForm() {
   const navigate = useNavigate()
@@ -60,6 +61,7 @@ export function SignUpForm() {
 
       if (error) {
         console.error('Erorr signing up', error)
+        toast.error("Failed to signup user")
         return
       }
 

@@ -12,12 +12,12 @@ export const Route = createFileRoute('/_authed/analytics')({
 })
 
 function RouteComponent() {
-  const { data: session, error, isPending } = useSession()
+  const { data: session, isPending } = useSession()
   const navigate = useNavigate()
 
   console.log('Session', session)
 
-  if (error || !session) {
+  if (!session && !isPending) {
     navigate({ to: '/login' })
   }
 
