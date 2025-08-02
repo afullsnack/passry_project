@@ -16,6 +16,7 @@ import { useSession } from '@/hooks/session'
 import { client } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useForm } from '@tanstack/react-form'
+import { useRouter } from '@tanstack/react-router'
 import { X } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -30,7 +31,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
   const [orgFormOpen, setOrgFormOpen] = useState(false)
   const [eventFormOpen, setEventFormOpen] = useState(false)
   const { data: session } = useSession()
-  console.log('Session', session)
+  const router = useRouter()
 
   const totalSteps = 3
 
@@ -53,7 +54,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
             json: {
               name: props.value.name,
               description: props.value.description,
-              ownerId: session?.session.userId ?? session?.user.id,
+              ownerId: session.session.userId,
             },
           })
           if (response.ok) {
@@ -73,6 +74,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
         } else {
           toast.error('User must be logged in to create organization')
           setOrgFormOpen(false)
+          router.invalidate()
         }
       } catch (error: any) {
         toast.error('Failed to create organization, try again')
@@ -220,6 +222,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
         form.reset()
         setStep(0)
         setEventFormOpen(false)
+        router.invalidate()
       } else {
         toast.error(
           'You must be logged in or create an organization to create an event',
@@ -583,7 +586,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                                   return toast.warning('File is required')
                                 }
 
-                                if (file?.size > 5 * 1024 * 1024) {
+                                if (file.size > 5 * 1024 * 1024) {
                                   return toast.warning('Max file size is 5MB')
                                 }
 

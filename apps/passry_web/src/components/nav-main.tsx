@@ -11,19 +11,21 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar'
 import { Link, useMatchRoute } from '@tanstack/react-router'
 
 export function NavMain({
   items,
 }: {
-  items: {
+  items: Array<{
     title: string
     url: string
     icon?: Icon
-  }[]
+  }>
 }) {
   const matchRoute = useMatchRoute()
+  const sidebar = useSidebar()
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -49,7 +51,16 @@ export function NavMain({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title} isActive={matchRoute({ to: item.url, fuzzy: true })? true : false} asChild>
+              <SidebarMenuButton
+                tooltip={item.title}
+                onClick={() => {
+                  sidebar.toggleSidebar()
+                }}
+                isActive={
+                  matchRoute({ to: item.url, fuzzy: true }) ? true : false
+                }
+                asChild
+              >
                 <Link to={item.url}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>

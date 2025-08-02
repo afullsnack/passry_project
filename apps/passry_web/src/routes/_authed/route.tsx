@@ -2,13 +2,14 @@ import { AppSidebar } from '@/components/app-sidebar'
 
 import { SiteHeader } from '@/components/site-header'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { Outlet, createFileRoute } from '@tanstack/react-router'
+import { Outlet, createFileRoute, useRouterState } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authed')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const route = useRouterState()
   return (
     <SidebarProvider
       style={
@@ -20,7 +21,7 @@ function RouteComponent() {
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader />
+        <SiteHeader page={route.location.pathname.slice(1)} />
         <div className="flex flex-1 flex-col">
           <Outlet />
         </div>
