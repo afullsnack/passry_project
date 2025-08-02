@@ -20,7 +20,7 @@ RUN pnpm install
 # Build the Hono.js application (if using TypeScript, for example)
 # Replace 'npm run build' with your specific build command if needed
 RUN pnpm run build:api
-RUN pnpm run generate:api:db
+# RUN pnpm run generate:api:db
 
 # Production stage
 FROM node:20-alpine
@@ -47,7 +47,7 @@ RUN npm install -g pnpm
 
 RUN pnpm install
 
-RUN pnpm run db:generate
+# RUN pnpm run db:generate
 RUN pnpm run db:migrate
 
 # Expose the port your Hono.js application listens on
