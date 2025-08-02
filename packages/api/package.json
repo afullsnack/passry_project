@@ -7,15 +7,11 @@
   "types": "./src/index.ts",
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "import": "./dist/src/index.js",
-      "types": "./dist/src/index.d.ts"
-    },
     "./app-type": {
-      "types": "./dist/app.d.ts"
+      "types": "./dist/src/app.d.ts"
     },
     "./auth-type": {
-      "types": "./dist/lib/auth.d.ts"
+      "types": "./dist/src/lib/auth.d.ts"
     }
   },
   "scripts": {
