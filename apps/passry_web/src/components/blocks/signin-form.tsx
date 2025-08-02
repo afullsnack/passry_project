@@ -53,6 +53,7 @@ export function SignInForm() {
       } else {
         // TODO: navigate to dashboard
         navigate({ to: '/explore' })
+        document.location.href = "/explore"
       }
     } catch (error) {
       console.error('Sign in error:', error)
