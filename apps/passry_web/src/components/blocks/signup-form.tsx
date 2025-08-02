@@ -61,7 +61,7 @@ export function SignUpForm() {
 
       if (error) {
         console.error('Erorr signing up', error)
-        toast.error("Failed to signup user")
+        toast.error('Failed to signup user')
         return
       }
 

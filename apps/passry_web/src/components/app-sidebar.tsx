@@ -155,7 +155,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session, error } = useSession()
   const navigate = useNavigate()
 
-  if (error || !session) {
+  if (!session) {
     console.log('Error in app sidebar', error, session)
     navigate({ to: '/login' })
   }

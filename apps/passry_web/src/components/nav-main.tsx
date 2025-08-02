@@ -14,6 +14,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { Link, useMatchRoute } from '@tanstack/react-router'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export function NavMain({
   items,
@@ -25,6 +26,7 @@ export function NavMain({
   }>
 }) {
   const matchRoute = useMatchRoute()
+  const isMobile = useIsMobile()
   const sidebar = useSidebar()
   return (
     <SidebarGroup>
@@ -54,7 +56,9 @@ export function NavMain({
               <SidebarMenuButton
                 tooltip={item.title}
                 onClick={() => {
-                  sidebar.toggleSidebar()
+                  if (isMobile) {
+                    sidebar.toggleSidebar()
+                  }
                 }}
                 isActive={
                   matchRoute({ to: item.url, fuzzy: true }) ? true : false
