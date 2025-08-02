@@ -21,8 +21,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development pnpm with-env tsx watch src/index.ts",
     "start": "node ./dist/src/index.js",
-    "db:generate": "pnpm with-env npx drizzle-kit generate --config=./dist/drizzle.config.js",
-    "db:migrate": "pnpm with-env npx drizzle-kit migrate --config=./dist/drizzle.config.js",
+    "db:generate": "pnpm with-env-prod npx drizzle-kit generate --config=./dist/drizzle.config.js",
+    "db:migrate": "pnpm with-env-prod npx drizzle-kit migrate --config=./dist/drizzle.config.js",
     "db:generate-dev": "pnpm with-env npx drizzle-kit generate",
     "db:migrate-dev": "pnpm with-env npx drizzle-kit migrate",
     "studio": "pnpm with-env npx drizzle-kit studio",
@@ -30,8 +30,9 @@
     "lint": "eslint .",
     "lint:fix": "npm run lint --fix",
     "test": "cross-env NODE_ENV=test vitest",
-    "build": "tsc && tsc-alias",
-    "with-env": "dotenv -e .env.local -e .env --"
+    "build": "cross-env NODE_ENV=staging tsc && tsc-alias",
+    "with-env": "dotenv -e .env.local -e .env --",
+    "with-env-prod": "dotenv -e .env.prod -e .env --"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.857.0",
