@@ -78,7 +78,7 @@ export function SignInForm() {
     },
     onSubmit: async ({ value }) => {
       console.log('Values', value)
-      handleSubmit(value)
+      await handleSubmit(value)
     },
     validators: {
       onChange: z.object({
