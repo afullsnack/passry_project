@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Apple, Chrome, Facebook } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 import { authClient } from '@/lib/auth-client'
@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 
 export function SignInForm() {
   const navigate = useNavigate()
+  const router = useRouter()
 
   const handleSubmit = async ({
     email,
@@ -29,6 +30,7 @@ export function SignInForm() {
         email,
         password,
         rememberMe: true,
+        callbackURL: "/explore"
       })
 
       if (error) {
@@ -53,7 +55,7 @@ export function SignInForm() {
       } else {
         // TODO: navigate to dashboard
         navigate({ to: '/explore' })
-        document.location.href = "/explore"
+        router.navigate({to: "/explore", from: "/login"})
       }
     } catch (error) {
       console.error('Sign in error:', error)
