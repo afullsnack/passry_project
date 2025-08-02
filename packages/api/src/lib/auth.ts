@@ -98,8 +98,8 @@ export const auth = betterAuth({
     cookies: {
       session_token: {
         attributes: {
-          sameSite: "none",
-          secure: true,
+          sameSite: env.NODE_ENV === "development" ? "Lax" : "none",
+          secure: env.NODE_ENV !== "development",
         },
       },
     },

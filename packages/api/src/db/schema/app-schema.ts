@@ -1,8 +1,14 @@
 import { relations } from "drizzle-orm";
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createSchemaFactory, createSelectSchema } from "drizzle-zod";
 
 import { user } from "./auth-schema";
+
+const { createInsertSchema } = createSchemaFactory({
+  coerce: {
+    date: true,
+  },
+});
 
 // Organization
 export const organization = sqliteTable("organization", {
@@ -26,7 +32,7 @@ export const organization = sqliteTable("organization", {
 
 export const selectOrgSchema = createSelectSchema(organization);
 export const insertOrgSchema = createInsertSchema(organization, {
-  name: schema => schema.name.min(6),
+  name: schema => schema.min(6),
 }).required({
   ownerId: true,
 }).omit({
@@ -61,10 +67,10 @@ export const event = sqliteTable("event", {
 
 export const selectEventSchema = createSelectSchema(event);
 export const insertEventSchema = createInsertSchema(event, {
-  title: schema => schema.title.min(6),
+  title: schema => schema.min(6),
 }).required({
   title: true,
-  orgId: true
+  orgId: true,
 }).omit({
   id: true,
   createdAt: true,
@@ -83,7 +89,7 @@ export const ticket = sqliteTable("ticket", {
   imageKey: text("image_key"),
   imageUrl: text("image_url"),
   eventId: text("event_id").references(() => event.id, { onDelete: "cascade" }),
-  orgId: text("org_id").references(() => organization.id, {onDelete: "cascade"}),
+  orgId: text("org_id").references(() => organization.id, { onDelete: "cascade" }),
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
     () => /* @__PURE__ */ new Date(),
   ),
@@ -94,13 +100,13 @@ export const ticket = sqliteTable("ticket", {
 
 export const selectTicketSchema = createSelectSchema(ticket);
 export const insertTicketSchema = createInsertSchema(ticket, {
-  name: schema => schema.name.min(6),
+  name: schema => schema.min(6),
 })
   .required({
     price: true,
     quantity: true,
     eventId: true,
-    orgId: true
+    orgId: true,
   })
   .omit({
     id: true,
@@ -109,14 +115,14 @@ export const insertTicketSchema = createInsertSchema(ticket, {
   });
 export const patchTicketSchema = insertEventSchema.partial();
 
-export const organizationRelations = relations(organization, ({ one, many }) => ({
+export const organizationRelations = relations(organization, ({ one }) => ({
   owner: one(user, {
     fields: [organization.ownerId],
     references: [user.id],
   }),
 }));
 
-export const eventRelations = relations(event, ({ one, many }) => ({
+export const eventRelations = relations(event, ({ one }) => ({
   organization: one(organization, {
     fields: [event.orgId],
     references: [organization.id],

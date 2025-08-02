@@ -27,6 +27,8 @@ interface IProps {
 
 export default function CreateEventDialog({ openTrigger }: IProps) {
   const [step, setStep] = useState(0)
+  const [orgFormOpen, setOrgFormOpen] = useState(false)
+  const [eventFormOpen, setEventFormOpen] = useState(false)
   const { data: session } = useSession()
   console.log('Session', session)
 
@@ -45,8 +47,36 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
     },
     async onSubmit(props) {
       try {
+        // TODO: create organization
+        if (session) {
+          const response = await client.orgs.$post({
+            json: {
+              name: props.value.name,
+              description: props.value.description,
+              ownerId: session?.session.userId ?? session?.user.id,
+            },
+          })
+          if (response.ok) {
+            const result = await response.json()
+            console.log('Org creation result', result)
+            setOrgFormOpen(false)
+            toast.success('Organization created successfully', {
+              description: 'You can now start creating events',
+              // action: {
+              //   label: "Create event",
+              //   onClick: () => {
+
+              //   }
+              // }
+            })
+          }
+        } else {
+          toast.error('User must be logged in to create organization')
+          setOrgFormOpen(false)
+        }
       } catch (error: any) {
         toast.error('Failed to create organization, try again')
+        setOrgFormOpen(false)
       }
     },
   })
@@ -66,7 +96,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
         {
           name: '',
           price: 0,
-          quantity: 1,
+          quantity: 0,
           saleStateDate: new Date(),
           saleEndDate: new Date(),
           isFree: true,
@@ -96,24 +126,110 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
         ),
       }),
     },
-    onSubmit: ({ value }) => {
-      onSubmit(value)
+    onSubmit: async ({ value }) => {
+      console.log(value, ':::Values to submit')
+      if (session && session.org) {
+        // Upload cover image first
+        const formData = new FormData()
+        formData.append('file', value.coverImage)
+        formData.append('type', 'event-cover')
+        formData.append(
+          'identifier',
+          value.title.toLowerCase().split(' ').join('-'),
+        )
+
+        console.log('Uplaod URL', client.upload.$url())
+        const response = await fetch(client.upload.$url().href, {
+          body: formData,
+          method: 'POST',
+          credentials: 'include',
+        })
+
+        if (response.ok) {
+          const result = await response.json()
+          toast.success(result.message, {
+            description: 'Now creating your new event',
+          })
+
+          // Create event
+          const eventResponse = await client.event.$post({
+            json: {
+              description: value.description,
+              title: value.title,
+              orgId: session.org.id,
+              category: value.category,
+              country: value.country,
+              city: value.city,
+              venueName: value.venueName,
+              address: value.venueFullAddress,
+              coverUrl: result.link,
+              coverUrlKey: result.key,
+              dateTime: value.dateTime,
+            },
+          })
+
+          if (eventResponse.ok) {
+            const eventResult = await eventResponse.json()
+
+            // Create Ticket
+            const promiseSetlledTicketResponses = await Promise.allSettled(
+              value.tickets.map((ticket) => {
+                return client.tickets.$post({
+                  json: {
+                    name: ticket.name,
+                    price: ticket.price,
+                    quantity: ticket.quantity,
+                    eventId: eventResult.id,
+                    orgId: session.org.id,
+                    saleStart: ticket.saleStateDate,
+                    saleEnd: ticket.saleEndDate,
+                    isFree: ticket.isFree,
+                  },
+                })
+              }),
+            )
+
+            const promiseSettleTicketResults = await Promise.allSettled(
+              promiseSetlledTicketResponses.map((settledResponse) => {
+                if (
+                  settledResponse.status === 'fulfilled' &&
+                  settledResponse.value.ok
+                ) {
+                  return settledResponse.value.json()
+                }
+              }),
+            )
+
+            console.log(
+              'Tickets creation log',
+              promiseSettleTicketResults.values,
+            )
+
+            toast.success('Event and its tickets created successfully')
+            console.log('New event', eventResult)
+          } else {
+            toast.error('Failed to create event')
+          }
+        } else {
+          toast.error('Failed to upload cover image', {
+            description: 'You must attach a cover image to the event',
+          })
+          return
+        }
+
+        form.reset()
+        setStep(0)
+        setEventFormOpen(false)
+      } else {
+        toast.error(
+          'You must be logged in or create an organization to create an event',
+        )
+      }
     },
   })
 
-  const onSubmit = async (formData: unknown) => {
-    if (step < totalSteps - 1) {
-      setStep(step + 1)
-    } else {
-      console.log(formData)
-
-      setStep(0)
-
-      form.reset()
-
-      toast.success('Form successfully submitted')
-    }
-  }
+  console.log(form.state.errors, JSON.stringify(form.state.errorMap, null, 3))
+  console.log(form.state.values)
 
   const handleBack = () => {
     if (step > 0) {
@@ -128,7 +244,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
 
   if (!session?.org) {
     return (
-      <Dialog>
+      <Dialog open={orgFormOpen} onOpenChange={(open) => setOrgFormOpen(open)}>
         <DialogTrigger asChild>{openTrigger}</DialogTrigger>
         <DialogContent className="overflow-y-auto">
           <DialogHeader>
@@ -199,7 +315,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                             ]}
                             children={([canSubmit, isSubmitting]) => (
                               <Button
-                                type="button"
+                                type="submit"
                                 className="font-medium"
                                 variant="outline"
                                 size="sm"
@@ -226,9 +342,18 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
   }
 
   return (
-    <Dialog>
+    <Dialog
+      open={eventFormOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          form.reset()
+          setStep(0)
+        }
+        setEventFormOpen(open)
+      }}
+    >
       <DialogTrigger asChild>{openTrigger}</DialogTrigger>
-      <DialogContent className="overflow-y-auto">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Event</DialogTitle>
           <DialogDescription>Create events for your audience</DialogDescription>
@@ -272,397 +397,409 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="overflow-y-auto h-full">
-                <ScrollArea className="h-full w-full">
+              <CardContent className="h-full">
+                <ScrollArea className="h-[450px] w-full">
                   <form
                     onSubmit={(e) => {
+                      console.log('Called from onSubmit')
                       e.preventDefault()
-                      form.handleSubmit()
+                      // form.handleSubmit()
                     }}
                     className="space-y-4"
                   >
-                    {step === 0 && (
-                      <>
-                        <form.Field
-                          name="title"
-                          children={(field) => (
-                            <>
-                              <Label>Event title</Label>
-                              <Input
-                                onBlur={field.handleBlur}
-                                onChange={(e) =>
-                                  field.handleChange(e.target.value)
+                    <div className={cn('grid gap-4', { hidden: step !== 0 })}>
+                      <form.Field
+                        name="title"
+                        children={(field) => (
+                          <>
+                            <Label>Event title</Label>
+                            <Input
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              placeholder="Enter event title"
+                              autoComplete="off"
+                            />
+                          </>
+                        )}
+                      />
+
+                      <form.Field
+                        name="category"
+                        children={(field) => (
+                          <>
+                            <Label>Category</Label>
+
+                            <Input
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              placeholder="Enter category"
+                              autoComplete="off"
+                            />
+                          </>
+                        )}
+                      />
+
+                      <form.Field
+                        name="description"
+                        children={(field) => (
+                          <>
+                            <Label>Event Description</Label>
+
+                            <Input
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              placeholder="Describe the event"
+                              autoComplete="off"
+                            />
+                          </>
+                        )}
+                      />
+
+                      <form.Field
+                        name="dateTime"
+                        children={(field) => (
+                          <>
+                            <Label>Event Date and Time</Label>
+                            <Input
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.valueAsDate!)
+                              }
+                              type="datetime-local"
+                              placeholder="Pick a date and time"
+                              autoComplete="off"
+                            />
+                          </>
+                        )}
+                      />
+
+                      <div className="flex justify-start gap-4">
+                        <Button
+                          className="font-medium"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleBack()}
+                          disabled={step === 0}
+                        >
+                          Previous Step
+                        </Button>
+
+                        <Button
+                          size="sm"
+                          className="font-medium"
+                          onClick={() => handleNext()}
+                        >
+                          {'Next Step'}
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className={cn('grid gap-4', { hidden: step !== 1 })}>
+                      <form.Field
+                        name="venueName"
+                        children={(field) => (
+                          <>
+                            <Label>Vernue Name</Label>
+                            <Input
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              placeholder="Enter event venue"
+                              autoComplete="off"
+                            />
+                          </>
+                        )}
+                      />
+
+                      <form.Field
+                        name="venueFullAddress"
+                        children={(field) => (
+                          <>
+                            <Label>Vernue Full address or Link</Label>
+                            <Input
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              placeholder="Enter event full address"
+                              autoComplete="off"
+                            />
+                          </>
+                        )}
+                      />
+
+                      <form.Field
+                        name="city"
+                        children={(field) => (
+                          <>
+                            <Label>Event City Location</Label>
+                            <Input
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              placeholder="Enter event city location"
+                              autoComplete="off"
+                            />
+                          </>
+                        )}
+                      />
+
+                      <form.Field
+                        name="country"
+                        children={(field) => (
+                          <>
+                            <Label>Event country</Label>
+                            <Input
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              placeholder="Enter event country"
+                              autoComplete="off"
+                            />
+                          </>
+                        )}
+                      />
+
+                      <form.Field
+                        name="coverImage"
+                        children={(field) => (
+                          <>
+                            <Label>Event cover image</Label>
+                            <Input
+                              onBlur={field.handleBlur}
+                              onChange={(e) => {
+                                const file = e.target.files && e.target.files[0]
+
+                                if (!file) {
+                                  return toast.warning('File is required')
                                 }
-                                placeholder="Enter event title"
-                                autoComplete="off"
-                              />
-                            </>
-                          )}
-                        />
 
-                        <form.Field
-                          name="category"
-                          children={(field) => (
-                            <>
-                              <Label>Category</Label>
-
-                              <Input
-                                onBlur={field.handleBlur}
-                                onChange={(e) =>
-                                  field.handleChange(e.target.value)
+                                if (file?.size > 5 * 1024 * 1024) {
+                                  return toast.warning('Max file size is 5MB')
                                 }
-                                placeholder="Enter category"
-                                autoComplete="off"
-                              />
-                            </>
-                          )}
-                        />
 
-                        <form.Field
-                          name="description"
-                          children={(field) => (
-                            <>
-                              <Label>Event Description</Label>
-
-                              <Input
-                                onBlur={field.handleBlur}
-                                onChange={(e) =>
-                                  field.handleChange(e.target.value)
+                                if (
+                                  file.type !== 'image/jpeg' &&
+                                  file.type !== 'image/png'
+                                ) {
+                                  return toast.warning(
+                                    'Only JPEG and PNG images are allowed',
+                                  )
                                 }
-                                placeholder="Describe the event"
-                                autoComplete="off"
-                              />
-                            </>
-                          )}
-                        />
 
-                        <form.Field
-                          name="dateTime"
-                          children={(field) => (
-                            <>
-                              <Label>Event Date and Time</Label>
-                              <Input
-                                onBlur={field.handleBlur}
-                                onChange={(e) =>
-                                  field.handleChange(e.target.valueAsDate!)
-                                }
-                                type="datetime-local"
-                                placeholder="Pick a date and time"
-                                autoComplete="off"
-                              />
-                            </>
-                          )}
-                        />
+                                field.handleChange(file)
+                              }}
+                              type="file"
+                              placeholder="Select cover image"
+                              autoComplete="off"
+                            />
+                          </>
+                        )}
+                      />
 
-                        <div className="flex justify-between">
-                          <Button
-                            type="button"
-                            className="font-medium"
-                            variant="outline"
-                            size="sm"
-                            onClick={handleBack}
-                            disabled={step === 0}
-                          >
-                            Previous Step
-                          </Button>
+                      <div className="flex justify-start gap-4">
+                        <Button
+                          className="font-medium"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleBack()}
+                          // disabled={step === 0}
+                        >
+                          Previous Step
+                        </Button>
 
-                          <Button
-                            type="submit"
-                            size="sm"
-                            className="font-medium"
-                            onClick={handleNext}
-                          >
-                            {step === 2 ? 'Submit' : 'Next Step'}
-                          </Button>
-                        </div>
-                      </>
-                    )}
+                        <Button
+                          size="sm"
+                          className="font-medium"
+                          onClick={() => handleNext()}
+                        >
+                          {'Next Step'}
+                        </Button>
+                      </div>
+                    </div>
 
-                    {step === 1 && (
-                      <>
-                        <form.Field
-                          name="venueName"
-                          children={(field) => (
-                            <>
-                              <Label>Vernue Name</Label>
-                              <Input
-                                onBlur={field.handleBlur}
-                                onChange={(e) =>
-                                  field.handleChange(e.target.value)
-                                }
-                                placeholder="Enter event venue"
-                                autoComplete="off"
-                              />
-                            </>
-                          )}
-                        />
-
-                        <form.Field
-                          name="venueFullAddress"
-                          children={(field) => (
-                            <>
-                              <Label>Vernue Full address or Link</Label>
-                              <Input
-                                onBlur={field.handleBlur}
-                                onChange={(e) =>
-                                  field.handleChange(e.target.value)
-                                }
-                                placeholder="Enter event full address"
-                                autoComplete="off"
-                              />
-                            </>
-                          )}
-                        />
-
-                        <form.Field
-                          name="city"
-                          children={(field) => (
-                            <>
-                              <Label>Event City Location</Label>
-                              <Input
-                                onBlur={field.handleBlur}
-                                onChange={(e) =>
-                                  field.handleChange(e.target.value)
-                                }
-                                placeholder="Enter event city location"
-                                autoComplete="off"
-                              />
-                            </>
-                          )}
-                        />
-
-                        <form.Field
-                          name="country"
-                          children={(field) => (
-                            <>
-                              <Label>Event country</Label>
-                              <Input
-                                onBlur={field.handleBlur}
-                                onChange={(e) =>
-                                  field.handleChange(e.target.value)
-                                }
-                                placeholder="Enter event country"
-                                autoComplete="off"
-                              />
-                            </>
-                          )}
-                        />
-
-                        <form.Field
-                          name="coverImage"
-                          children={(field) => (
-                            <>
-                              <Label>Event cover image</Label>
-                              <Input
-                                onBlur={field.handleBlur}
-                                onChange={(e) =>
-                                  field.handleChange(e.target.files![0])
-                                }
-                                type="file"
-                                placeholder="Enter event venue"
-                                autoComplete="off"
-                              />
-                            </>
-                          )}
-                        />
-
-                        <div className="flex justify-between">
-                          <Button
-                            type="button"
-                            className="font-medium"
-                            size="sm"
-                            variant="outline"
-                            onClick={handleBack}
-                            disabled={step === 0}
-                          >
-                            Previous Step
-                          </Button>
-
-                          <Button
-                            type="submit"
-                            size="sm"
-                            className="font-medium"
-                            onClick={handleNext}
-                          >
-                            {step === 2 ? 'Submit' : 'Next Step'}
-                          </Button>
-                        </div>
-                      </>
-                    )}
-
-                    {step === 2 && (
-                      <ScrollArea className="w-full h-[300px]">
-                        <form.Field name="tickets" mode="array">
-                          {(field) => (
-                            <div>
-                              {field.state.value.map((_, i) => {
-                                return (
-                                  <div className="border border-gray-700 rounded-md p-4 my-4 border-dashed space-y-3">
-                                    <div className="w-full flex items-center justify-end mx-3">
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => field.removeValue(i)}
-                                      >
-                                        <X className="size-4" />
-                                      </Button>
-                                    </div>
-                                    <form.Field
-                                      key={i}
-                                      name={`tickets[${i}].name`}
+                    <div className={cn('grid gap-4', { hidden: step !== 2 })}>
+                      <form.Field name="tickets" mode="array">
+                        {(field) => (
+                          <div>
+                            {field.state.value.map((_, i) => {
+                              return (
+                                <div
+                                  key={i}
+                                  className="border border-gray-700 rounded-md p-4 my-4 border-dashed space-y-3"
+                                >
+                                  <div className="w-full flex items-center justify-end mx-3">
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => field.removeValue(i)}
                                     >
-                                      {(subField) => (
-                                        <div>
-                                          <Label>Ticket name</Label>
-                                          <Input
-                                            value={subField.state.value}
-                                            onBlur={subField.handleBlur}
-                                            onChange={(e) =>
-                                              subField.handleChange(
-                                                e.target.value,
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      )}
-                                    </form.Field>
-                                    <form.Field
-                                      key={i}
-                                      name={`tickets[${i}].price`}
-                                    >
-                                      {(subField) => (
-                                        <div>
-                                          <Label>Price</Label>
-                                          <Input
-                                            value={subField.state.value}
-                                            onBlur={subField.handleBlur}
-                                            onChange={(e) =>
-                                              subField.handleChange(
-                                                e.target.valueAsNumber,
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      )}
-                                    </form.Field>
-                                    <form.Field
-                                      key={i}
-                                      name={`tickets[${i}].quantity`}
-                                    >
-                                      {(subField) => (
-                                        <div>
-                                          <Label>Quantity</Label>
-                                          <Input
-                                            onBlur={subField.handleBlur}
-                                            onChange={(e) =>
-                                              subField.handleChange(
-                                                e.target.valueAsNumber,
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      )}
-                                    </form.Field>
-                                    <form.Field
-                                      key={i}
-                                      name={`tickets[${i}].saleStateDate`}
-                                    >
-                                      {(subField) => (
-                                        <div>
-                                          <Label>Sale End</Label>
-                                          <Input
-                                            onBlur={subField.handleBlur}
-                                            type="datetime-local"
-                                            onChange={(e) =>
-                                              subField.handleChange(
-                                                e.target.valueAsDate!,
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      )}
-                                    </form.Field>
-                                    <form.Field
-                                      key={i}
-                                      name={`tickets[${i}].saleEndDate`}
-                                    >
-                                      {(subField) => (
-                                        <div>
-                                          <Label>Sale End</Label>
-                                          <Input
-                                            onBlur={subField.handleBlur}
-                                            type="datetime-local"
-                                            onChange={(e) =>
-                                              subField.handleChange(
-                                                e.target.valueAsDate!,
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      )}
-                                    </form.Field>
-                                    <form.Field
-                                      key={i}
-                                      name={`tickets[${i}].isFree`}
-                                    >
-                                      {(subField) => (
-                                        <div className="flex items-center justify-between">
-                                          <Label>Switch to free event</Label>
-                                          <Switch
-                                            checked={subField.state.value}
-                                            onCheckedChange={(checked) =>
-                                              subField.handleChange(checked)
-                                            }
-                                          />
-                                        </div>
-                                      )}
-                                    </form.Field>
+                                      <X className="size-4" />
+                                    </Button>
                                   </div>
-                                )
-                              })}
-                              <Button
-                                onClick={() =>
-                                  field.pushValue({
-                                    name: '',
-                                    price: 0,
-                                    quantity: 0,
-                                    saleEndDate: new Date(),
-                                    saleStateDate: new Date(),
-                                    isFree: true,
-                                  })
-                                }
-                                variant="outline"
-                                size="sm"
-                                className="my-6"
-                              >
-                                Add New Ticket
-                              </Button>
-                            </div>
+                                  <form.Field name={`tickets[${i}].name`}>
+                                    {(subField) => (
+                                      <div>
+                                        <Label>Ticket name</Label>
+                                        <Input
+                                          value={subField.state.value}
+                                          onBlur={subField.handleBlur}
+                                          onChange={(e) =>
+                                            subField.handleChange(
+                                              e.target.value,
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                    )}
+                                  </form.Field>
+                                  <form.Field name={`tickets[${i}].price`}>
+                                    {(subField) => (
+                                      <div>
+                                        <Label>Price</Label>
+                                        <Input
+                                          value={subField.state.value}
+                                          type="number"
+                                          onBlur={subField.handleBlur}
+                                          onChange={(e) =>
+                                            subField.handleChange(
+                                              e.target.valueAsNumber,
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                    )}
+                                  </form.Field>
+                                  <form.Field name={`tickets[${i}].quantity`}>
+                                    {(subField) => (
+                                      <div>
+                                        <Label>Quantity</Label>
+                                        <Input
+                                          onBlur={subField.handleBlur}
+                                          type="number"
+                                          defaultValue={0}
+                                          onChange={(e) =>
+                                            subField.handleChange(
+                                              e.target.valueAsNumber,
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                    )}
+                                  </form.Field>
+                                  <form.Field
+                                    name={`tickets[${i}].saleStateDate`}
+                                  >
+                                    {(subField) => (
+                                      <div>
+                                        <Label>Sale End</Label>
+                                        <Input
+                                          onBlur={subField.handleBlur}
+                                          type="datetime-local"
+                                          onChange={(e) =>
+                                            subField.handleChange(
+                                              e.target.valueAsDate!,
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                    )}
+                                  </form.Field>
+                                  <form.Field
+                                    name={`tickets[${i}].saleEndDate`}
+                                  >
+                                    {(subField) => (
+                                      <div>
+                                        <Label>Sale End</Label>
+                                        <Input
+                                          onBlur={subField.handleBlur}
+                                          type="datetime-local"
+                                          onChange={(e) =>
+                                            subField.handleChange(
+                                              e.target.valueAsDate!,
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                    )}
+                                  </form.Field>
+                                  <form.Field name={`tickets[${i}].isFree`}>
+                                    {(subField) => (
+                                      <div className="flex items-center justify-between">
+                                        <Label>Switch to free event</Label>
+                                        <Switch
+                                          checked={subField.state.value}
+                                          onCheckedChange={(checked) =>
+                                            subField.handleChange(checked)
+                                          }
+                                        />
+                                      </div>
+                                    )}
+                                  </form.Field>
+                                </div>
+                              )
+                            })}
+                            <Button
+                              onClick={() =>
+                                field.pushValue({
+                                  name: '',
+                                  price: 0,
+                                  quantity: 0,
+                                  saleEndDate: new Date(),
+                                  saleStateDate: new Date(),
+                                  isFree: true,
+                                })
+                              }
+                              variant="outline"
+                              size="sm"
+                              className="my-6"
+                            >
+                              Add New Ticket
+                            </Button>
+                          </div>
+                        )}
+                      </form.Field>
+
+                      <div className="flex justify-start gap-4">
+                        <Button
+                          className="font-medium"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleBack()}
+                          // disabled={step === 0}
+                        >
+                          Previous Step
+                        </Button>
+
+                        <form.Subscribe
+                          selector={(state) => [
+                            state.canSubmit,
+                            state.isSubmitting,
+                          ]}
+                          children={([canSubmit, isSubmitting]) => (
+                            <Button
+                              size="sm"
+                              className="font-medium"
+                              disabled={!canSubmit}
+                              onClick={() => {
+                                form.handleSubmit()
+                              }}
+                            >
+                              {isSubmitting ? 'Publishing...' : 'Publish Event'}
+                            </Button>
                           )}
-                        </form.Field>
-
-                        <div className="flex justify-start gap-4">
-                          <Button
-                            type="button"
-                            className="font-medium"
-                            size="sm"
-                            variant="outline"
-                            onClick={handleBack}
-                            disabled={step === 0}
-                          >
-                            Previous Step
-                          </Button>
-
-                          <Button
-                            type="submit"
-                            size="sm"
-                            className="font-medium"
-                          >
-                            {step === 2 ? 'Publish Event' : 'Next Step'}
-                          </Button>
-                        </div>
-                      </ScrollArea>
-                    )}
+                        />
+                      </div>
+                    </div>
                   </form>
                 </ScrollArea>
               </CardContent>

@@ -9,6 +9,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 import { authClient } from '@/lib/auth-client'
+import { toast } from 'sonner'
 
 export function SignInForm() {
   const navigate = useNavigate()
@@ -32,6 +33,7 @@ export function SignInForm() {
 
       if (error) {
         console.log('Error signing in', error)
+        toast.error(error.message || 'Failed to login')
         return
       }
 
