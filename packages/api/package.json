@@ -8,8 +8,8 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
     },
     "./app-type": {
       "types": "./dist/app.d.ts"
@@ -30,7 +30,7 @@
     "lint": "eslint .",
     "lint:fix": "npm run lint --fix",
     "test": "cross-env NODE_ENV=test vitest",
-    "build": "cross-env NODE_ENV=staging tsc && tsc-alias",
+    "build": "cross-env NODE_ENV=staging tsup && tsc-alias",
     "with-env": "dotenv -e .env.local -e .env --",
     "with-env-prod": "dotenv -e .env.prod -e .env --"
   },

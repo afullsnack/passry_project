@@ -19,7 +19,7 @@ import CreateEventDialog from './-components/events/create-event-dialog'
 export const Route = createFileRoute('/_authed/events')({
   component: RouteComponent,
   loader: async (ctx) => {
-    console.log("Header data in loader", ctx.route.options.headers)
+    console.log('Header data in loader', ctx.route.options.headers)
     const { data: session } = await authClient.getSession()
     if (!session) {
       throw redirect({ to: '/login' })
@@ -76,7 +76,7 @@ function RouteComponent() {
                       date: event.dateTime!,
                       title: event.title,
                       price: '100',
-                      image: event.coverUrl,
+                      image: event.coverUrl || '',
                     }}
                   />
                 ))

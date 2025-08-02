@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import configureOpenAPI from "@/lib/configure-open-api";
 import createApp from "@/lib/create-app";
+import { authSession } from "@/middlewares/auth-session";
 import events from "@/routes/events/events.index";
 import index from "@/routes/index.route";
 import orgs from "@/routes/organization/organization.index";
@@ -21,10 +22,11 @@ const routes = [
 
 app.on(["POST", "GET", "DELETE", "PUT"], "/api/auth/*", async c => await auth.handler(c.req.raw));
 
+app.use(async (c, next) => authSession(c, next));
+
 routes.forEach((route) => {
   app.route("/", route);
 });
-
 
 export type AppType = typeof routes[number];
 
