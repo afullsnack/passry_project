@@ -5,6 +5,7 @@ export default defineConfig({
     "./src/app.ts",
     "./src/lib/auth.ts",
     "./drizzle.config.ts",
+    "./src/index.ts",
   ],
   format: ["esm", "cjs"],
   dts: true,
