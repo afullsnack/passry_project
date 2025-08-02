@@ -54,7 +54,7 @@ export function SignInForm() {
         }
       } else {
         // TODO: navigate to dashboard
-        navigate({ to: '/explore' })
+        // navigate({ to: '/explore' })
         router.navigate({to: "/explore", from: "/login"})
       }
     } catch (error) {

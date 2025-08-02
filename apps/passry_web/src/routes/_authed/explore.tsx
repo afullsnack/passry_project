@@ -18,19 +18,19 @@ import {
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // import { IconPlus } from '@tabler/icons-react'
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { Filter } from 'lucide-react'
 import ExploreCards from './-components/explore-cards'
 import { client } from '@/lib/api-client'
-import { authClient } from '@/lib/auth-client'
+// import { authClient } from '@/lib/auth-client'
 
 export const Route = createFileRoute('/_authed/explore')({
   component: RouteComponent,
   loader: async () => {
-    const { data: session } = await authClient.getSession()
-    if (!session) {
-      throw redirect({ to: '/login' })
-    }
+    // const { data: session } = await authClient.getSession()
+    // if (!session) {
+    //   throw redirect({ to: '/login' })
+    // }
     const response = await client.event.$get()
     if (response.ok) {
       const events = await response.json()
@@ -103,18 +103,20 @@ function RouteComponent() {
             className="flex flex-col gap-4 overflow-auto px-4 lg:px-6"
           >
             <div className="overflow-hidden rounded-lg grid gap-4.5 border p-3 lg:grid-cols-4 md:grid-cols-3 grid-cols-1">
-              {!!events.length ? (
+              {events.length ? (
                 events.map((event) => (
-                  <ExploreCards
-                    key={event.id}
-                    event={{
-                      id: event.id,
-                      date: event.dateTime!,
-                      title: event.title,
-                      price: '100',
-                      image: event.coverUrl,
-                    }}
-                  />
+                  <Link to={'/e/$id'} params={{ id: event.id }}>
+                    <ExploreCards
+                      key={event.id}
+                      event={{
+                        id: event.id,
+                        date: event.dateTime,
+                        title: event.title,
+                        price: '100',
+                        image: event.coverUrl,
+                      }}
+                    />
+                  </Link>
                 ))
               ) : (
                 <div>No events found</div>
