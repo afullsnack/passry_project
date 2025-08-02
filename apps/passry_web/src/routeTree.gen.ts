@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthedRouteRouteImport } from './routes/_authed/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthedTeamRouteImport } from './routes/_authed/team'
+import { Route as AuthedStatsRouteImport } from './routes/_authed/stats'
 import { Route as AuthedExploreRouteImport } from './routes/_authed/explore'
 import { Route as AuthedEventsRouteImport } from './routes/_authed/events'
 import { Route as AuthedAnalyticsRouteImport } from './routes/_authed/analytics'
@@ -26,6 +28,16 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthedTeamRoute = AuthedTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AuthedRouteRoute,
+} as any)
+const AuthedStatsRoute = AuthedStatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
+  getParentRoute: () => AuthedRouteRoute,
 } as any)
 const AuthedExploreRoute = AuthedExploreRouteImport.update({
   id: '/explore',
@@ -66,6 +78,8 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AuthedAnalyticsRoute
   '/events': typeof AuthedEventsRoute
   '/explore': typeof AuthedExploreRoute
+  '/stats': typeof AuthedStatsRoute
+  '/team': typeof AuthedTeamRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,6 +89,8 @@ export interface FileRoutesByTo {
   '/analytics': typeof AuthedAnalyticsRoute
   '/events': typeof AuthedEventsRoute
   '/explore': typeof AuthedExploreRoute
+  '/stats': typeof AuthedStatsRoute
+  '/team': typeof AuthedTeamRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,6 +102,8 @@ export interface FileRoutesById {
   '/_authed/analytics': typeof AuthedAnalyticsRoute
   '/_authed/events': typeof AuthedEventsRoute
   '/_authed/explore': typeof AuthedExploreRoute
+  '/_authed/stats': typeof AuthedStatsRoute
+  '/_authed/team': typeof AuthedTeamRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,6 +115,8 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/events'
     | '/explore'
+    | '/stats'
+    | '/team'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -106,6 +126,8 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/events'
     | '/explore'
+    | '/stats'
+    | '/team'
   id:
     | '__root__'
     | '/'
@@ -116,6 +138,8 @@ export interface FileRouteTypes {
     | '/_authed/analytics'
     | '/_authed/events'
     | '/_authed/explore'
+    | '/_authed/stats'
+    | '/_authed/team'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -141,6 +165,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authed/team': {
+      id: '/_authed/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof AuthedTeamRouteImport
+      parentRoute: typeof AuthedRouteRoute
+    }
+    '/_authed/stats': {
+      id: '/_authed/stats'
+      path: '/stats'
+      fullPath: '/stats'
+      preLoaderRoute: typeof AuthedStatsRouteImport
+      parentRoute: typeof AuthedRouteRoute
     }
     '/_authed/explore': {
       id: '/_authed/explore'
@@ -191,12 +229,16 @@ interface AuthedRouteRouteChildren {
   AuthedAnalyticsRoute: typeof AuthedAnalyticsRoute
   AuthedEventsRoute: typeof AuthedEventsRoute
   AuthedExploreRoute: typeof AuthedExploreRoute
+  AuthedStatsRoute: typeof AuthedStatsRoute
+  AuthedTeamRoute: typeof AuthedTeamRoute
 }
 
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
   AuthedAnalyticsRoute: AuthedAnalyticsRoute,
   AuthedEventsRoute: AuthedEventsRoute,
   AuthedExploreRoute: AuthedExploreRoute,
+  AuthedStatsRoute: AuthedStatsRoute,
+  AuthedTeamRoute: AuthedTeamRoute,
 }
 
 const AuthedRouteRouteWithChildren = AuthedRouteRoute._addFileChildren(

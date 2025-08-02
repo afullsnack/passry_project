@@ -14,13 +14,6 @@ export const Route = createFileRoute('/_authed/analytics')({
 function RouteComponent() {
   const { data: session, isPending } = useSession()
   const navigate = useNavigate()
-
-  console.log('Session', session)
-
-  if (!session && !isPending) {
-    navigate({ to: '/login' })
-  }
-
   if (isPending) return <div>Loading...</div>
 
   return (
