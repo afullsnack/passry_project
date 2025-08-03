@@ -111,7 +111,6 @@ export function NavUser({
                   resetScroll: true,
                   ignoreBlocker: true,
                   reloadDocument: true,
-                  href: 'http://localhost:3000/login',
                 })
               }}
             >
