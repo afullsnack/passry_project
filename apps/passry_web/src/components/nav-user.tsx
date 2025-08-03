@@ -23,16 +23,15 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { authClient } from '@/lib/auth-client'
-import { useNavigate } from '@tanstack/react-router'
 import { useRouter } from '@tanstack/react-router'
 
 export function NavUser({
   user,
 }: {
   user: {
-    name: string
-    email: string
-    avatar: string
+    name?: string
+    email?: string
+    avatar?: string
   }
 }) {
   const { isMobile } = useSidebar()
@@ -50,8 +49,8 @@ export function NavUser({
               <Avatar className="h-8 w-8 rounded-lg grayscale">
                 <AvatarImage src={user.avatar} alt={user.name} />
                 <AvatarFallback className="rounded-lg">
-                  {(user.name ?? 'C N').split(' ')[0].charAt(0) +
-                    (user.name ?? 'C N').split(' ')[1].charAt(0)}
+                  {(user.name || 'C N').split(' ')[0].charAt(0) +
+                    (user.name || 'C N').split(' ')[1].charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -73,7 +72,10 @@ export function NavUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                  {(user.name || 'C N').split(' ')[0].charAt(0) +
+                    (user.name || 'C N').split(' ')[1].charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
