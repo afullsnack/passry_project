@@ -30,7 +30,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import LogoTextMark from '@/assets/PASSRY_Logo_TextMark.svg?url'
 import { useSession } from '@/hooks/session'
 
@@ -152,13 +152,8 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: session, error } = useSession()
-  const navigate = useNavigate()
+  const {data: session} = useSession()
 
-  if (!session) {
-    console.log('Error in app sidebar', error, session)
-    navigate({ to: '/login' })
-  }
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -186,9 +181,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <NavUser
           user={{
-            name: session?.user.name!,
-            email: session?.user.email!,
-            avatar: session?.user.image!,
+            name: session? session.user.name : "",
+            email: session? session.user.email : "",
+            avatar: "",
           }}
         />
       </SidebarFooter>
