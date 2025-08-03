@@ -100,6 +100,9 @@ export const auth = betterAuth({
         attributes: {
           sameSite: env.NODE_ENV === "development" ? "Lax" : "None",
           secure: env.NODE_ENV !== "development",
+          domain: env.NODE_ENV === "development"? 'localhost' : 'passry.com',
+          path: "/",
+          partitioned: env.NODE_ENV !== "development"
         },
       },
     },
