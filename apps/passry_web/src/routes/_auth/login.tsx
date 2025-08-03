@@ -1,6 +1,6 @@
 import { SignInForm } from '@/components/blocks/signin-form'
 import { Container, Main, Section } from '@/components/craft'
-import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Link, createFileRoute, useRouter } from '@tanstack/react-router'
 
 import logoMark from '@/assets/PASSRY_Logo_TextMark.svg'
 import { useSession } from '@/hooks/session'
@@ -10,18 +10,13 @@ export const Route = createFileRoute('/_auth/login')({
 })
 
 function Login() {
-  const navigate = useNavigate()
-  const { data: session, error } = useSession()
+  const router = useRouter()
+  const { data: session } = useSession()
 
-  console.log("Session in login", session)
-  console.log("error in login", error)
+  console.log('Session in login', session)
+
   if (session) {
-    navigate({ to: '/explore' })
-  }
-
-  if (error) {
-    console.error('Error: ', error)
-    navigate({ to: '/login' })
+    router.navigate({ to: '/explore' })
   }
 
   return (

@@ -191,6 +191,7 @@ export class TigrisClient {
         metadata,
       };
     } catch (error) {
+      console.log("Failed to donwload file:", error)
       throw new Error(`Failed to download file: ${error}`);
     }
   }
@@ -356,7 +357,7 @@ export class TigrisClient {
   async generatePresignedUrl(options: PresignedUrlOptions): Promise<string> {
     try {
       let command;
-      
+
       switch (options.operation || 'GET') {
         case 'GET':
           command = new GetObjectCommand({
@@ -513,26 +514,26 @@ export class TigrisService {
    */
   async downloadTextFile(bucket: string, key: string): Promise<string> {
     const result = await this.client.downloadFile({ bucket, key });
-    
+
     if (result.body instanceof Buffer) {
       return result.body.toString('utf-8');
     }
-    
+
     // Handle ReadableStream
     if (result.body instanceof ReadableStream) {
       const reader = result.body.getReader();
       const chunks: Uint8Array[] = [];
-      
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         chunks.push(value);
       }
-      
+
       const buffer = Buffer.concat(chunks.map(chunk => Buffer.from(chunk)));
       return buffer.toString('utf-8');
     }
-    
+
     throw new Error('Unsupported body type');
   }
 
@@ -544,7 +545,7 @@ export class TigrisService {
       bucket,
       prefix: directory.endsWith('/') ? directory : `${directory}/`,
     });
-    
+
     return result.objects;
   }
 

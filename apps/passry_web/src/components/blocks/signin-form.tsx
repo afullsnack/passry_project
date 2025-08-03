@@ -26,16 +26,16 @@ export function SignInForm() {
       console.log('Sign in with:', { email, password })
 
       // Simulate API call
-      const { data, error } = await authClient.signIn.email({
+      const { data, error: signinError } = await authClient.signIn.email({
         email,
         password,
         rememberMe: true,
-        callbackURL: "/explore"
+        callbackURL: '/explore',
       })
 
-      if (error) {
-        console.log('Error signing in', error)
-        toast.error(error.message || 'Failed to login')
+      if (signinError) {
+        console.log('Error signing in', signinError)
+        toast.error(signinError.message || 'Failed to login')
         return
       }
 
@@ -50,21 +50,21 @@ export function SignInForm() {
           navigate({ to: '/verify_code', search: { email } })
         } catch (error: any) {
           console.error('Error sending verification OTP', error)
+          toast.error(error.message || 'Failed to send verification OTP')
           return
         }
       } else {
         // TODO: navigate to dashboard
         // navigate({ to: '/explore' })
-        router.navigate({to: "/explore", from: "/login"})
+        router.navigate({ to: '/explore' })
       }
     } catch (error) {
+      toast.error('Error signing in please try again later')
       console.error('Sign in error:', error)
-    } finally {
-      // setIsLoading(false)
     }
   }
 
-  const handleSocialSignIn = async (provider: string) => {
+  const handleSocialSignIn = (provider: string) => {
     try {
       // Better Auth social sign in would go here
       // Example: await signIn.social({ provider })

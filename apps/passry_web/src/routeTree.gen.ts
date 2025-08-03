@@ -19,6 +19,7 @@ import { Route as AuthedAnalyticsRouteImport } from './routes/_authed/analytics'
 import { Route as AuthVerify_codeRouteImport } from './routes/_auth/verify_code'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthedEIdRouteImport } from './routes/_authed/e/$id'
 
 const AuthedRouteRoute = AuthedRouteRouteImport.update({
   id: '/_authed',
@@ -69,6 +70,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedEIdRoute = AuthedEIdRouteImport.update({
+  id: '/e/$id',
+  path: '/e/$id',
+  getParentRoute: () => AuthedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/explore': typeof AuthedExploreRoute
   '/stats': typeof AuthedStatsRoute
   '/team': typeof AuthedTeamRoute
+  '/e/$id': typeof AuthedEIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/explore': typeof AuthedExploreRoute
   '/stats': typeof AuthedStatsRoute
   '/team': typeof AuthedTeamRoute
+  '/e/$id': typeof AuthedEIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/_authed/explore': typeof AuthedExploreRoute
   '/_authed/stats': typeof AuthedStatsRoute
   '/_authed/team': typeof AuthedTeamRoute
+  '/_authed/e/$id': typeof AuthedEIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/stats'
     | '/team'
+    | '/e/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/stats'
     | '/team'
+    | '/e/$id'
   id:
     | '__root__'
     | '/'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/_authed/explore'
     | '/_authed/stats'
     | '/_authed/team'
+    | '/_authed/e/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -222,6 +234,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed/e/$id': {
+      id: '/_authed/e/$id'
+      path: '/e/$id'
+      fullPath: '/e/$id'
+      preLoaderRoute: typeof AuthedEIdRouteImport
+      parentRoute: typeof AuthedRouteRoute
+    }
   }
 }
 
@@ -231,6 +250,7 @@ interface AuthedRouteRouteChildren {
   AuthedExploreRoute: typeof AuthedExploreRoute
   AuthedStatsRoute: typeof AuthedStatsRoute
   AuthedTeamRoute: typeof AuthedTeamRoute
+  AuthedEIdRoute: typeof AuthedEIdRoute
 }
 
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
@@ -239,6 +259,7 @@ const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
   AuthedExploreRoute: AuthedExploreRoute,
   AuthedStatsRoute: AuthedStatsRoute,
   AuthedTeamRoute: AuthedTeamRoute,
+  AuthedEIdRoute: AuthedEIdRoute,
 }
 
 const AuthedRouteRouteWithChildren = AuthedRouteRoute._addFileChildren(

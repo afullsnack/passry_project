@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/sidebar'
 import { authClient } from '@/lib/auth-client'
 import { useNavigate } from '@tanstack/react-router'
+import { useRouter } from '@tanstack/react-router'
 
 export function NavUser({
   user,
@@ -35,7 +36,7 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const navigate = useNavigate()
+  const router = useRouter()
 
   return (
     <SidebarMenu>
@@ -101,7 +102,15 @@ export function NavUser({
             <DropdownMenuItem
               onClick={async () => {
                 await authClient.signOut()
-                navigate({ to: '/login' })
+                router.invalidate()
+                router.navigate({
+                  to: '/login',
+                  replace: true,
+                  resetScroll: true,
+                  ignoreBlocker: true,
+                  reloadDocument: true,
+                  href: 'http://localhost:3000/login',
+                })
               }}
             >
               <IconLogout />

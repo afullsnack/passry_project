@@ -18,46 +18,31 @@ import {
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // import { IconPlus } from '@tabler/icons-react'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { Filter } from 'lucide-react'
+import { createFileRoute } from '@tanstack/react-router'
+import { AlertCircleIcon, Filter } from 'lucide-react'
 import ExploreCards from './-components/explore-cards'
-import { client } from '@/lib/api-client'
-// import { authClient } from '@/lib/auth-client'
+import { useState } from 'react'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { useEvents } from '@/hooks/use-events'
 
 export const Route = createFileRoute('/_authed/explore')({
   component: RouteComponent,
-  loader: async () => {
-    // const { data: session } = await authClient.getSession()
-    // if (!session) {
-    //   throw redirect({ to: '/login' })
-    // }
-    const response = await client.event.$get()
-    if (response.ok) {
-      const events = await response.json()
-      console.log('Events server side', events)
-      return { events }
-    }
-
-    throw new Error('Could not get events')
-    // const events = Array.from({ length: 8 }, () => ({
-    //   id: Math.random().toString(16),
-    //   date: '2-01-2025',
-    //   title: 'Event one',
-    //   price: '100',
-    //   image: 'https://via.placeholder.com/150',
-    // }))
-  },
 })
 
 function RouteComponent() {
-  const { events } = Route.useLoaderData()
+  const { data: events, isLoading, error } = useEvents()
+  const [tabValue, setTabValue] = useState('events')
 
   console.log('Events', events)
+  console.log('Error', error)
+
   return (
     <div className="@container/main flex flex-1 flex-col gap-2">
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
         <Tabs
           defaultValue="events"
+          value={tabValue}
+          onValueChange={(value) => setTabValue(value)}
           className="w-full flex-col justify-start gap-6"
         >
           <div className="flex items-center justify-between px-4 lg:px-6">
@@ -70,7 +55,10 @@ function RouteComponent() {
             <Label htmlFor="view-selector" className="sr-only">
               View
             </Label>
-            <Select defaultValue="events">
+            <Select
+              defaultValue="events"
+              onValueChange={(value) => setTabValue(value)}
+            >
               <SelectTrigger
                 className="flex w-fit @4xl/main:hidden"
                 size="sm"
@@ -103,23 +91,21 @@ function RouteComponent() {
             className="flex flex-col gap-4 overflow-auto px-4 lg:px-6"
           >
             <div className="overflow-hidden rounded-lg grid gap-4.5 border p-3 lg:grid-cols-4 md:grid-cols-3 grid-cols-1">
-              {events.length ? (
-                events.map((event) => (
-                  <Link to={'/e/$id'} params={{ id: event.id }}>
-                    <ExploreCards
-                      key={event.id}
-                      event={{
-                        id: event.id,
-                        date: event.dateTime,
-                        title: event.title,
-                        price: '100',
-                        image: event.coverUrl,
-                      }}
-                    />
-                  </Link>
-                ))
-              ) : (
-                <div>No events found</div>
+              {isLoading && <h1>Fetching events...</h1>}
+              {!isLoading && <ExploreCards events={events} />}
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircleIcon />
+                  <AlertTitle>Unable to fetch events.</AlertTitle>
+                  <AlertDescription>
+                    <p>Please verify your internet connection and try again.</p>
+                    <ul className="list-inside list-disc text-sm">
+                      <li>Check your WiFI or mobile data</li>
+                      <li>Ensure sufficient bandwidth</li>
+                      <li>Verify other apps can access the internet</li>
+                    </ul>
+                  </AlertDescription>
+                </Alert>
               )}
             </div>
           </TabsContent>

@@ -36,7 +36,7 @@ export function HeroSection() {
   const [email, setEmail] = useState<string>()
   const [name, setName] = useState<string>()
 
-  const { isPending, error, mutateAsync } = useMutation({
+  const { isPending, mutateAsync } = useMutation({
     mutationKey: ['subscribe'],
     mutationFn: async (params: {
       email: string
@@ -53,7 +53,6 @@ export function HeroSection() {
       setName('')
     },
   })
-  console.log('Error object', error)
 
   return (
     <>

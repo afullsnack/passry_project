@@ -1,49 +1,18 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { Badge } from '@/components/ui/badge'
+import { createFileRoute } from '@tanstack/react-router'
 import { Input } from '@/components/ui/input'
-import { client } from '@/lib/api-client'
-import { authClient } from '@/lib/auth-client'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import ExploreCards from './-components/explore-cards'
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
+import { AlertCircleIcon, Plus } from 'lucide-react'
 import CreateEventDialog from './-components/events/create-event-dialog'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { useEvents } from '@/hooks/use-events'
+
 export const Route = createFileRoute('/_authed/events')({
   component: RouteComponent,
-  loader: async (ctx) => {
-    console.log('Header data in loader', ctx.route.options.headers)
-    const { data: session } = await authClient.getSession()
-    if (!session) {
-      throw redirect({ to: '/login' })
-    }
-    const response = await client.event.$get()
-    if (response.ok) {
-      const events = await response.json()
-      console.log('Events server side', events)
-      return { events }
-    }
-
-    throw new Error('Could not get events')
-    // const events = Array.from({ length: 8 }, () => ({
-    //   id: Math.random().toString(16),
-    //   date: '2-01-2025',
-    //   title: 'Event one',
-    //   price: '100',
-    //   image: 'https://via.placeholder.com/150',
-    // }))
-  },
 })
 
 function RouteComponent() {
-  const { events } = Route.useLoaderData()
+  const { data: events, isLoading, error } = useEvents()
 
   console.log('Events', events)
   return (
@@ -67,21 +36,21 @@ function RouteComponent() {
           </div>
           <div className="flex flex-col gap-4 overflow-auto px-4 lg:px-6">
             <div className="overflow-hidden rounded-lg grid gap-4.5 border p-3 lg:grid-cols-4 md:grid-cols-3 grid-cols-1">
-              {events.length ? (
-                events.map((event) => (
-                  <ExploreCards
-                    key={event.id}
-                    event={{
-                      id: event.id,
-                      date: event.dateTime!,
-                      title: event.title,
-                      price: '100',
-                      image: event.coverUrl || '',
-                    }}
-                  />
-                ))
-              ) : (
-                <div>No events found</div>
+              {isLoading && <h1>Fetching events...</h1>}
+              {!isLoading && <ExploreCards events={events} />}
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircleIcon />
+                  <AlertTitle>Unable to fetch events.</AlertTitle>
+                  <AlertDescription>
+                    <p>Please verify your internet connection and try again.</p>
+                    <ul className="list-inside list-disc text-sm">
+                      <li>Check your WiFI or mobile data</li>
+                      <li>Ensure sufficient bandwidth</li>
+                      <li>Verify other apps can access the internet</li>
+                    </ul>
+                  </AlertDescription>
+                </Alert>
               )}
             </div>
           </div>

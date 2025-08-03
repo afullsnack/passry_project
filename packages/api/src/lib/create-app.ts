@@ -25,7 +25,7 @@ export default function createApp() {
     .use(pinoLogger())
     .use(cors({
       origin: ["*", "http://localhost:3000", "https://passry.com", "https://www.passry.com"],
-      credentials: true,
+      credentials: true
     }));
 
   app.notFound(notFound);

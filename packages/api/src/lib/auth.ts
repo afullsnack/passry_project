@@ -98,8 +98,13 @@ export const auth = betterAuth({
     cookies: {
       session_token: {
         attributes: {
-          sameSite: env.NODE_ENV === "development" ? "Lax" : "none",
+          sameSite: env.NODE_ENV === "development" ? "Lax" : "Lax",
           secure: env.NODE_ENV !== "development",
+          domain: env.NODE_ENV === "development" ? "localhost" : ".passry.com",
+          httpOnly: true,
+          maxAge: 3600,
+          path: "/",
+          partitioned: env.NODE_ENV !== "development"
         },
       },
     },

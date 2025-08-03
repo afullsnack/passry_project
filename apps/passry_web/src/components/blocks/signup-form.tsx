@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Apple, Chrome, Facebook } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
+import { useRouter } from '@tanstack/react-router'
 import { z } from 'zod'
 import { useForm } from '@tanstack/react-form'
 import {
@@ -19,7 +19,7 @@ import { authClient } from '@/lib/auth-client'
 import { toast } from 'sonner'
 
 export function SignUpForm() {
-  const navigate = useNavigate()
+  const router = useRouter()
 
   const handleSocialSignUp = async (provider: string) => {
     try {
@@ -66,7 +66,7 @@ export function SignUpForm() {
       }
 
       console.log('data', data)
-      navigate({ to: '/verify_code', search: { email: value.email } })
+      router.navigate({ to: '/verify_code', search: { email: value.email } })
     },
   })
 
@@ -228,7 +228,7 @@ export function SignUpForm() {
           Already have an account? -{' '}
         </span>
         <button
-          onClick={() => navigate({ to: '/login' })}
+          onClick={() => router.navigate({ to: '/login' })}
           className="text-cyan-500 hover:text-cyan-600 font-medium"
         >
           Sign In

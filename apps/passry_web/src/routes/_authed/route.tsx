@@ -21,7 +21,12 @@ function RouteComponent() {
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader page={route.location.pathname.slice(1)} />
+        <SiteHeader
+          page={route.location.pathname.slice(
+            1,
+            route.location.pathname.lastIndexOf('/'),
+          )}
+        />
         <div className="flex flex-1 flex-col">
           <Outlet />
         </div>
