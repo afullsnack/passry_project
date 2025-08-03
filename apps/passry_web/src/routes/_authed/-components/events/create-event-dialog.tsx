@@ -14,8 +14,10 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Switch } from '@/components/ui/switch'
 import { useSession } from '@/hooks/session'
 import { client } from '@/lib/api-client'
+import { authClient } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 import { useForm } from '@tanstack/react-form'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { X } from 'lucide-react'
 import { useState } from 'react'
@@ -32,6 +34,8 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
   const [eventFormOpen, setEventFormOpen] = useState(false)
   const { data: session } = useSession()
   const router = useRouter()
+  const queryClient = useQueryClient()
+  
 
   const totalSteps = 3
 
@@ -62,13 +66,15 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
             console.log('Org creation result', result)
             setOrgFormOpen(false)
             toast.success('Organization created successfully', {
-              description: 'You can now start creating events',
-              // action: {
-              //   label: "Create event",
-              //   onClick: () => {
-
-              //   }
-              // }
+              description: 'You can now start creating events, after you log back in',
+            })
+            await authClient.signOut()
+            router.navigate({
+              to: '/login',
+              replace: true,
+              resetScroll: true,
+              ignoreBlocker: true,
+              reloadDocument: true,
             })
           }
         } else {
@@ -209,6 +215,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
 
             toast.success('Event and its tickets created successfully')
             console.log('New event', eventResult)
+            queryClient.invalidateQueries({queryKey: ['events']})
           } else {
             toast.error('Failed to create event')
           }
@@ -615,7 +622,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                           size="sm"
                           variant="outline"
                           onClick={() => handleBack()}
-                          // disabled={step === 0}
+                        // disabled={step === 0}
                         >
                           Previous Step
                         </Button>
@@ -778,7 +785,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                           size="sm"
                           variant="outline"
                           onClick={() => handleBack()}
-                          // disabled={step === 0}
+                        // disabled={step === 0}
                         >
                           Previous Step
                         </Button>
