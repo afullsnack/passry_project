@@ -105,7 +105,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
           name: '',
           price: 0,
           quantity: 0,
-          saleStateDate: new Date(),
+          saleStartDate: new Date(),
           saleEndDate: new Date(),
           isFree: true,
         },
@@ -127,7 +127,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
             name: z.string(),
             price: z.number().min(0),
             quantity: z.number().min(1),
-            saleStateDate: z.date(),
+            saleStartDate: z.date(),
             saleEndDate: z.date(),
             isFree: z.boolean(),
           }),
@@ -189,7 +189,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                     quantity: ticket.quantity,
                     eventId: eventResult.id,
                     orgId: session.org.id,
-                    saleStart: ticket.saleStateDate,
+                    saleStart: ticket.saleStartDate,
                     saleEnd: ticket.saleEndDate,
                     isFree: ticket.isFree,
                   },
@@ -710,11 +710,11 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                                     )}
                                   </form.Field>
                                   <form.Field
-                                    name={`tickets[${i}].saleStateDate`}
+                                    name={`tickets[${i}].saleStartDate`}
                                   >
                                     {(subField) => (
                                       <div>
-                                        <Label>Sale End</Label>
+                                        <Label>Sale Start Date</Label>
                                         <Input
                                           onBlur={subField.handleBlur}
                                           type="datetime-local"
@@ -732,7 +732,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                                   >
                                     {(subField) => (
                                       <div>
-                                        <Label>Sale End</Label>
+                                        <Label>Sale End Date</Label>
                                         <Input
                                           onBlur={subField.handleBlur}
                                           type="datetime-local"
@@ -768,7 +768,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                                   price: 0,
                                   quantity: 0,
                                   saleEndDate: new Date(),
-                                  saleStateDate: new Date(),
+                                  saleStartDate: new Date(),
                                   isFree: true,
                                 })
                               }
