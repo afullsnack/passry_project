@@ -35,7 +35,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
   const { data: session } = useSession()
   const router = useRouter()
   const queryClient = useQueryClient()
-  
+
 
   const totalSteps = 3
 
@@ -215,7 +215,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
 
             toast.success('Event and its tickets created successfully')
             console.log('New event', eventResult)
-            queryClient.invalidateQueries({queryKey: ['events']})
+            queryClient.invalidateQueries({ queryKey: ['events'] })
           } else {
             toast.error('Failed to create event')
           }
@@ -237,9 +237,6 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
       }
     },
   })
-
-  console.log(form.state.errors, JSON.stringify(form.state.errorMap, null, 3))
-  console.log(form.state.values)
 
   const handleBack = () => {
     if (step > 0) {
@@ -363,7 +360,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
       }}
     >
       <DialogTrigger asChild>{openTrigger}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className='px-2 md:px-3'>
         <DialogHeader>
           <DialogTitle>Create Event</DialogTitle>
           <DialogDescription>Create events for your audience</DialogDescription>
@@ -408,7 +405,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
               </CardHeader>
 
               <CardContent className="h-full">
-                <ScrollArea className="h-[450px] w-full">
+                <ScrollArea className="h-[40vh] w-full">
                   <form
                     onSubmit={(e) => {
                       console.log('Called from onSubmit')
@@ -493,6 +490,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                         <Button
                           className="font-medium"
                           variant="outline"
+                          type='button'
                           size="sm"
                           onClick={() => handleBack()}
                           disabled={step === 0}
@@ -502,6 +500,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
 
                         <Button
                           size="sm"
+                          type='button'
                           className="font-medium"
                           onClick={() => handleNext()}
                         >
@@ -620,6 +619,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                         <Button
                           className="font-medium"
                           size="sm"
+                          type='button'
                           variant="outline"
                           onClick={() => handleBack()}
                         // disabled={step === 0}
@@ -629,6 +629,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
 
                         <Button
                           size="sm"
+                          type='button'
                           className="font-medium"
                           onClick={() => handleNext()}
                         >
@@ -663,6 +664,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                                         <Input
                                           value={subField.state.value}
                                           onBlur={subField.handleBlur}
+                                          placeholder='Enter name of ticket'
                                           onChange={(e) =>
                                             subField.handleChange(
                                               e.target.value,
@@ -679,6 +681,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                                         <Input
                                           value={subField.state.value}
                                           type="number"
+                                          placeholder='Enter price of ticket'
                                           onBlur={subField.handleBlur}
                                           onChange={(e) =>
                                             subField.handleChange(
@@ -770,6 +773,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                                 })
                               }
                               variant="outline"
+                              type='button'
                               size="sm"
                               className="my-6"
                             >
@@ -782,6 +786,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                       <div className="flex justify-start gap-4">
                         <Button
                           className="font-medium"
+                          type='button'
                           size="sm"
                           variant="outline"
                           onClick={() => handleBack()}
@@ -798,6 +803,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                           children={([canSubmit, isSubmitting]) => (
                             <Button
                               size="sm"
+                              type='button'
                               className="font-medium"
                               disabled={!canSubmit}
                               onClick={() => {

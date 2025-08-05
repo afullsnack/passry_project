@@ -1,10 +1,10 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { FatInput, Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
-import { Apple, Chrome, Facebook } from 'lucide-react'
+import { Apple, Chrome, Eye, EyeOff, Facebook } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
 import { z } from 'zod'
 import { useForm } from '@tanstack/react-form'
@@ -17,9 +17,15 @@ import {
 } from '../ui/select'
 import { authClient } from '@/lib/auth-client'
 import { toast } from 'sonner'
+import { useState } from 'react'
 
 export function SignUpForm() {
   const router = useRouter()
+  const [passwordHidden, setPasswordHidden] = useState(true)
+  const [confirmPasswordHidden, setConfirmPasswordHidden] = useState(true)
+
+  const togglePasswordHidden = () => setPasswordHidden((_prev) => !_prev)
+  const toggleConfirmPasswordHidden = () => setConfirmPasswordHidden((_prev) => !_prev)
 
   const handleSocialSignUp = async (provider: string) => {
     try {
@@ -146,14 +152,15 @@ export function SignUpForm() {
           <form.Field
             name="password"
             children={(field) => (
-              <Input
+              <FatInput
                 id="password"
-                type="text"
+                type={passwordHidden? "password" : "text"}
                 placeholder="Enter your password"
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
+                suffix={<Button type='button' variant="link" size="sm" onClick={togglePasswordHidden}>{!passwordHidden? <EyeOff /> : <Eye />}</Button>}
                 className="h-12"
               />
             )}
@@ -165,14 +172,15 @@ export function SignUpForm() {
           <form.Field
             name="confirmPassword"
             children={(field) => (
-              <Input
+              <FatInput
                 id="confirmPassword"
-                type="text"
+                type={confirmPasswordHidden? "password" : "text"}
                 placeholder="Confirm your password"
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
+                suffix={<Button type='button' variant="link" size="sm" onClick={toggleConfirmPasswordHidden}>{!confirmPasswordHidden? <EyeOff /> : <Eye />}</Button>}
                 className="h-12"
               />
             )}

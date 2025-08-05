@@ -1,19 +1,24 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { FatInput, Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
-import { Apple, Chrome, Facebook } from 'lucide-react'
+import { Apple, Chrome, Eye, EyeOff, Facebook } from 'lucide-react'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 import { authClient } from '@/lib/auth-client'
 import { toast } from 'sonner'
+import { useState } from 'react'
 
 export function SignInForm() {
   const navigate = useNavigate()
   const router = useRouter()
+
+  const [passwordHidden, setPasswordHidden] = useState(true)
+
+  const togglePasswordHidden = () => setPasswordHidden((_prev) => !_prev)
 
   const handleSubmit = async ({
     email,
@@ -129,14 +134,15 @@ export function SignInForm() {
           <form.Field
             name="password"
             children={(field) => (
-              <Input
+              <FatInput
                 id="password"
-                type="password"
+                type={passwordHidden? "password" : "text"}
                 placeholder="Enter password"
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
+                suffix={<Button type='button' variant="link" size="sm" onClick={togglePasswordHidden}>{!passwordHidden? <EyeOff /> : <Eye />}</Button>}
                 className="h-12"
               />
             )}

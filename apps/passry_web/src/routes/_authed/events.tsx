@@ -6,6 +6,7 @@ import { AlertCircleIcon, Plus } from 'lucide-react'
 import CreateEventDialog from './-components/events/create-event-dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useEvents } from '@/hooks/use-events'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export const Route = createFileRoute('/_authed/events')({
   component: RouteComponent,
@@ -13,6 +14,7 @@ export const Route = createFileRoute('/_authed/events')({
 
 function RouteComponent() {
   const { data: events, isLoading, error } = useEvents()
+  const isMobile = useIsMobile()
 
   console.log('Events', events)
   return (
@@ -22,14 +24,14 @@ function RouteComponent() {
           defaultValue="events"
           className="w-full flex-col justify-start gap-6"
         >
-          <div className="flex items-center justify-between px-4 lg:px-6">
+          <div className="flex items-center justify-between px-4 lg:px-6 mb-6 lg:mb-4">
             <div className="flex items-center gap-2">
               <Input placeholder="Search" />
             </div>
             <CreateEventDialog
               openTrigger={
-                <Button>
-                  Create event <Plus />
+                <Button className='' size={isMobile? "sm" : "default"}>
+                  Create event <Plus className='ml-2 size-4' />
                 </Button>
               }
             />
