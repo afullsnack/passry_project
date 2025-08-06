@@ -10,6 +10,8 @@ import { PiTiktokLogo } from 'react-icons/pi'
 import { UpcomingEventsSection } from '@/components/blocks/upcoming-events-section'
 import { AboutSection } from '@/components/blocks/about-section'
 import { CandoSection } from '@/components/blocks/cando-section'
+import { HowItWorksSection } from '@/components/blocks/how-it-works-section'
+import { DownloadAppSection } from '@/components/blocks/download-app-section'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -22,6 +24,8 @@ function App() {
       <UpcomingEventsSection />
       <AboutSection />
       <CandoSection />
+      <HowItWorksSection />
+      <DownloadAppSection />
       <FooterSection
         logo={<img src={LogoTextMark} className="object-cover h-8 w-28" />}
         brandName=""
