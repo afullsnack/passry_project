@@ -8,6 +8,8 @@ import PASSRYPolicy from '@/assets/PASSRY_Privacy_Policy.pdf?url'
 import { Facebook, Instagram, Twitter } from 'lucide-react'
 import { PiTiktokLogo } from 'react-icons/pi'
 import { UpcomingEventsSection } from '@/components/blocks/upcoming-events-section'
+import { AboutSection } from '@/components/blocks/about-section'
+import { CandoSection } from '@/components/blocks/cando-section'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -18,6 +20,8 @@ function App() {
     <Main className="min-h-screen overflow-hidden justify-center items-center">
       <HeroSection />
       <UpcomingEventsSection />
+      <AboutSection />
+      <CandoSection />
       <FooterSection
         logo={<img src={LogoTextMark} className="object-cover h-8 w-28" />}
         brandName=""

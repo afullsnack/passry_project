@@ -33,7 +33,7 @@ export function UpcomingEventsSection() {
   return (
     <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
+        <h2 className="text-3xl md:text-4xl text-balance font-bold text-center text-gray-900 mb-12">
           Don't Miss These Upcoming Events
         </h2>
 
@@ -41,7 +41,7 @@ export function UpcomingEventsSection() {
           {events.map((event) => (
             <Card
               key={event.id}
-              className="overflow-hidden rounded-2xl border-0 shadow-lg hover:shadow-xl transition-shadow duration-300"
+              className="overflow-hidden rounded-2xl border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 p-0"
             >
               <CardContent className="p-0 h-full">
                 <div className={`relative h-64 ${event.className}`}>

@@ -98,7 +98,7 @@ export function HeroSection() {
                     <h1 className="text-start mb-3">
                       Join Passry waitlist community
                     </h1>
-                    <form className="space-y-3 md:space-y-0 md:flex mx-auto max-w-sm">
+                    <form className="space-y-3 md:space-y-0 md:flex md:gap-2 mx-auto max-w-sm">
                       <div className="bg-background has-[input:focus]:ring-muted relative grid grid-cols-[1fr_auto] pr-1.5 items-center rounded-[1rem] border shadow shadow-zinc-950/5 has-[input:focus]:ring-2 lg:pr-0">
                         <User
                           className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4"
@@ -167,9 +167,7 @@ export function HeroSection() {
                               )
                             }}
                           >
-                            <span className="hidden md:block">
-                              Join waitlist
-                            </span>
+                            <span className="hidden md:block">Join</span>
                             <SendHorizonal
                               className="relative mx-auto size-5 md:hidden -rotate-40"
                               strokeWidth={2}
@@ -191,7 +189,10 @@ export function HeroSection() {
                   </div>
                 </div>
 
-                <div className="my-20 md:hidden items-center" id="hide-large">
+                <div
+                  className="grid my-20 md:hidden items-center"
+                  id={isMobile ? 'show-small' : 'hide-large'}
+                >
                   <img
                     src={playStoreDownload}
                     className="object-cover h-[80px]"
