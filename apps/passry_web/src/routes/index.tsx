@@ -1,12 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { Main} from '@/components/craft'
+import { Main } from '@/components/craft'
 import { HeroSection } from '@/components/blocks/hero-section-3'
 import { FooterSection } from '@/components/blocks/footer-section'
 import LogoTextMark from '@/assets/PASSRY_Logo_TextMark.svg?url'
 import PASSRYPolicy from '@/assets/PASSRY_Privacy_Policy.pdf?url'
 import { Facebook, Instagram, Twitter } from 'lucide-react'
 import { PiTiktokLogo } from 'react-icons/pi'
+import { UpcomingEventsSection } from '@/components/blocks/upcoming-events-section'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -16,6 +17,7 @@ function App() {
   return (
     <Main className="min-h-screen overflow-hidden justify-center items-center">
       <HeroSection />
+      <UpcomingEventsSection />
       <FooterSection
         logo={<img src={LogoTextMark} className="object-cover h-8 w-28" />}
         brandName=""
@@ -53,18 +55,6 @@ function App() {
           license: `All rights reserved.`,
         }}
       />
-      {/* <Section className="grid grid-cols-2 gap-0">
-        <Container>
-          <h1>Passry</h1>
-        </Container>
-        <Container>
-          <img
-            src={logo}
-            className="h-[40vmin] pointer-events-none animate-[spin_20s_linear_infinite]"
-            alt="logo"
-          />
-        </Container>
-      </Section> */}
     </Main>
   )
 }

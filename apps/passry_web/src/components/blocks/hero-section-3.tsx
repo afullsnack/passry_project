@@ -9,10 +9,13 @@ import { ProgressiveBlur } from '@/components/ui/progressive-blur'
 import type { Variants } from 'framer-motion'
 import LogoMark from '@/assets/PASSRY_LogoMark.svg?url'
 import PASSRY_Hero from '@/assets/Passry_Hero.gif?url'
+import playStoreDownload from '@/assets/play-store-download.png?url'
+import appStoreDownload from '@/assets/app-store-download.png?url'
 import { ThemeToggle } from '../theme-toggle'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { subscribe } from '@/actions/subscribe'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 const transitionVariants: Variants = {
   hidden: {
@@ -35,6 +38,7 @@ const transitionVariants: Variants = {
 export function HeroSection() {
   const [email, setEmail] = useState<string>()
   const [name, setName] = useState<string>()
+  const isMobile = useIsMobile()
 
   const { isPending, mutateAsync } = useMutation({
     mutationKey: ['subscribe'],
@@ -74,7 +78,7 @@ export function HeroSection() {
                   },
                   ...transitionVariants,
                 }}
-                className="grid grid-cols-1 lg:grid-cols-2"
+                className="grid grid-cols-1 md:grid-cols-2 md:gap-6"
               >
                 <div>
                   <h1 className="text-balance text-left text-4xl font-medium sm:text-5xl md:text-6xl">
@@ -90,10 +94,16 @@ export function HeroSection() {
                     front row when the app launches.
                   </p>
 
-                  <div className="justify-start grid">
-                    <form action="" className="mt-12 mx-auto max-w-sm">
+                  <div className="grid bg-[#00BCD4]/40 rounded-2xl py-8 items-center justify-center mt-6">
+                    <h1 className="text-start mb-3">
+                      Join Passry waitlist community
+                    </h1>
+                    <form className="space-y-3 md:space-y-0 md:flex mx-auto max-w-sm">
                       <div className="bg-background has-[input:focus]:ring-muted relative grid grid-cols-[1fr_auto] pr-1.5 items-center rounded-[1rem] border shadow shadow-zinc-950/5 has-[input:focus]:ring-2 lg:pr-0">
-                        <User className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4" />
+                        <User
+                          className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4"
+                          color="#00BCD4"
+                        />
                         <input
                           placeholder="Your name"
                           className="h-12 w-full bg-transparent pl-12 focus:outline-none"
@@ -103,7 +113,10 @@ export function HeroSection() {
                         />
                       </div>
                       <div className="bg-background has-[input:focus]:ring-muted relative grid grid-cols-[1fr_auto] pr-1.5 items-center rounded-[1rem] border shadow shadow-zinc-950/5 has-[input:focus]:ring-2 lg:pr-0">
-                        <Mail className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4" />
+                        <Mail
+                          className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4"
+                          color="#00BCD4"
+                        />
 
                         <input
                           placeholder="Your email address"
@@ -118,7 +131,7 @@ export function HeroSection() {
                             aria-label="submit"
                             size="sm"
                             type="submit"
-                            className="rounded-[0.5rem]"
+                            className="rounded-[0.5rem] bg-[#00BCD4]"
                             disabled={isPending}
                             onClick={(e) => {
                               e.preventDefault()
@@ -166,7 +179,29 @@ export function HeroSection() {
                       </div>
                     </form>
                   </div>
+                  <div className="hidden my-6 md:flex gap-2 items-center">
+                    <img
+                      src={playStoreDownload}
+                      className="object-cover h-[60px]"
+                    />
+                    <img
+                      src={appStoreDownload}
+                      className="object-cover h-[60px]"
+                    />
+                  </div>
                 </div>
+
+                <div className="my-20 md:hidden items-center" id="hide-large">
+                  <img
+                    src={playStoreDownload}
+                    className="object-cover h-[80px]"
+                  />
+                  <img
+                    src={appStoreDownload}
+                    className="object-cover h-[80px]"
+                  />
+                </div>
+
                 <AppComponent />
                 {/* <div
                   aria-hidden
@@ -194,8 +229,8 @@ export function HeroSection() {
 
 const AppComponent = () => {
   return (
-    <div>
-      <img src={PASSRY_Hero} className="object-cover" />
+    <div className="bg-[#00BCD4]/45 h-[600px] md:h-[600px] rounded-tl-[180px] grid items-center justify-center">
+      <img src={PASSRY_Hero} className="object-cover h-[80%]" />
     </div>
   )
   // return (

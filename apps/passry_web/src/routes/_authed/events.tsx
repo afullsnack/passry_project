@@ -30,8 +30,8 @@ function RouteComponent() {
             </div>
             <CreateEventDialog
               openTrigger={
-                <Button className='' size={isMobile? "sm" : "default"}>
-                  Create event <Plus className='ml-2 size-4' />
+                <Button className="" size={isMobile ? 'sm' : 'default'}>
+                  Create event <Plus className="ml-2 size-4" />
                 </Button>
               }
             />

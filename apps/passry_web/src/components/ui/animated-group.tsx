@@ -156,11 +156,21 @@ function AnimatedGroup({
       variants={containerVariants}
       className={cn(className)}
     >
-      {React.Children.map(children, (child, index) => (
-        <motion.div key={index} variants={itemVariants}>
-          {child}
-        </motion.div>
-      ))}
+      {React.Children.map(children, (child, index) => {
+        if (React.isValidElement(child)) {
+          if (
+            child.props?.hasOwnProperty('id') &&
+            child.props.id === 'hide-large'
+          ) {
+            return null
+          }
+        }
+        return (
+          <motion.div key={index} variants={itemVariants}>
+            {child}
+          </motion.div>
+        )
+      })}
     </motion.div>
   )
 }

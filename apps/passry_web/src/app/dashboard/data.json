@@ -1,614 +1,506 @@
 [
   {
     "id": 1,
-    "header": "Cover page",
-    "type": "Cover page",
+    "title": "Cover page",
+    "category": "Cover page",
     "status": "In Process",
-    "target": "18",
-    "limit": "5",
-    "reviewer": "Eddie Lake"
+    "location": "18"
   },
   {
     "id": 2,
-    "header": "Table of contents",
-    "type": "Table of contents",
+    "title": "Table of contents",
+    "category": "Table of contents",
     "status": "Done",
-    "target": "29",
-    "limit": "24",
-    "reviewer": "Eddie Lake"
+    "location": "29"
   },
   {
     "id": 3,
-    "header": "Executive summary",
-    "type": "Narrative",
+    "title": "Executive summary",
+    "category": "Executive summary",
     "status": "Done",
-    "target": "10",
-    "limit": "13",
-    "reviewer": "Eddie Lake"
+    "location": "10"
   },
   {
     "id": 4,
-    "header": "Technical approach",
-    "type": "Narrative",
+    "title": "Technical approach",
+    "category": "Technical approach",
     "status": "Done",
-    "target": "27",
-    "limit": "23",
-    "reviewer": "Jamik Tashpulatov"
+    "location": "27"
   },
   {
     "id": 5,
-    "header": "Design",
-    "type": "Narrative",
+    "title": "Design",
+    "category": "Design",
     "status": "In Process",
-    "target": "2",
-    "limit": "16",
-    "reviewer": "Jamik Tashpulatov"
+    "location": "2"
   },
   {
     "id": 6,
-    "header": "Capabilities",
-    "type": "Narrative",
+    "title": "Capabilities",
+    "category": "Capabilities",
     "status": "In Process",
-    "target": "20",
-    "limit": "8",
-    "reviewer": "Jamik Tashpulatov"
+    "location": "20"
   },
   {
     "id": 7,
-    "header": "Integration with existing systems",
-    "type": "Narrative",
+    "title": "Integration with existing systems",
+    "category": "Integration with existing systems",
     "status": "In Process",
-    "target": "19",
-    "limit": "21",
-    "reviewer": "Jamik Tashpulatov"
+    "location": "19"
   },
   {
     "id": 8,
-    "header": "Innovation and Advantages",
-    "type": "Narrative",
+    "title": "Innovation and Advantages",
+    "category": "Innovation and Advantages",
     "status": "Done",
-    "target": "25",
-    "limit": "26",
-    "reviewer": "Assign reviewer"
+    "location": "25"
   },
   {
     "id": 9,
-    "header": "Overview of EMR's Innovative Solutions",
-    "type": "Technical content",
+    "title": "Overview of EMR's Innovative Solutions",
+    "category": "Overview of EMR's Innovative Solutions",
     "status": "Done",
-    "target": "7",
-    "limit": "23",
-    "reviewer": "Assign reviewer"
+    "location": "7"
   },
   {
     "id": 10,
-    "header": "Advanced Algorithms and Machine Learning",
-    "type": "Narrative",
+    "title": "Advanced Algorithms and Machine Learning",
+    "category": "Advanced Algorithms and Machine Learning",
     "status": "Done",
-    "target": "30",
-    "limit": "28",
-    "reviewer": "Assign reviewer"
+    "location": "30"
   },
   {
     "id": 11,
-    "header": "Adaptive Communication Protocols",
-    "type": "Narrative",
+    "title": "Adaptive Communication Protocols",
+    "category": "Adaptive Communication Protocols",
     "status": "Done",
-    "target": "9",
-    "limit": "31",
-    "reviewer": "Assign reviewer"
+    "location": "9"
   },
   {
     "id": 12,
-    "header": "Advantages Over Current Technologies",
-    "type": "Narrative",
+    "title": "Advantages Over Current Technologies",
+    "category": "Advantages Over Current Technologies",
     "status": "Done",
-    "target": "12",
-    "limit": "0",
-    "reviewer": "Assign reviewer"
+    "location": "12"
   },
   {
     "id": 13,
-    "header": "Past Performance",
-    "type": "Narrative",
+    "title": "Past Performance",
+    "category": "Past Performance",
     "status": "Done",
-    "target": "22",
-    "limit": "33",
-    "reviewer": "Assign reviewer"
+    "location": "22"
   },
   {
     "id": 14,
-    "header": "Customer Feedback and Satisfaction Levels",
-    "type": "Narrative",
+    "title": "Customer Feedback and Satisfaction Levels",
+    "category": "Customer Feedback and Satisfaction Levels",
     "status": "Done",
-    "target": "15",
-    "limit": "34",
-    "reviewer": "Assign reviewer"
+    "location": "15"
   },
   {
     "id": 15,
-    "header": "Implementation Challenges and Solutions",
-    "type": "Narrative",
+    "title": "Implementation Challenges and Solutions",
+    "category": "Implementation Challenges and Solutions",
     "status": "Done",
-    "target": "3",
-    "limit": "35",
-    "reviewer": "Assign reviewer"
+    "location": "3"
   },
   {
     "id": 16,
-    "header": "Security Measures and Data Protection Policies",
-    "type": "Narrative",
+    "title": "Security Measures and Data Protection Policies",
+    "category": "Security Measures and Data Protection Policies",
     "status": "In Process",
-    "target": "6",
-    "limit": "36",
-    "reviewer": "Assign reviewer"
+    "location": "6"
   },
   {
     "id": 17,
-    "header": "Scalability and Future Proofing",
-    "type": "Narrative",
+    "title": "Scalability and Future Proofing",
+    "category": "Scalability and Future Proofing",
     "status": "Done",
-    "target": "4",
-    "limit": "37",
-    "reviewer": "Assign reviewer"
+    "location": "4"
   },
   {
     "id": 18,
-    "header": "Cost-Benefit Analysis",
-    "type": "Plain language",
+    "title": "Cost-Benefit Analysis",
+    "category": "Cost-Benefit Analysis",
     "status": "Done",
-    "target": "14",
-    "limit": "38",
-    "reviewer": "Assign reviewer"
+    "location": "14"
   },
   {
     "id": 19,
-    "header": "User Training and Onboarding Experience",
-    "type": "Narrative",
+    "title": "User Training and Onboarding Experience",
+    "category": "User Training and Onboarding Experience",
     "status": "Done",
-    "target": "17",
-    "limit": "39",
-    "reviewer": "Assign reviewer"
+    "location": "17"
   },
   {
     "id": 20,
-    "header": "Future Development Roadmap",
-    "type": "Narrative",
+    "title": "Future Development Roadmap",
+    "category": "Future Development Roadmap",
     "status": "Done",
-    "target": "11",
-    "limit": "40",
-    "reviewer": "Assign reviewer"
+    "location": "11"
   },
   {
     "id": 21,
-    "header": "System Architecture Overview",
-    "type": "Technical content",
+    "title": "System Architecture Overview",
+    "category": "System Architecture Overview",
     "status": "In Process",
-    "target": "24",
-    "limit": "18",
-    "reviewer": "Maya Johnson"
+    "location": "24"
   },
   {
     "id": 22,
-    "header": "Risk Management Plan",
-    "type": "Narrative",
+    "title": "Risk Management Plan",
+    "category": "Risk Management Plan",
     "status": "Done",
-    "target": "15",
-    "limit": "22",
-    "reviewer": "Carlos Rodriguez"
+    "location": "15"
   },
   {
     "id": 23,
-    "header": "Compliance Documentation",
-    "type": "Legal",
+    "title": "Compliance Documentation",
+    "category": "Compliance Documentation",
     "status": "In Process",
-    "target": "31",
-    "limit": "27",
-    "reviewer": "Sarah Chen"
+    "location": "31"
   },
   {
     "id": 24,
-    "header": "API Documentation",
-    "type": "Technical content",
+    "title": "API Documentation",
+    "category": "API Documentation",
     "status": "Done",
-    "target": "8",
-    "limit": "12",
-    "reviewer": "Raj Patel"
+    "location": "8"
   },
   {
     "id": 25,
-    "header": "User Interface Mockups",
-    "type": "Visual",
+    "title": "User Interface Mockups",
+    "category": "User Interface Mockups",
     "status": "In Process",
-    "target": "19",
-    "limit": "25",
-    "reviewer": "Leila Ahmadi"
+    "location": "19"
   },
   {
     "id": 26,
-    "header": "Database Schema",
-    "type": "Technical content",
+    "title": "Database Schema",
+    "category": "Database Schema",
     "status": "Done",
-    "target": "22",
-    "limit": "20",
-    "reviewer": "Thomas Wilson"
+    "location": "22"
   },
   {
     "id": 27,
-    "header": "Testing Methodology",
-    "type": "Technical content",
+    "title": "Testing Methodology",
+    "category": "Testing Methodology",
     "status": "In Process",
-    "target": "17",
-    "limit": "14",
-    "reviewer": "Assign reviewer"
+    "location": "17"
   },
   {
     "id": 28,
-    "header": "Deployment Strategy",
-    "type": "Narrative",
+    "title": "Deployment Strategy",
+    "category": "Deployment Strategy",
     "status": "Done",
-    "target": "26",
-    "limit": "30",
-    "reviewer": "Eddie Lake"
+    "location": "26"
   },
   {
     "id": 29,
-    "header": "Budget Breakdown",
-    "type": "Financial",
+    "title": "Budget Breakdown",
+    "category": "Budget Breakdown",
     "status": "In Process",
-    "target": "13",
-    "limit": "16",
-    "reviewer": "Jamik Tashpulatov"
+    "location": "13"
   },
   {
     "id": 30,
-    "header": "Market Analysis",
-    "type": "Research",
+    "title": "Market Analysis",
+    "category": "Market Analysis",
     "status": "Done",
-    "target": "29",
-    "limit": "32",
-    "reviewer": "Sophia Martinez"
+    "location": "29"
   },
   {
     "id": 31,
-    "header": "Competitor Comparison",
-    "type": "Research",
+    "title": "Competitor Comparison",
+    "category": "Competitor Comparison",
     "status": "In Process",
-    "target": "21",
-    "limit": "19",
-    "reviewer": "Assign reviewer"
+    "location": "21"
   },
   {
     "id": 32,
-    "header": "Maintenance Plan",
-    "type": "Technical content",
+    "title": "Maintenance Plan",
+    "category": "Maintenance Plan",
     "status": "Done",
-    "target": "16",
-    "limit": "23",
-    "reviewer": "Alex Thompson"
+    "location": "16"
   },
   {
     "id": 33,
-    "header": "User Personas",
-    "type": "Research",
+    "title": "User Personas",
+    "category": "User Personas",
     "status": "In Process",
-    "target": "27",
-    "limit": "24",
-    "reviewer": "Nina Patel"
+    "location": "27"
   },
   {
     "id": 34,
-    "header": "Accessibility Compliance",
-    "type": "Legal",
+    "title": "Accessibility Compliance",
+    "category": "Accessibility Compliance",
     "status": "Done",
-    "target": "18",
-    "limit": "21",
-    "reviewer": "Assign reviewer"
+    "location": "18"
   },
   {
     "id": 35,
-    "header": "Performance Metrics",
-    "type": "Technical content",
+    "title": "Performance Metrics",
+    "category": "Performance Metrics",
     "status": "In Process",
-    "target": "23",
-    "limit": "26",
-    "reviewer": "David Kim"
+    "location": "23"
   },
   {
     "id": 36,
-    "header": "Disaster Recovery Plan",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "14",
-    "limit": "17",
-    "reviewer": "Jamik Tashpulatov"
+    "title": "Limitations",
+    "category": "Limitations",
+    "status": "In Process",
+    "location": "26"
   },
   {
     "id": 37,
-    "header": "Third-party Integrations",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "25",
-    "limit": "28",
-    "reviewer": "Eddie Lake"
+    "title": "Disaster Recovery Plan",
+    "category": "Disaster Recovery Plan",
+    "status": "Done",
+    "location": "14"
   },
   {
     "id": 38,
-    "header": "User Feedback Summary",
-    "type": "Research",
-    "status": "Done",
-    "target": "20",
-    "limit": "15",
-    "reviewer": "Assign reviewer"
+    "title": "Third-party Integrations",
+    "category": "Third-party Integrations",
+    "status": "In Process",
+    "location": "25"
   },
   {
     "id": 39,
-    "header": "Localization Strategy",
-    "type": "Narrative",
-    "status": "In Process",
-    "target": "12",
-    "limit": "19",
-    "reviewer": "Maria Garcia"
+    "title": "User Feedback Summary",
+    "category": "User Feedback Summary",
+    "status": "Done",
+    "location": "20"
   },
   {
     "id": 40,
-    "header": "Mobile Compatibility",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "28",
-    "limit": "31",
-    "reviewer": "James Wilson"
+    "title": "Localization Strategy",
+    "category": "Localization Strategy",
+    "status": "In Process",
+    "location": "12"
   },
   {
     "id": 41,
-    "header": "Data Migration Plan",
-    "type": "Technical content",
-    "status": "In Process",
-    "target": "19",
-    "limit": "22",
-    "reviewer": "Assign reviewer"
+    "title": "Mobile Compatibility",
+    "category": "Mobile Compatibility",
+    "status": "Done",
+    "location": "28"
   },
   {
     "id": 42,
-    "header": "Quality Assurance Protocols",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "30",
-    "limit": "33",
-    "reviewer": "Priya Singh"
+    "title": "Data Migration Plan",
+    "category": "Data Migration Plan",
+    "status": "Technical content",
+    "location": "19"
+  },
+  {
+    "id": 42,
+    "title": "Quality Assurance Protocols",
+    "category": "Quality Assurance Protocols",
+    "status": "Technical content",
+    "location": "30"
   },
   {
     "id": 43,
-    "header": "Stakeholder Analysis",
-    "type": "Research",
-    "status": "In Process",
-    "target": "11",
-    "limit": "14",
-    "reviewer": "Eddie Lake"
+    "title": "Stakeholder Analysis",
+    "category": "Stakeholder Analysis",
+    "status": "Research",
+    "location": "11"
   },
   {
     "id": 44,
-    "header": "Environmental Impact Assessment",
-    "type": "Research",
-    "status": "Done",
-    "target": "24",
-    "limit": "27",
-    "reviewer": "Assign reviewer"
+    "title": "Environmental Impact Assessment",
+    "category": "Environmental Impact Assessment",
+    "status": "Research",
+    "location": "24"
   },
   {
     "id": 45,
-    "header": "Intellectual Property Rights",
-    "type": "Legal",
-    "status": "In Process",
-    "target": "17",
-    "limit": "20",
-    "reviewer": "Sarah Johnson"
+    "title": "Intellectual Property Rights",
+    "category": "Intellectual Property Rights",
+    "status": "Legal",
+    "location": "17"
   },
   {
     "id": 46,
-    "header": "Customer Support Framework",
-    "type": "Narrative",
-    "status": "Done",
-    "target": "22",
-    "limit": "25",
-    "reviewer": "Jamik Tashpulatov"
+    "title": "Customer Support Framework",
+    "category": "Customer Support Framework",
+    "status": "Narrative",
+    "location": "22"
   },
   {
     "id": 47,
-    "header": "Version Control Strategy",
-    "type": "Technical content",
+    "title": "Version Control Strategy",
+    "category": "Version Control Strategy",
     "status": "In Process",
-    "target": "15",
-    "limit": "18",
-    "reviewer": "Assign reviewer"
+    "location": "25"
   },
   {
     "id": 48,
-    "header": "Continuous Integration Pipeline",
-    "type": "Technical content",
+    "title": "Continuous Integration Pipeline",
+    "category": "Continuous Integration Pipeline",
     "status": "Done",
-    "target": "26",
-    "limit": "29",
-    "reviewer": "Michael Chen"
+    "location": "26"
   },
   {
     "id": 49,
-    "header": "Regulatory Compliance",
-    "type": "Legal",
+    "title": "Regulatory Compliance",
+    "category": "Regulatory Compliance",
     "status": "In Process",
-    "target": "13",
-    "limit": "16",
-    "reviewer": "Assign reviewer"
+    "location": "13"
   },
   {
     "id": 50,
-    "header": "User Authentication System",
-    "type": "Technical content",
+    "title": "User Authentication System",
+    "category": "User Authentication System",
     "status": "Done",
-    "target": "28",
-    "limit": "31",
-    "reviewer": "Eddie Lake"
+    "location": "28"
   },
   {
     "id": 51,
-    "header": "Data Analytics Framework",
-    "type": "Technical content",
+    "title": "Data Analytics Framework",
+    "category": "Data Analytics Framework",
     "status": "In Process",
-    "target": "21",
-    "limit": "24",
-    "reviewer": "Jamik Tashpulatov"
+    "location": "22"
   },
   {
     "id": 52,
-    "header": "Cloud Infrastructure",
-    "type": "Technical content",
+    "title": "Cloud Infrastructure",
+    "category": "Cloud Infrastructure",
     "status": "Done",
-    "target": "16",
-    "limit": "19",
-    "reviewer": "Assign reviewer"
+    "location": "16"
   },
   {
     "id": 53,
-    "header": "Network Security Measures",
-    "type": "Technical content",
+    "title": "Network Security Measures",
+    "category": "Network Security Measures",
     "status": "In Process",
-    "target": "29",
-    "limit": "32",
-    "reviewer": "Lisa Wong"
+    "location": "29"
   },
   {
     "id": 54,
-    "header": "Project Timeline",
-    "type": "Planning",
+    "title": "Project Timeline",
+    "category": "Project Timeline",
     "status": "Done",
-    "target": "14",
-    "limit": "17",
-    "reviewer": "Eddie Lake"
+    "location": "14"
   },
   {
     "id": 55,
-    "header": "Resource Allocation",
-    "type": "Planning",
+    "title": "Resource Allocation",
+    "category": "Resource Allocation",
     "status": "In Process",
-    "target": "27",
-    "limit": "30",
-    "reviewer": "Assign reviewer"
+    "location": "27"
   },
   {
     "id": 56,
-    "header": "Team Structure and Roles",
-    "type": "Planning",
+    "title": "Team Structure and Roles",
+    "category": "Team Structure and Roles",
     "status": "Done",
-    "target": "20",
-    "limit": "23",
-    "reviewer": "Jamik Tashpulatov"
+    "location": "20"
   },
   {
     "id": 57,
-    "header": "Communication Protocols",
-    "type": "Planning",
+    "title": "Communication Protocols",
+    "category": "Communication Protocols",
     "status": "In Process",
-    "target": "15",
-    "limit": "18",
-    "reviewer": "Assign reviewer"
+    "location": "15"
   },
   {
     "id": 58,
-    "header": "Success Metrics",
-    "type": "Planning",
+    "title": "Success Metrics",
+    "category": "Success Metrics",
     "status": "Done",
-    "target": "30",
-    "limit": "33",
-    "reviewer": "Eddie Lake"
+    "location": "30"
   },
   {
     "id": 59,
-    "header": "Internationalization Support",
-    "type": "Technical content",
+    "title": "Internationalization Support",
+    "category": "Internationalization Support",
     "status": "In Process",
-    "target": "23",
-    "limit": "26",
-    "reviewer": "Jamik Tashpulatov"
+    "location": "23"
   },
   {
     "id": 60,
-    "header": "Backup and Recovery Procedures",
-    "type": "Technical content",
+    "title": "Backup and Recovery Procedures",
+    "category": "Backup and Recovery Procedures",
     "status": "Done",
-    "target": "18",
-    "limit": "21",
-    "reviewer": "Assign reviewer"
+    "location": "18"
   },
   {
     "id": 61,
-    "header": "Monitoring and Alerting System",
-    "type": "Technical content",
+    "title": "Monitoring and Alerting System",
+    "category": "Monitoring and Alerting System",
     "status": "In Process",
-    "target": "25",
-    "limit": "28",
-    "reviewer": "Daniel Park"
+    "location": "25"
   },
   {
     "id": 62,
-    "header": "Code Review Guidelines",
-    "type": "Technical content",
-    "status": "Done",
-    "target": "12",
-    "limit": "15",
-    "reviewer": "Eddie Lake"
+    "title": "Code Review Guidelines",
+    "category": "Code Review Guidelines",
+    "status": "Technical content",
+    "location": "12"
   },
   {
     "id": 63,
-    "header": "Documentation Standards",
-    "type": "Technical content",
+    "title": "Documentation Standards",
+    "category": "Documentation Standards",
     "status": "In Process",
-    "target": "27",
-    "limit": "30",
-    "reviewer": "Jamik Tashpulatov"
+    "location": "27"
   },
   {
     "id": 64,
-    "header": "Release Management Process",
-    "type": "Planning",
+    "title": "Release Management Process",
+    "category": "Release Management Process",
     "status": "Done",
-    "target": "22",
-    "limit": "25",
-    "reviewer": "Assign reviewer"
+    "location": "22"
   },
   {
     "id": 65,
-    "header": "Feature Prioritization Matrix",
-    "type": "Planning",
+    "title": "Feature Prioritization Matrix",
+    "category": "Feature Prioritization Matrix",
     "status": "In Process",
-    "target": "19",
-    "limit": "22",
-    "reviewer": "Emma Davis"
+    "location": "19"
   },
   {
     "id": 66,
-    "header": "Technical Debt Assessment",
-    "type": "Technical content",
+    "title": "Technical Debt Assessment",
+    "category": "Technical Debt Assessment",
     "status": "Done",
-    "target": "24",
-    "limit": "27",
-    "reviewer": "Eddie Lake"
+    "location": "24"
   },
   {
     "id": 67,
-    "header": "Capacity Planning",
-    "type": "Planning",
+    "title": "Capacity Planning",
+    "category": "Capacity Planning",
     "status": "In Process",
-    "target": "21",
-    "limit": "24",
-    "reviewer": "Jamik Tashpulatov"
+    "location": "21"
   },
   {
     "id": 68,
-    "header": "Service Level Agreements",
-    "type": "Legal",
+    "title": "Service Level Agreements",
+    "category": "Service Level Agreements",
     "status": "Done",
-    "target": "26",
-    "limit": "29",
-    "reviewer": "Assign reviewer"
+    "location": "26"
+  },
+  {
+    "id": 69,
+    "title": "Security Best Practices",
+    "category": "Security Best Practices",
+    "status": "In Process",
+    "location": "28"
+  },
+  {
+    "id": 70,
+    "title": "Performance Tuning Techniques",
+    "category": "Performance Tuning Techniques",
+    "status": "In Process",
+    "location": "20"
+  },
+  {
+    "id": 71,
+    "title": "User Experience Design Principles",
+    "category": "User Experience Design Principles",
+    "status": "In Process",
+    "location": "23"
   }
 ]
