@@ -285,8 +285,8 @@ const AppComponent = () => {
   // )
 }
 
-const menuItems: any[] = [
-  // { name: 'Features', href: '#link' },
+const menuItems: Array<any> = [
+  { name: 'Discover', href: '#link' },
   // { name: 'Solution', href: '#link' },
   // { name: 'Pricing', href: '#link' },
   // { name: 'About', href: '#link' },
