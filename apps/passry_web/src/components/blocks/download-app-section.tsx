@@ -3,9 +3,9 @@ import appStoreDownload from '@/assets/app-store-download.png?url'
 
 export function DownloadAppSection() {
   return (
-    <section className="py-16 bg-[#F6F7FB] grid items-center justify-center">
+    <section className="py-16 bg-[#F6F7FB] grid items-center justify-center lg:px-6 px-4">
       <div className="max-w-7xl mx-auto grid md:flex items-center justify-between">
-        <div className="text-start grid gap-3">
+        <div className="text-start grid gap-3 text-black dark:text-black">
           <h1 className="font-medium text-3xl md:text-4xl">
             Ready to Experience Smarter Event Management?
           </h1>

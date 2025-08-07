@@ -10,15 +10,14 @@ export function AboutSection() {
               What is passry?
             </h2>
             <p className="text-[16px] text-start">
-              Passry is your all-in-one event management and ticketing mobile
-              application. Whether you're an organizer looking to host
-              professional events or a user searching for exciting experiences,
-              Passry offers a seamless way to create, promote, discover, and
-              attend events.
+              PASSRY is your all-in-one platform for creating, managing,
+              selling, and verifying digital tickets and access passes.
             </p>
             <p className="text-[16px] text-start">
-              With just a few taps, you can publish events, generate tickets,
-              monitor sales, and gain real-time insights - anytime, anywhere.
+              We’re pioneering the first invite-to-earn ticketing system.
+              Empowering users to earn by inviting others to events. With
+              PASSRY, event organizers drive growth, attendees get rewarded, and
+              everyone wins.
             </p>
           </div>
         </div>

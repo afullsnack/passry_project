@@ -1,7 +1,6 @@
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { MapPin, Calendar, Ticket, Signal, Heart, Search } from 'lucide-react'
+import { Calendar, Signal, Ticket, Heart, Search } from 'lucide-react'
 import { PiMoney } from 'react-icons/pi'
 
 const canDoList = {
@@ -45,6 +44,12 @@ const canDoList = {
     },
     {
       id: 3,
+      title: 'Invite-to-Earn',
+      subTitle:
+        'User earn money by inviting friends and others to buy tickets.',
+    },
+    {
+      id: 4,
       title: 'Save or Share Events',
       subTitle: 'Bookmark your favorite events or invite friends.',
       icon: <Heart className="size-5" />,

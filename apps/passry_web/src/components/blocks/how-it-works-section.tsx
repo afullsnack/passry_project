@@ -7,13 +7,13 @@ export function HowItWorksSection() {
         <div className="relative z-10 mx-auto max-w-4xl text-center">
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 items-center">
             <div>
-              <h1 className="text-balance text-left text-3xl font-bold sm:text-3xl">
+              <h1 className="text-balance text-left text-3xl font-bold sm:text-3xl pl-6">
                 How Passry Works
               </h1>
 
-              <div className="grid gap-6 mt-6">
+              <div className="grid gap-6 mt-6 p-6">
                 <div className="flex gap-4 items-start justify-start w-full">
-                  <div className="size-6 bg-black rounded-full" />
+                  <div className="size-6 bg-black dark:bg-white rounded-full" />
                   <div className="grid items-center gap-3">
                     <h2 className="text-start font-bold text-lg">
                       Download the App
@@ -35,7 +35,7 @@ export function HowItWorksSection() {
                   </div>
                 </div>
                 <div className="flex gap-4 items-start justify-start w-full">
-                  <div className="size-6 bg-black rounded-full" />
+                  <div className="size-6 bg-black dark:bg-white rounded-full" />
                   <div className="grid items-center gap-3">
                     <h2 className="text-start font-bold text-lg">
                       Start Exploring or Hosting
@@ -48,7 +48,10 @@ export function HowItWorksSection() {
               </div>
             </div>
             <div className="bg-[#00BCD4]/45 h-[600px] md:h-[600px] rounded-tl-[180px] mt-8 md:mt-0 grid items-center justify-center">
-              <img src={howItWorks} className="object-cover h-[60%]" />
+              <img
+                src={howItWorks}
+                className="object-cover h-[80vw] lg:h-[60%]"
+              />
             </div>
           </div>
         </div>
