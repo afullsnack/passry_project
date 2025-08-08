@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -16,7 +17,7 @@ import { useSession } from '@/hooks/session'
 import { client } from '@/lib/api-client'
 import { authClient } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
-import { useForm } from '@tanstack/react-form'
+import { useForm, useStore } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { X } from 'lucide-react'
@@ -35,7 +36,6 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
   const { data: session } = useSession()
   const router = useRouter()
   const queryClient = useQueryClient()
-
 
   const totalSteps = 3
 
@@ -66,7 +66,8 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
             console.log('Org creation result', result)
             setOrgFormOpen(false)
             toast.success('Organization created successfully', {
-              description: 'You can now start creating events, after you log back in',
+              description:
+                'You can now start creating events, after you log back in',
             })
             await authClient.signOut()
             router.navigate({
@@ -105,30 +106,30 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
           name: '',
           price: 0,
           quantity: 0,
-          saleStartDate: new Date(),
-          saleEndDate: new Date(),
+          saleStartDate: undefined,
+          saleEndDate: undefined,
           isFree: true,
         },
       ],
     },
     validators: {
       onChange: z.object({
-        title: z.string(),
-        category: z.string(),
-        description: z.string(),
-        dateTime: z.date(),
-        venueName: z.string(),
-        venueFullAddress: z.string(),
-        city: z.string(),
-        country: z.string(),
+        title: z.string().min(6),
+        category: z.string().min(6),
+        description: z.string().min(13),
+        dateTime: z.date().min(new Date()),
+        venueName: z.string().min(6),
+        venueFullAddress: z.string().min(12),
+        city: z.string().min(3),
+        country: z.string().min(3),
         coverImage: z.instanceof(File),
         tickets: z.array(
           z.object({
-            name: z.string(),
+            name: z.string().min(4),
             price: z.number().min(0),
             quantity: z.number().min(1),
-            saleStartDate: z.date(),
-            saleEndDate: z.date(),
+            saleStartDate: z.date().optional(),
+            saleEndDate: z.date().optional(),
             isFree: z.boolean(),
           }),
         ),
@@ -138,6 +139,9 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
       console.log(value, ':::Values to submit')
       if (session && session.org) {
         // Upload cover image first
+        if (!value.coverImage.name) {
+          return toast.warning('A cover image for the event is required')
+        }
         const formData = new FormData()
         formData.append('file', value.coverImage)
         formData.append('type', 'event-cover')
@@ -237,6 +241,8 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
       }
     },
   })
+
+  console.log('Form errors', form.state.errorMap, form.state.errors)
 
   const handleBack = () => {
     if (step > 0) {
@@ -360,7 +366,7 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
       }}
     >
       <DialogTrigger asChild>{openTrigger}</DialogTrigger>
-      <DialogContent className='px-2 md:px-3'>
+      <DialogContent className="px-2 md:px-3">
         <DialogHeader>
           <DialogTitle>Create Event</DialogTitle>
           <DialogDescription>Create events for your audience</DialogDescription>
@@ -475,9 +481,15 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                             <Label>Event Date and Time</Label>
                             <Input
                               onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.valueAsDate!)
-                              }
+                              // value={field.state.value.toDateString()}
+                              onChange={(e) => {
+                                console.log(
+                                  'Date time value',
+                                  e.target.valueAsDate,
+                                  e.target.value,
+                                )
+                                field.handleChange(new Date(e.target.value))
+                              }}
                               type="datetime-local"
                               placeholder="Pick a date and time"
                               autoComplete="off"
@@ -485,28 +497,6 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                           </>
                         )}
                       />
-
-                      <div className="flex justify-start gap-4">
-                        <Button
-                          className="font-medium"
-                          variant="outline"
-                          type='button'
-                          size="sm"
-                          onClick={() => handleBack()}
-                          disabled={step === 0}
-                        >
-                          Previous Step
-                        </Button>
-
-                        <Button
-                          size="sm"
-                          type='button'
-                          className="font-medium"
-                          onClick={() => handleNext()}
-                        >
-                          {'Next Step'}
-                        </Button>
-                      </div>
                     </div>
 
                     <div className={cn('grid gap-4', { hidden: step !== 1 })}>
@@ -614,207 +604,45 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
                           </>
                         )}
                       />
-
-                      <div className="flex justify-start gap-4">
-                        <Button
-                          className="font-medium"
-                          size="sm"
-                          type='button'
-                          variant="outline"
-                          onClick={() => handleBack()}
-                        // disabled={step === 0}
-                        >
-                          Previous Step
-                        </Button>
-
-                        <Button
-                          size="sm"
-                          type='button'
-                          className="font-medium"
-                          onClick={() => handleNext()}
-                        >
-                          {'Next Step'}
-                        </Button>
-                      </div>
                     </div>
 
                     <div className={cn('grid gap-4', { hidden: step !== 2 })}>
                       <form.Field name="tickets" mode="array">
-                        {(field) => (
-                          <div>
-                            {field.state.value.map((_, i) => {
-                              return (
-                                <div
-                                  key={i}
-                                  className="border border-gray-700 rounded-md p-4 my-4 border-dashed space-y-3"
-                                >
-                                  <div className="w-full flex items-center justify-end mx-3">
-                                    <Button
-                                      size="sm"
-                                      variant="ghost"
-                                      onClick={() => field.removeValue(i)}
-                                    >
-                                      <X className="size-4" />
-                                    </Button>
-                                  </div>
-                                  <form.Field name={`tickets[${i}].name`}>
-                                    {(subField) => (
-                                      <div>
-                                        <Label>Ticket name</Label>
-                                        <Input
-                                          value={subField.state.value}
-                                          onBlur={subField.handleBlur}
-                                          placeholder='Enter name of ticket'
-                                          onChange={(e) =>
-                                            subField.handleChange(
-                                              e.target.value,
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    )}
-                                  </form.Field>
-                                  <form.Field name={`tickets[${i}].price`}>
-                                    {(subField) => (
-                                      <div>
-                                        <Label>Price</Label>
-                                        <Input
-                                          value={subField.state.value}
-                                          type="number"
-                                          placeholder='Enter price of ticket'
-                                          onBlur={subField.handleBlur}
-                                          onChange={(e) =>
-                                            subField.handleChange(
-                                              e.target.valueAsNumber,
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    )}
-                                  </form.Field>
-                                  <form.Field name={`tickets[${i}].quantity`}>
-                                    {(subField) => (
-                                      <div>
-                                        <Label>Quantity</Label>
-                                        <Input
-                                          onBlur={subField.handleBlur}
-                                          type="number"
-                                          defaultValue={0}
-                                          onChange={(e) =>
-                                            subField.handleChange(
-                                              e.target.valueAsNumber,
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    )}
-                                  </form.Field>
-                                  <form.Field
-                                    name={`tickets[${i}].saleStartDate`}
-                                  >
-                                    {(subField) => (
-                                      <div>
-                                        <Label>Sale Start Date</Label>
-                                        <Input
-                                          onBlur={subField.handleBlur}
-                                          type="datetime-local"
-                                          onChange={(e) =>
-                                            subField.handleChange(
-                                              e.target.valueAsDate!,
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    )}
-                                  </form.Field>
-                                  <form.Field
-                                    name={`tickets[${i}].saleEndDate`}
-                                  >
-                                    {(subField) => (
-                                      <div>
-                                        <Label>Sale End Date</Label>
-                                        <Input
-                                          onBlur={subField.handleBlur}
-                                          type="datetime-local"
-                                          onChange={(e) =>
-                                            subField.handleChange(
-                                              e.target.valueAsDate!,
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    )}
-                                  </form.Field>
-                                  <form.Field name={`tickets[${i}].isFree`}>
-                                    {(subField) => (
-                                      <div className="flex items-center justify-between">
-                                        <Label>Switch to free event</Label>
-                                        <Switch
-                                          checked={subField.state.value}
-                                          onCheckedChange={(checked) =>
-                                            subField.handleChange(checked)
-                                          }
-                                        />
-                                      </div>
-                                    )}
-                                  </form.Field>
-                                </div>
-                              )
-                            })}
-                            <Button
-                              onClick={() =>
-                                field.pushValue({
-                                  name: '',
-                                  price: 0,
-                                  quantity: 0,
-                                  saleEndDate: new Date(),
-                                  saleStartDate: new Date(),
-                                  isFree: true,
-                                })
-                              }
-                              variant="outline"
-                              type='button'
-                              size="sm"
-                              className="my-6"
-                            >
-                              Add New Ticket
-                            </Button>
-                          </div>
-                        )}
+                        {(field) => {
+                          return (
+                            <div>
+                              {field.state.value.map((_, i) => {
+                                return (
+                                  <TicketItem
+                                    key={i}
+                                    form={form}
+                                    i={i}
+                                    field={field}
+                                  />
+                                )
+                              })}
+                              <Button
+                                onClick={() =>
+                                  field.pushValue({
+                                    name: '',
+                                    price: 0,
+                                    quantity: 0,
+                                    saleEndDate: undefined,
+                                    saleStartDate: undefined,
+                                    isFree: true,
+                                  })
+                                }
+                                variant="outline"
+                                type="button"
+                                size="sm"
+                                className="my-6"
+                              >
+                                Add New Ticket
+                              </Button>
+                            </div>
+                          )
+                        }}
                       </form.Field>
-
-                      <div className="flex justify-start gap-4">
-                        <Button
-                          className="font-medium"
-                          type='button'
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleBack()}
-                        // disabled={step === 0}
-                        >
-                          Previous Step
-                        </Button>
-
-                        <form.Subscribe
-                          selector={(state) => [
-                            state.canSubmit,
-                            state.isSubmitting,
-                          ]}
-                          children={([canSubmit, isSubmitting]) => (
-                            <Button
-                              size="sm"
-                              type='button'
-                              className="font-medium"
-                              disabled={!canSubmit}
-                              onClick={() => {
-                                form.handleSubmit()
-                              }}
-                            >
-                              {isSubmitting ? 'Publishing...' : 'Publish Event'}
-                            </Button>
-                          )}
-                        />
-                      </div>
                     </div>
                   </form>
                 </ScrollArea>
@@ -822,7 +650,153 @@ export default function CreateEventDialog({ openTrigger }: IProps) {
             </Card>
           </div>
         </div>
+        <DialogFooter>
+          <div className="flex justify-start gap-4">
+            <Button
+              className="font-medium"
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={step === 0}
+              onClick={() => handleBack()}
+              // disabled={step === 0}
+            >
+              Previous Step
+            </Button>
+
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]) => (
+                <Button
+                  size="sm"
+                  type="button"
+                  className="font-medium"
+                  disabled={step === 2 && !canSubmit}
+                  onClick={() => {
+                    if (step <= 1) {
+                      handleNext()
+                    } else {
+                      form.handleSubmit()
+                    }
+                  }}
+                >
+                  {isSubmitting
+                    ? 'Publishing...'
+                    : step <= 1
+                      ? 'Next Step'
+                      : 'Publish Event'}
+                </Button>
+              )}
+            />
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
+  )
+}
+
+function TicketItem({ form, i, field }: any) {
+  const trackIsFree = useStore(
+    form.store,
+    (state) => state?.values.tickets[i].isFree,
+  )
+
+  return (
+    <div className="border border-gray-700 rounded-md p-4 my-4 border-dashed space-y-3">
+      <div className="w-full flex items-center justify-end mx-3">
+        <Button size="sm" variant="ghost" onClick={() => field.removeValue(i)}>
+          <X className="size-4" />
+        </Button>
+      </div>
+      <div className="grid gap-4">
+        <form.Field name={`tickets[${i}].name`}>
+          {(subField) => (
+            <div>
+              <Label>Ticket name</Label>
+              <Input
+                value={subField.state.value}
+                onBlur={subField.handleBlur}
+                placeholder="Enter name of ticket"
+                onChange={(e) => subField.handleChange(e.target.value)}
+              />
+            </div>
+          )}
+        </form.Field>
+        <form.Field name={`tickets[${i}].price`}>
+          {(subField) => (
+            <div>
+              <Label>Price</Label>
+              <Input
+                value={trackIsFree ? 0 : subField.state.value}
+                type="number"
+                placeholder="Enter price of ticket"
+                onBlur={subField.handleBlur}
+                onChange={(e) =>
+                  subField.handleChange(
+                    trackIsFree ? 0 : e.target.valueAsNumber,
+                  )
+                }
+              />
+            </div>
+          )}
+        </form.Field>
+        <form.Field name={`tickets[${i}].quantity`}>
+          {(subField) => (
+            <div>
+              <Label>Quantity</Label>
+              <Input
+                onBlur={subField.handleBlur}
+                type="number"
+                defaultValue={0}
+                onChange={(e) => subField.handleChange(e.target.valueAsNumber)}
+              />
+            </div>
+          )}
+        </form.Field>
+        {!trackIsFree && (
+          <>
+            <form.Field name={`tickets[${i}].saleStartDate`}>
+              {(subField) => (
+                <div>
+                  <Label>Sale Start Date</Label>
+                  <Input
+                    onBlur={subField.handleBlur}
+                    type="datetime-local"
+                    onChange={(e) =>
+                      subField.handleChange(e.target.valueAsDate!)
+                    }
+                  />
+                </div>
+              )}
+            </form.Field>
+            <form.Field name={`tickets[${i}].saleEndDate`}>
+              {(subField) => (
+                <div>
+                  <Label>Sale End Date</Label>
+                  <Input
+                    onBlur={subField.handleBlur}
+                    type="datetime-local"
+                    onChange={(e) =>
+                      subField.handleChange(e.target.valueAsDate!)
+                    }
+                  />
+                </div>
+              )}
+            </form.Field>
+          </>
+        )}
+        <form.Field name={`tickets[${i}].isFree`}>
+          {(subField) => (
+            <div className="flex items-center justify-between">
+              <Label>Switch to free event</Label>
+              <Switch
+                checked={subField.state.value}
+                onCheckedChange={(checked) => subField.handleChange(checked)}
+              />
+            </div>
+          )}
+        </form.Field>
+      </div>
+    </div>
   )
 }
