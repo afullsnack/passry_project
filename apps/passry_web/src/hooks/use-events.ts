@@ -1,8 +1,11 @@
 import { client } from "@/lib/api-client";import { useQuery } from "@tanstack/react-query";
 import type { InferRequestType, InferResponseType } from "hono/client";
 
+interface EventProps {
+  orgId?: string;
+}
 
-export function useEvents() {
+export function useEvents(props?: EventProps) {
   return useQuery<
     InferResponseType<typeof client.event.$get>,
     Error,

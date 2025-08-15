@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { env } from '@/env'
+import { formatDate } from '@/lib/date-formatter'
 import { Link } from '@tanstack/react-router'
 import { Heart, Ticket } from 'lucide-react'
 
@@ -33,7 +34,7 @@ export default function ExploreCards({ events }: IProps) {
         <Link to={'/e/$id'} params={{ id: event.id }} key={event.id}>
           <Card
             key={event.id}
-            className="overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow"
+            className="overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow !p-0"
           >
             <div className="relative">
               <div
@@ -63,7 +64,9 @@ export default function ExploreCards({ events }: IProps) {
                 {event.title}
               </h3>
               <div className="flex items-center justify-between text-sm">
-                <span className="dark:text-gray-400">{event.dateTime}</span>
+                <span className="dark:text-gray-400">
+                  {formatDate(event.dateTime)}
+                </span>
                 <div className="flex items-center gap-1">
                   {event.price === 'Free' ? (
                     <Badge
@@ -74,7 +77,7 @@ export default function ExploreCards({ events }: IProps) {
                     </Badge>
                   ) : (
                     <span className="font-semibold text-gray-900 dark:text-gray-400 flex items-center justify-center gap-2">
-                      <Ticket className="size-4 -rotate-45" /> #{event.price}
+                      <Ticket className="size-4 -rotate-45" />
                     </span>
                   )}
                 </div>

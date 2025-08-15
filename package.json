@@ -8,7 +8,7 @@
   "scripts": {
     "build:api": "pnpm run --filter @passry/api build",
     "generate:api:db": "pnpm run db:generate",
-    "dev:all": "pnpm run --filter @passry/api dev && pnpm run --filter @passry/web dev",
+    "dev:all": "turbo dev",
     "start:api": "pnpm run --filter @passry/api start",
     "db:generate": "pnpm run --filter @passry/api db:generate",
     "db:migrate": "pnpm run --filter @passry/api db:migrate",
@@ -22,6 +22,8 @@
     "dotenv-cli": "^9.0.0",
     "hono": "^4.7.11",
     "tsup": "^8.5.0",
+    "turbo": "^2.5.6",
     "zod": "^4.0.10"
-  }
+  },
+  "packageManager": "pnpm@9.11.0"
 }

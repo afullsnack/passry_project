@@ -31,12 +31,12 @@ export const list: AppRouteHandler<ListEvents> = async (c) => {
     const session = await auth.api.getSession({ headers: c.req.raw.headers });
     console.log("session", session);
     const events = await db.query.event.findMany({
-      where(fields, operators) {
-        if (!session?.org) {
-          return operators.eq(event.orgId, "");
-        }
-        return operators.eq(event.orgId, session?.org?.id);
-      },
+      // where(fields, operators) {
+      //   if (!session?.org) {
+      //     return operators.eq(event.orgId, "");
+      //   }
+      //   return operators.eq(event.orgId, session?.org?.id);
+      // },
     });
     return c.json(events, HttpStatusCodes.OK);
   }

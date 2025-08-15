@@ -42,3 +42,4 @@ apps
 node_modules
 .git
 **/.git
+.turbo
