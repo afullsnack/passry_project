@@ -164,7 +164,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   // },
   {
     accessorKey: 'title',
-    header: 'Evnet Title',
+    header: 'Event Title',
     cell: ({ row }) => {
       return <TableCellViewer item={row.original} />
     },

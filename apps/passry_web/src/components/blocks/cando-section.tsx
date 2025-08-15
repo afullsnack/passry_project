@@ -51,7 +51,8 @@ const canDoList = {
     {
       id: 4,
       title: 'Save or Share Events',
-      subTitle: 'Bookmark your favorite events or invite friends.',
+      subTitle:
+        'Save your favorite events or share them easily on WhatsApp and other social media platforms.',
       icon: <Heart className="size-5" />,
       className: 'bg-white',
     },

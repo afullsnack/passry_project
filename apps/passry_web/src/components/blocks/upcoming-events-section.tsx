@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { MapPin, Users } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 
 const events = [
   {

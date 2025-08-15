@@ -286,7 +286,7 @@ const AppComponent = () => {
 }
 
 const menuItems: Array<any> = [
-  { name: 'Discover', href: '#link' },
+  { name: 'Discover', href: '/discover' },
   // { name: 'Solution', href: '#link' },
   // { name: 'Pricing', href: '#link' },
   // { name: 'About', href: '#link' },

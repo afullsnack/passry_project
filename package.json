@@ -8,6 +8,7 @@
   "scripts": {
     "build:api": "pnpm run --filter @passry/api build",
     "generate:api:db": "pnpm run db:generate",
+    "dev:all": "pnpm run --filter @passry/api dev && pnpm run --filter @passry/web dev",
     "start:api": "pnpm run --filter @passry/api start",
     "db:generate": "pnpm run --filter @passry/api db:generate",
     "db:migrate": "pnpm run --filter @passry/api db:migrate",
