@@ -163,7 +163,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!px-3.5 data-[slot=sidebar-menu-button]:!py-20.5"
             >
-              <Link to="/explore">
+              <Link to="/">
                 <img src={LogoTextMark} className="object-cover h-8 w-28" />
                 {/* <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">Acme Inc.</span> */}
