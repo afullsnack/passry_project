@@ -20,6 +20,8 @@ import { Route as AuthedAnalyticsRouteImport } from './routes/_authed/analytics'
 import { Route as AuthVerify_codeRouteImport } from './routes/_auth/verify_code'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthedEventsIndexRouteImport } from './routes/_authed/events.index'
+import { Route as AuthedEventsIdRouteImport } from './routes/_authed/events.$id'
 import { Route as AuthedEIdRouteImport } from './routes/_authed/e/$id'
 
 const DiscoverRoute = DiscoverRouteImport.update({
@@ -76,6 +78,16 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedEventsIndexRoute = AuthedEventsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthedEventsRoute,
+} as any)
+const AuthedEventsIdRoute = AuthedEventsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthedEventsRoute,
+} as any)
 const AuthedEIdRoute = AuthedEIdRouteImport.update({
   id: '/e/$id',
   path: '/e/$id',
@@ -89,11 +101,13 @@ export interface FileRoutesByFullPath {
   '/signup': typeof AuthSignupRoute
   '/verify_code': typeof AuthVerify_codeRoute
   '/analytics': typeof AuthedAnalyticsRoute
-  '/events': typeof AuthedEventsRoute
+  '/events': typeof AuthedEventsRouteWithChildren
   '/explore': typeof AuthedExploreRoute
   '/stats': typeof AuthedStatsRoute
   '/team': typeof AuthedTeamRoute
   '/e/$id': typeof AuthedEIdRoute
+  '/events/$id': typeof AuthedEventsIdRoute
+  '/events/': typeof AuthedEventsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,11 +116,12 @@ export interface FileRoutesByTo {
   '/signup': typeof AuthSignupRoute
   '/verify_code': typeof AuthVerify_codeRoute
   '/analytics': typeof AuthedAnalyticsRoute
-  '/events': typeof AuthedEventsRoute
   '/explore': typeof AuthedExploreRoute
   '/stats': typeof AuthedStatsRoute
   '/team': typeof AuthedTeamRoute
   '/e/$id': typeof AuthedEIdRoute
+  '/events/$id': typeof AuthedEventsIdRoute
+  '/events': typeof AuthedEventsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -117,11 +132,13 @@ export interface FileRoutesById {
   '/_auth/signup': typeof AuthSignupRoute
   '/_auth/verify_code': typeof AuthVerify_codeRoute
   '/_authed/analytics': typeof AuthedAnalyticsRoute
-  '/_authed/events': typeof AuthedEventsRoute
+  '/_authed/events': typeof AuthedEventsRouteWithChildren
   '/_authed/explore': typeof AuthedExploreRoute
   '/_authed/stats': typeof AuthedStatsRoute
   '/_authed/team': typeof AuthedTeamRoute
   '/_authed/e/$id': typeof AuthedEIdRoute
+  '/_authed/events/$id': typeof AuthedEventsIdRoute
+  '/_authed/events/': typeof AuthedEventsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -137,6 +154,8 @@ export interface FileRouteTypes {
     | '/stats'
     | '/team'
     | '/e/$id'
+    | '/events/$id'
+    | '/events/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -145,11 +164,12 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify_code'
     | '/analytics'
-    | '/events'
     | '/explore'
     | '/stats'
     | '/team'
     | '/e/$id'
+    | '/events/$id'
+    | '/events'
   id:
     | '__root__'
     | '/'
@@ -164,6 +184,8 @@ export interface FileRouteTypes {
     | '/_authed/stats'
     | '/_authed/team'
     | '/_authed/e/$id'
+    | '/_authed/events/$id'
+    | '/_authed/events/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -254,6 +276,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed/events/': {
+      id: '/_authed/events/'
+      path: '/'
+      fullPath: '/events/'
+      preLoaderRoute: typeof AuthedEventsIndexRouteImport
+      parentRoute: typeof AuthedEventsRoute
+    }
+    '/_authed/events/$id': {
+      id: '/_authed/events/$id'
+      path: '/$id'
+      fullPath: '/events/$id'
+      preLoaderRoute: typeof AuthedEventsIdRouteImport
+      parentRoute: typeof AuthedEventsRoute
+    }
     '/_authed/e/$id': {
       id: '/_authed/e/$id'
       path: '/e/$id'
@@ -264,9 +300,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthedEventsRouteChildren {
+  AuthedEventsIdRoute: typeof AuthedEventsIdRoute
+  AuthedEventsIndexRoute: typeof AuthedEventsIndexRoute
+}
+
+const AuthedEventsRouteChildren: AuthedEventsRouteChildren = {
+  AuthedEventsIdRoute: AuthedEventsIdRoute,
+  AuthedEventsIndexRoute: AuthedEventsIndexRoute,
+}
+
+const AuthedEventsRouteWithChildren = AuthedEventsRoute._addFileChildren(
+  AuthedEventsRouteChildren,
+)
+
 interface AuthedRouteRouteChildren {
   AuthedAnalyticsRoute: typeof AuthedAnalyticsRoute
-  AuthedEventsRoute: typeof AuthedEventsRoute
+  AuthedEventsRoute: typeof AuthedEventsRouteWithChildren
   AuthedExploreRoute: typeof AuthedExploreRoute
   AuthedStatsRoute: typeof AuthedStatsRoute
   AuthedTeamRoute: typeof AuthedTeamRoute
@@ -275,7 +325,7 @@ interface AuthedRouteRouteChildren {
 
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
   AuthedAnalyticsRoute: AuthedAnalyticsRoute,
-  AuthedEventsRoute: AuthedEventsRoute,
+  AuthedEventsRoute: AuthedEventsRouteWithChildren,
   AuthedExploreRoute: AuthedExploreRoute,
   AuthedStatsRoute: AuthedStatsRoute,
   AuthedTeamRoute: AuthedTeamRoute,

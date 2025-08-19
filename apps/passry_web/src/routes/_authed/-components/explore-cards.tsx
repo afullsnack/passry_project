@@ -35,7 +35,7 @@ export default function ExploreCards({ events }: IProps) {
   return (
     <>
       {events.map((event) => (
-        <Link to={'/e/$id'} params={{ id: event.id }} key={event.id}>
+        <Link to={'/events/$id'} params={{ id: event.id }} key={event.id}>
           <Card
             key={event.id}
             className="overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow !p-0"

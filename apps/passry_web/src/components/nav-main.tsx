@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar'
 import { Link, useMatchRoute } from '@tanstack/react-router'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { useSession } from '@/hooks/session'
 
 export function NavMain({
   items,
@@ -28,6 +29,7 @@ export function NavMain({
   const matchRoute = useMatchRoute()
   const isMobile = useIsMobile()
   const sidebar = useSidebar()
+  const { data, isPending } = useSession()
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -51,27 +53,36 @@ export function NavMain({
           </SidebarMenuItem>
         </SidebarMenu> */}
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                tooltip={item.title}
-                onClick={() => {
-                  if (isMobile) {
-                    sidebar.toggleSidebar()
+          {items.map((item) => {
+            const page = item.title.toLowerCase()
+            if (
+              (page === 'analytics' || page === 'stats' || page === 'team') &&
+              !data?.org
+            ) {
+              return null
+            }
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  onClick={() => {
+                    if (isMobile) {
+                      sidebar.toggleSidebar()
+                    }
+                  }}
+                  isActive={
+                    matchRoute({ to: item.url, fuzzy: true }) ? true : false
                   }
-                }}
-                isActive={
-                  matchRoute({ to: item.url, fuzzy: true }) ? true : false
-                }
-                asChild
-              >
-                <Link to={item.url}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+                  asChild
+                >
+                  <Link to={item.url}>
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
