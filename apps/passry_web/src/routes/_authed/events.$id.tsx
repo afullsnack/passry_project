@@ -1,21 +1,17 @@
 import { cn } from '@/lib/utils'
 import { env } from '@/env'
-import { createFileRoute, redirect, useParams } from '@tanstack/react-router'
+import { createFileRoute, useParams } from '@tanstack/react-router'
 import {
   AlertCircleIcon,
   Calendar,
-  Clock,
-  Compass,
   Heart,
   Loader2Icon,
   MapPin,
-  MapPinCheck,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useSingleEvent } from '@/hooks/use-events'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { formatDate } from '@/lib/date-formatter'
-import { IconLocation } from '@tabler/icons-react'
 import { RegisterEventCard } from './-components/events/register-event'
 import { Badge } from '@/components/ui/badge'
 

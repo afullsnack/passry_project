@@ -1,9 +1,10 @@
-import { Outlet, createFileRoute } from '@tanstack/react-router'
+import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import CreateEventDialog from './-components/events/create-event-dialog'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Plus } from 'lucide-react'
+import NiceModal from '@ebay/nice-modal-react'
 
 export const Route = createFileRoute('/_authed/events')({
   component: RouteComponent,
@@ -23,18 +24,17 @@ function RouteComponent() {
             <div className="flex items-center gap-2">
               <Input placeholder="Search" />
             </div>
-            <CreateEventDialog
-              openTrigger={
-                <Button className="" size={isMobile ? 'sm' : 'default'}>
-                  Create event <Plus className="ml-2 size-4" />
-                </Button>
-              }
-            />
+
+            <Button className="" size={isMobile ? 'sm' : 'default'} asChild>
+              <Link to="/events/new">
+                Create event <Plus className="ml-2 size-4" />
+              </Link>
+            </Button>
           </div>
           <div className="flex flex-col gap-4 overflow-auto">
-            <Outlet />
-            {/*<div className="overflow-hidden rounded-lg grid gap-4.5 border p-3 lg:grid-cols-4 md:grid-cols-3 grid-cols-1">
-            </div>*/}
+            <NiceModal.Provider>
+              <Outlet />
+            </NiceModal.Provider>
           </div>
         </div>
       </div>

@@ -21,6 +21,7 @@ import { Route as AuthVerify_codeRouteImport } from './routes/_auth/verify_code'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthedEventsIndexRouteImport } from './routes/_authed/events.index'
+import { Route as AuthedEventsNewRouteImport } from './routes/_authed/events.new'
 import { Route as AuthedEventsIdRouteImport } from './routes/_authed/events.$id'
 import { Route as AuthedEIdRouteImport } from './routes/_authed/e/$id'
 
@@ -83,6 +84,11 @@ const AuthedEventsIndexRoute = AuthedEventsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthedEventsRoute,
 } as any)
+const AuthedEventsNewRoute = AuthedEventsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthedEventsRoute,
+} as any)
 const AuthedEventsIdRoute = AuthedEventsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/team': typeof AuthedTeamRoute
   '/e/$id': typeof AuthedEIdRoute
   '/events/$id': typeof AuthedEventsIdRoute
+  '/events/new': typeof AuthedEventsNewRoute
   '/events/': typeof AuthedEventsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/team': typeof AuthedTeamRoute
   '/e/$id': typeof AuthedEIdRoute
   '/events/$id': typeof AuthedEventsIdRoute
+  '/events/new': typeof AuthedEventsNewRoute
   '/events': typeof AuthedEventsIndexRoute
 }
 export interface FileRoutesById {
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/_authed/team': typeof AuthedTeamRoute
   '/_authed/e/$id': typeof AuthedEIdRoute
   '/_authed/events/$id': typeof AuthedEventsIdRoute
+  '/_authed/events/new': typeof AuthedEventsNewRoute
   '/_authed/events/': typeof AuthedEventsIndexRoute
 }
 export interface FileRouteTypes {
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/e/$id'
     | '/events/$id'
+    | '/events/new'
     | '/events/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/team'
     | '/e/$id'
     | '/events/$id'
+    | '/events/new'
     | '/events'
   id:
     | '__root__'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/_authed/team'
     | '/_authed/e/$id'
     | '/_authed/events/$id'
+    | '/_authed/events/new'
     | '/_authed/events/'
   fileRoutesById: FileRoutesById
 }
@@ -283,6 +295,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedEventsIndexRouteImport
       parentRoute: typeof AuthedEventsRoute
     }
+    '/_authed/events/new': {
+      id: '/_authed/events/new'
+      path: '/new'
+      fullPath: '/events/new'
+      preLoaderRoute: typeof AuthedEventsNewRouteImport
+      parentRoute: typeof AuthedEventsRoute
+    }
     '/_authed/events/$id': {
       id: '/_authed/events/$id'
       path: '/$id'
@@ -302,11 +321,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthedEventsRouteChildren {
   AuthedEventsIdRoute: typeof AuthedEventsIdRoute
+  AuthedEventsNewRoute: typeof AuthedEventsNewRoute
   AuthedEventsIndexRoute: typeof AuthedEventsIndexRoute
 }
 
 const AuthedEventsRouteChildren: AuthedEventsRouteChildren = {
   AuthedEventsIdRoute: AuthedEventsIdRoute,
+  AuthedEventsNewRoute: AuthedEventsNewRoute,
   AuthedEventsIndexRoute: AuthedEventsIndexRoute,
 }
 
