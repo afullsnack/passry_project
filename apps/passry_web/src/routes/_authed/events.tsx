@@ -1,7 +1,6 @@
 import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import CreateEventDialog from './-components/events/create-event-dialog'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Plus } from 'lucide-react'
 import NiceModal from '@ebay/nice-modal-react'
