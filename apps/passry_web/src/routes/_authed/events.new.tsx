@@ -1,0 +1,334 @@
+import { cn } from '@/lib/utils'
+import { env } from '@/env'
+import { createFileRoute, useParams } from '@tanstack/react-router'
+import {
+  AlertCircleIcon,
+  Calendar,
+  Heart,
+  Loader2Icon,
+  MapPin,
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useSingleEvent } from '@/hooks/use-events'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { formatDate } from '@/lib/date-formatter'
+import { RegisterEventCard } from './-components/events/register-event'
+import { Badge } from '@/components/ui/badge'
+import NiceModal from '@ebay/nice-modal-react'
+import EventDateTimeModal from './-components/events/dialogs/event-datetime'
+import EventTitleModal from './-components/events/dialogs/event-title'
+import { useForm, useStore } from '@tanstack/react-form'
+import z from 'zod'
+import { useSession } from '@/hooks/session'
+import { toast } from 'sonner'
+import { client } from '@/lib/api-client'
+import { useQueryClient } from '@tanstack/react-query'
+import {
+  Dropzone,
+  DropzoneContent,
+  DropzoneEmptyState,
+} from '@/components/ui/shadcn-io/dropzone'
+import { useEffect, useState } from 'react'
+
+export const Route = createFileRoute('/_authed/events/new')({
+  component: RouteComponent,
+  errorComponent: () => <div>An error occured</div>,
+  notFoundComponent: () => <div>Page not found</div>,
+})
+
+function RouteComponent() {
+  const { data: session } = useSession()
+  const queryClient = useQueryClient()
+
+  const form = useForm({
+    defaultValues: {
+      title: '',
+      category: '',
+      description: '',
+      dateTime: new Date(),
+      venueName: '',
+      venueFullAddress: '',
+      city: '',
+      country: '',
+      coverImage: new File([], ''),
+      tickets: [
+        {
+          name: '',
+          price: 0,
+          quantity: 0,
+          saleStartDate: undefined,
+          saleEndDate: undefined,
+          isFree: true,
+        },
+      ],
+    },
+    validators: {
+      onChange: z.object({
+        title: z.string().min(6),
+        category: z.string().min(6),
+        description: z.string().min(13),
+        dateTime: z.date().min(new Date()),
+        venueName: z.string().min(6),
+        venueFullAddress: z.string().min(12),
+        city: z.string().min(3),
+        country: z.string().min(3),
+        coverImage: z.instanceof(File),
+        tickets: z.array(
+          z.object({
+            name: z.string().min(4),
+            price: z.number().min(0),
+            quantity: z.number().min(1),
+            saleStartDate: z.date().optional(),
+            saleEndDate: z.date().optional(),
+            isFree: z.boolean(),
+          }),
+        ),
+      }),
+    },
+    onSubmit: async ({ value }) => {
+      console.log(value, ':::Values to submit')
+      if (session && session.org) {
+        // Upload cover image first
+        if (!value.coverImage.name) {
+          return toast.warning('A cover image for the event is required')
+        }
+        const formData = new FormData()
+        formData.append('file', value.coverImage)
+        formData.append('type', 'event-cover')
+        formData.append(
+          'identifier',
+          value.title.toLowerCase().split(' ').join('-'),
+        )
+
+        console.log('Uplaod URL', client.upload.$url())
+        const response = await fetch(client.upload.$url().href, {
+          body: formData,
+          method: 'POST',
+          credentials: 'include',
+        })
+
+        if (response.ok) {
+          const result = await response.json()
+          toast.success(result.message, {
+            description: 'Now creating your new event',
+          })
+
+          // Create event
+          const eventResponse = await client.event.$post({
+            json: {
+              description: value.description,
+              title: value.title,
+              orgId: session.org.id,
+              category: value.category,
+              country: value.country,
+              city: value.city,
+              venueName: value.venueName,
+              address: value.venueFullAddress,
+              coverUrl: result.link,
+              coverUrlKey: result.key,
+              dateTime: value.dateTime,
+            },
+          })
+
+          if (eventResponse.ok) {
+            const eventResult = await eventResponse.json()
+
+            // Create Ticket
+            const promiseSetlledTicketResponses = await Promise.allSettled(
+              value.tickets.map((ticket) => {
+                return client.tickets.$post({
+                  json: {
+                    name: ticket.name,
+                    price: ticket.price,
+                    quantity: ticket.quantity,
+                    eventId: eventResult.id,
+                    orgId: session.org.id,
+                    saleStart: ticket.saleStartDate,
+                    saleEnd: ticket.saleEndDate,
+                    isFree: ticket.isFree,
+                  },
+                })
+              }),
+            )
+
+            const promiseSettleTicketResults = await Promise.allSettled(
+              promiseSetlledTicketResponses.map((settledResponse) => {
+                if (
+                  settledResponse.status === 'fulfilled' &&
+                  settledResponse.value.ok
+                ) {
+                  return settledResponse.value.json()
+                }
+              }),
+            )
+
+            console.log(
+              'Tickets creation log',
+              promiseSettleTicketResults.values,
+            )
+
+            toast.success('Event and its tickets created successfully')
+            console.log('New event', eventResult)
+            queryClient.invalidateQueries({ queryKey: ['events'] })
+          } else {
+            toast.error('Failed to create event')
+          }
+        } else {
+          toast.error('Failed to upload cover image', {
+            description: 'You must attach a cover image to the event',
+          })
+          return
+        }
+
+        form.reset()
+        // setStep(0)
+        // setEventFormOpen(false)
+        // router.invalidate()
+      } else {
+        toast.error(
+          'You must be logged in or create an organization to create an event',
+        )
+      }
+    },
+  })
+
+  const formattedDateTime = formatDate(new Date(), {
+    format: 'EEEE, MMMM dd. hh:mm aa',
+    smart: false,
+    includeTime: true,
+  })
+
+  const titleTracked = useStore(form.store, (state) => state.values.title)
+
+  const showDateTimeModal = () => {
+    NiceModal.show(EventDateTimeModal, { name: 'dateTime', form })
+  }
+
+  const showEventTitleModal = () => {
+    NiceModal.show(EventTitleModal, {
+      name: 'title',
+      form,
+      defaultValue: titleTracked,
+    })
+  }
+
+  const [files, setFiles] = useState<Array<File> | undefined>([])
+  const [filePreview, setFilePreview] = useState<string | undefined>()
+
+  const handleDrop = (fileList: Array<File>) => {
+    console.log('Files list', fileList)
+    setFiles(fileList)
+
+    if (fileList.length > 0) {
+      console.log('Reader init')
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        if (typeof e.target?.result === 'string') {
+          setFilePreview(e.target.result)
+        }
+      }
+
+      reader.readAsDataURL(fileList[0])
+    }
+  }
+
+  return (
+    <div className="@container/main flex flex-1 flex-col gap-2">
+      <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+        <div
+          defaultValue="events"
+          className="w-full flex-col justify-start gap-6 px-4 lg:px-6"
+        >
+          <div className="relative w-full">
+            <div>
+              {/*<div className="max-h-[400px] bg-cover bg-center aspect-square rounded-lg mx-auto">*/}
+              <Dropzone
+                maxSize={1024 * 1024 * 10}
+                maxFiles={1}
+                accept={{ 'image/*': ['.png', '.jpg', '.jpeg'] }}
+                onDrop={handleDrop}
+                className="w-full h-full z-50"
+                src={files}
+                onError={(error) => {
+                  console.error('Error getting file', error)
+                  toast.error('Error getting image', {
+                    description: error.message,
+                  })
+                }}
+              >
+                <DropzoneEmptyState />
+                <DropzoneContent>
+                  {filePreview && (
+                    <div className="h-[400px] w-[400px] aspect-square relative">
+                      <h1>File should Preview</h1>
+                      <img
+                        src={filePreview}
+                        alt="Preview"
+                        className="object-cover absolute inset-0 h-full w-full"
+                      />
+                    </div>
+                  )}
+                </DropzoneContent>
+              </Dropzone>
+              {/*</div>*/}
+              <div className="absolute inset-0 bg-black/20" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-2 right-2 h-8 w-8 bg-white/20 hover:bg-white/30 backdrop-blur-sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  // toggleFavorite(event.id)
+                }}
+              >
+                <Heart
+                  className={cn(`h-4 w-4`, {
+                    'fill-red-500 text-red-500': false,
+                    'text-white': true,
+                  })}
+                />
+              </Button>
+            </div>
+          </div>
+
+          {/* Event details */}
+          <div className="grid w-full gap-4 md:max-w-2xl py-4 lg:py-6 mx-auto">
+            <div className="flex items-center justify-between">
+              <h1
+                className="text-2xl lg:text-3xl font-extrabold"
+                onClick={showEventTitleModal}
+              >
+                {titleTracked || 'Event title'}
+              </h1>
+              <Badge className="rounded-2xl lg:h-6" variant="secondary">
+                {'party'}
+              </Badge>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              <span
+                className="flex items-center gap-2"
+                onClick={showDateTimeModal}
+              >
+                <div className="p-3 border border-primary/30 items-center justify-center rounded-xl">
+                  <Calendar className="size-6" />{' '}
+                </div>
+                {formattedDateTime.split('.')[0]} <br />
+                {formattedDateTime.split('.')[1]}
+              </span>
+              <span className="flex items-center gap-2">
+                <div className="p-3 border border-primary/30 items-center justify-center rounded-xl">
+                  <MapPin className="size-6" />{' '}
+                </div>
+                Nigeria, Abuja
+                <br />
+                Address of the event
+              </span>
+            </div>
+            <div></div>
+            <RegisterEventCard description={'Add description here'} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
