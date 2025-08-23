@@ -13,9 +13,17 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useSession } from '@/hooks/session'
+import { useEffect, useState } from 'react'
 
 export function RegisterEventCard({ description }: { description: string }) {
   const { data: session } = useSession()
+  const [orgName, setOrgName] = useState<Array<string>>(['Default'])
+
+  useEffect(() => {
+    if (session?.org) {
+      setOrgName(session.org.name.split(' '))
+    }
+  }, [session])
 
   return (
     <Card className="bg-none">
@@ -30,7 +38,10 @@ export function RegisterEventCard({ description }: { description: string }) {
               <TooltipTrigger asChild>
                 <Avatar className="size-6 items-center justify-center">
                   <AvatarFallback className="text-xs items-center justify-center">
-                    MF
+                    {orgName.length > 1
+                      ? orgName[0].charAt(0).toUpperCase() +
+                        orgName[1].charAt(0).toUpperCase()
+                      : orgName[0].charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </TooltipTrigger>
