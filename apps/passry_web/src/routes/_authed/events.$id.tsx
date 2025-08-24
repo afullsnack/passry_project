@@ -10,7 +10,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useSingleEvent } from '@/hooks/use-events'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { formatDate } from '@/lib/date-formatter'
 import { RegisterEventCard } from './-components/events/register-event'
 import { Badge } from '@/components/ui/badge'
