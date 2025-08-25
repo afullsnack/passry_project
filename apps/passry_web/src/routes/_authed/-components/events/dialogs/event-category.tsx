@@ -16,6 +16,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Check, ChevronsUpDown } from 'lucide-react'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import { cn } from '@/lib/utils'
+import { useState } from 'react'
 
 interface IProps {
   name: string // form field name
@@ -23,8 +39,22 @@ interface IProps {
   defaultValue?: string
 }
 
+const defaultCategories = [
+  'Party',
+  'Workshop',
+  'Conference',
+  'Meeting',
+  'Birthday',
+  'Anniversary',
+  'Wedding',
+  'Graduation',
+  'Other',
+]
+
 export default NiceModal.create(({ name, form, defaultValue }: IProps) => {
   const modal = useModal()
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState('')
 
   return (
     <Dialog
@@ -43,19 +73,56 @@ export default NiceModal.create(({ name, form, defaultValue }: IProps) => {
           children={(field: AnyFieldApi) => (
             <>
               <Label>Event category</Label>
-              <Select
-                onValueChange={(value) => field.handleChange(value)}
-                defaultValue={defaultValue}
-              >
-                <SelectTrigger className="w-full md:w-[180px]">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                </SelectContent>
-              </Select>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-[200px] justify-between"
+                  >
+                    {value
+                      ? defaultCategories.find((category) => category === value)
+                      : 'Select category...'}
+                    <ChevronsUpDown className="opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Search framework..."
+                      className="h-9"
+                    />
+                    <CommandList>
+                      <CommandEmpty>No Category found.</CommandEmpty>
+                      <CommandGroup>
+                        {defaultCategories.map((category) => (
+                          <CommandItem
+                            key={category}
+                            value={category}
+                            onSelect={(currentValue) => {
+                              setValue(
+                                currentValue === value ? '' : currentValue,
+                              )
+                              setOpen(false)
+                            }}
+                          >
+                            {category}
+                            <Check
+                              className={cn(
+                                'ml-auto',
+                                value === category
+                                  ? 'opacity-100'
+                                  : 'opacity-0',
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </>
           )}
         />

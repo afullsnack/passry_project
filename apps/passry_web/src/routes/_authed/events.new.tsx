@@ -65,10 +65,10 @@ function RouteComponent() {
       city: '',
       country: '',
       coverImage: new File([], ''),
-      capacity: 0,
+      // capacity: 0,
       tickets: [
         {
-          name: '',
+          name: 'Free',
           price: 0,
           quantity: 0,
           saleStartDate: undefined,
@@ -88,7 +88,7 @@ function RouteComponent() {
         city: z.string().min(3),
         country: z.string().min(3),
         coverImage: z.instanceof(File),
-        capacity: z.number().min(0),
+        // capacity: z.number().min(0),
         tickets: z.array(
           z.object({
             name: z.string().min(4),
@@ -213,6 +213,7 @@ function RouteComponent() {
   const { dateTime: dateTimeTracked } = useStore(form.store, (state) => {
     return { dateTime: state.values.dateTime }
   })
+  const ticketsTracked = useStore(form.store, (state) => state.values.tickets)
   const countryTracked = useStore(form.store, (state) => state.values.country)
   const cityTracked = useStore(form.store, (state) => state.values.city)
   const venueFullAddressTracked = useStore(

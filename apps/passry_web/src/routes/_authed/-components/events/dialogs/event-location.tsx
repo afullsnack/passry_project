@@ -68,7 +68,7 @@ export default NiceModal.create(
               <form.Field
                 name={fieldNames[0] || 'fieldName'}
                 children={(field: AnyFieldApi) => (
-                  <>
+                  <div className="grid">
                     <Label>Country</Label>
                     <Select
                       onValueChange={(value) => {
@@ -92,13 +92,13 @@ export default NiceModal.create(
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                  </>
+                  </div>
                 )}
               />
               <form.Field
                 name={fieldNames[1] || 'fieldName'}
                 children={(field: AnyFieldApi) => (
-                  <>
+                  <div className="grid">
                     <Label>State</Label>
                     <Select
                       onValueChange={(value) => {
@@ -128,7 +128,7 @@ export default NiceModal.create(
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                  </>
+                  </div>
                 )}
               />
             </div>

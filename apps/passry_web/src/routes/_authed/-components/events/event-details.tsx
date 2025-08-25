@@ -9,6 +9,9 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import EventTicketsModal from './dialogs/event-tickets'
+import EventCapacityModal from './dialogs/event-capacity'
+import EventCommunityModal from './dialogs/event-community'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import {
@@ -17,6 +20,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useSession } from '@/hooks/session'
+import NiceModal from '@ebay/nice-modal-react'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { Edit } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -38,6 +42,28 @@ export function EventDetailsCard({
       setOrgName(session.org.name.split(' '))
     }
   }, [session])
+
+  const showEventTicketsModal = () => {
+    NiceModal.show(EventTicketsModal, {
+      name: 'tickets',
+      form,
+      defaultValue: 'free',
+    })
+  }
+  const showEventCapacityModal = () => {
+    NiceModal.show(EventCapacityModal, {
+      name: 'capacity',
+      form,
+      defaultValue: 50,
+    })
+  }
+  const showEventCommunityModal = () => {
+    NiceModal.show(EventCommunityModal, {
+      name: 'community',
+      form,
+      defaultValue: 'whatsapp',
+    })
+  }
 
   return (
     <Card className="bg-none">
@@ -87,6 +113,7 @@ export function EventDetailsCard({
             className="w-full flex items-center justify-between"
             variant="outline"
             size="sm"
+            onClick={showEventTicketsModal}
           >
             <span>Tickets</span>
             <Badge variant="secondary">
@@ -97,6 +124,7 @@ export function EventDetailsCard({
             className="w-full flex items-center justify-between"
             variant="outline"
             size="sm"
+            onClick={showEventCapacityModal}
           >
             <span>Capacity</span>
             <Badge variant="secondary">
@@ -107,6 +135,7 @@ export function EventDetailsCard({
             className="w-full flex items-center justify-between"
             variant="outline"
             size="sm"
+            onClick={showEventCommunityModal}
           >
             <span>Communities</span>
             <Badge variant="secondary">

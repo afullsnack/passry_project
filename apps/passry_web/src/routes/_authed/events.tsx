@@ -31,11 +31,13 @@ function RouteComponent() {
               {matchRoute({ to: '/events' }) && <Input placeholder="Search" />}
             </div>
 
-            <Button className="" size={isMobile ? 'sm' : 'default'} asChild>
-              <Link to="/events/new">
-                Create event <Plus className="ml-2 size-4" />
-              </Link>
-            </Button>
+            {!matchRoute({ to: '/events/new' }) && (
+              <Button className="" size={isMobile ? 'sm' : 'default'} asChild>
+                <Link to="/events/new">
+                  Create event <Plus className="ml-2 size-4" />
+                </Link>
+              </Button>
+            )}
           </div>
           <div className="flex flex-col gap-4 overflow-auto">
             <NiceModal.Provider>
