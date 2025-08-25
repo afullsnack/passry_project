@@ -1,4 +1,9 @@
-import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
+import {
+  Link,
+  Outlet,
+  createFileRoute,
+  useMatchRoute,
+} from '@tanstack/react-router'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -12,6 +17,8 @@ export const Route = createFileRoute('/_authed/events')({
 function RouteComponent() {
   const isMobile = useIsMobile()
 
+  const matchRoute = useMatchRoute()
+
   return (
     <div className="@container/main flex flex-1 flex-col gap-2">
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
@@ -21,7 +28,7 @@ function RouteComponent() {
         >
           <div className="flex items-center justify-between px-4 lg:px-6 mb-6 lg:mb-4">
             <div className="flex items-center gap-2">
-              <Input placeholder="Search" />
+              {matchRoute({ to: '/events' }) && <Input placeholder="Search" />}
             </div>
 
             <Button className="" size={isMobile ? 'sm' : 'default'} asChild>
