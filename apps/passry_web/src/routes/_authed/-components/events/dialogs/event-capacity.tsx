@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input'
 interface IProps {
   name: string // form field name
   form: any
-  defaultValue?: string
+  defaultValue?: number
 }
 
 export default NiceModal.create(({ name, form, defaultValue }: IProps) => {
@@ -27,8 +27,8 @@ export default NiceModal.create(({ name, form, defaultValue }: IProps) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogDescription>
-            Enter the name of your event below.
+          <DialogDescription className="text-start">
+            Close registration when capacity is reached
           </DialogDescription>
         </DialogHeader>
         <form.Field
@@ -38,15 +38,16 @@ export default NiceModal.create(({ name, form, defaultValue }: IProps) => {
               <Label>Event title</Label>
               <Input
                 onBlur={field.handleBlur}
+                type="number"
                 defaultValue={defaultValue}
                 onChange={(e) => field.handleChange(e.target.value)}
-                placeholder="Enter event title"
+                placeholder="Enter event capacity"
                 autoComplete="off"
               />
             </>
           )}
         />
-        <Button onClick={() => modal.hide()}>Set title</Button>
+        <Button onClick={() => modal.hide()}>Set Limit</Button>
       </DialogContent>
     </Dialog>
   )

@@ -61,7 +61,7 @@ export default NiceModal.create(({ name, form, defaultStateDate }: IProps) => {
     >
       <DialogContent>
         <DialogHeader className="items-start">
-          <DialogDescription>
+          <DialogDescription className="text-start">
             Set the start and end time for your event.
           </DialogDescription>
         </DialogHeader>
@@ -118,7 +118,8 @@ export default NiceModal.create(({ name, form, defaultStateDate }: IProps) => {
                   }}
                   className={cn(
                     'bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none',
-                    '!text-3xl font-sans font-semibold size-[35%] mx-auto items-center justify-center',
+                    '!text-3xl py-6 font-sans font-semibold w-[35%] mx-auto items-center justify-center',
+                    { 'w-[100%]': isMobile },
                   )}
                 />
               </>
