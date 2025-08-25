@@ -37,7 +37,12 @@ export default NiceModal.create(({ name, form, defaultValue }: IProps) => {
           children={(field: AnyFieldApi) => (
             <>
               <Label>Event category</Label>
-              <Tabs>
+              <Tabs
+                onValueChange={(value) => {
+                  console.log('Value for ticket', value)
+                  field.handleChange(value)
+                }}
+              >
                 <TabsList>
                   <TabsTrigger value="free">Free</TabsTrigger>
                   <TabsTrigger value="paid">Paid</TabsTrigger>
