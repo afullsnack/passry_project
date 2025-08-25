@@ -1,22 +1,14 @@
 import { cn } from '@/lib/utils'
-import { env } from '@/env'
-import { createFileRoute, useParams } from '@tanstack/react-router'
-import {
-  AlertCircleIcon,
-  Calendar,
-  Heart,
-  Loader2Icon,
-  MapPin,
-} from 'lucide-react'
+import { createFileRoute } from '@tanstack/react-router'
+import { Calendar, Heart, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useSingleEvent } from '@/hooks/use-events'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { formatDate } from '@/lib/date-formatter'
-import { RegisterEventCard } from './-components/events/register-event'
+import { EventDetailsCard } from './-components/events/event-details'
 import { Badge } from '@/components/ui/badge'
 import NiceModal from '@ebay/nice-modal-react'
 import EventDateTimeModal from './-components/events/dialogs/event-datetime'
-import EventTitleModal from './-components/events/dialogs/event-title'
+import EventCategoryModal from './-components/events/dialogs/event-category'
+import EventLocationModal from './-components/events/dialogs/event-location'
 import { useForm, useStore } from '@tanstack/react-form'
 import z from 'zod'
 import { useSession } from '@/hooks/session'
@@ -28,15 +20,37 @@ import {
   DropzoneContent,
   DropzoneEmptyState,
 } from '@/components/ui/shadcn-io/dropzone'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { Input } from '@/components/ui/input'
 
 export const Route = createFileRoute('/_authed/events/new')({
+  loader: async () => {
+    // fetch countries and cities
+    const response = await fetch(
+      `https://countriesnow.space/api/v0.1/countries/states`,
+    )
+    const { data: countries } = (await response.json()) as {
+      error: boolean
+      msg: string
+      data: Array<{
+        name: string
+        iso3: string
+        iso2: string
+        states: Array<{
+          name: string
+          state_code: string
+        }>
+      }>
+    }
+    return countries
+  },
   component: RouteComponent,
   errorComponent: () => <div>An error occured</div>,
   notFoundComponent: () => <div>Page not found</div>,
 })
 
 function RouteComponent() {
+  const countries = Route.useLoaderData()
   const { data: session } = useSession()
   const queryClient = useQueryClient()
 
@@ -51,6 +65,7 @@ function RouteComponent() {
       city: '',
       country: '',
       coverImage: new File([], ''),
+      capacity: 0,
       tickets: [
         {
           name: '',
@@ -73,6 +88,7 @@ function RouteComponent() {
         city: z.string().min(3),
         country: z.string().min(3),
         coverImage: z.instanceof(File),
+        capacity: z.number().min(0),
         tickets: z.array(
           z.object({
             name: z.string().min(4),
@@ -192,23 +208,48 @@ function RouteComponent() {
     },
   })
 
-  const formattedDateTime = formatDate(new Date(), {
+  const titleTracked = useStore(form.store, (state) => state.values.title)
+  const categoryTracked = useStore(form.store, (state) => state.values.category)
+  const { dateTime: dateTimeTracked } = useStore(form.store, (state) => {
+    return { dateTime: state.values.dateTime }
+  })
+  const countryTracked = useStore(form.store, (state) => state.values.country)
+  const cityTracked = useStore(form.store, (state) => state.values.city)
+  const venueFullAddressTracked = useStore(
+    form.store,
+    (state) => state.values.venueFullAddress,
+  )
+
+  const formattedDateTime = formatDate(dateTimeTracked, {
     format: 'EEEE, MMMM dd. hh:mm aa',
     smart: false,
     includeTime: true,
   })
 
-  const titleTracked = useStore(form.store, (state) => state.values.title)
-
   const showDateTimeModal = () => {
-    NiceModal.show(EventDateTimeModal, { name: 'dateTime', form })
+    NiceModal.show(EventDateTimeModal, {
+      name: 'dateTime',
+      form,
+      defaultStateDate: dateTimeTracked,
+    })
   }
 
-  const showEventTitleModal = () => {
-    NiceModal.show(EventTitleModal, {
-      name: 'title',
+  const showEventCategoryModal = () => {
+    NiceModal.show(EventCategoryModal, {
+      name: 'category',
       form,
-      defaultValue: titleTracked,
+      defaultValue: categoryTracked,
+    })
+  }
+
+  const showEventLocationModal = () => {
+    NiceModal.show(EventLocationModal, {
+      fieldNames: ['country', 'city', 'venueFullAddress'],
+      form,
+      countries,
+      defaultAddress: '',
+      defaultCity: '',
+      defaultCountry: '',
     })
   }
 
@@ -241,7 +282,6 @@ function RouteComponent() {
         >
           <div className="relative w-full">
             <div>
-              {/*<div className="max-h-[400px] bg-cover bg-center aspect-square rounded-lg mx-auto">*/}
               <Dropzone
                 maxSize={1024 * 1024 * 10}
                 maxFiles={1}
@@ -270,7 +310,6 @@ function RouteComponent() {
                   )}
                 </DropzoneContent>
               </Dropzone>
-              {/*</div>*/}
               <div className="absolute inset-0 bg-black/20" />
               <Button
                 variant="ghost"
@@ -296,11 +335,29 @@ function RouteComponent() {
             <div className="flex items-center justify-between">
               <h1
                 className="text-2xl lg:text-3xl font-extrabold"
-                onClick={showEventTitleModal}
+                // onClick={showEventTitleModal}
               >
-                {titleTracked || 'Event title'}
+                <form.Field
+                  name={'title'}
+                  children={(field) => (
+                    <>
+                      <Input
+                        onBlur={field.handleBlur}
+                        defaultValue={titleTracked}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="Enter title"
+                        autoComplete="off"
+                        className="text-2xl lg:text-3xl font-extrabold p-2 border-none bg-none"
+                      />
+                    </>
+                  )}
+                />
               </h1>
-              <Badge className="rounded-2xl lg:h-6" variant="secondary">
+              <Badge
+                className="rounded-2xl lg:h-6"
+                variant="secondary"
+                onClick={showEventCategoryModal}
+              >
                 {'party'}
               </Badge>
             </div>
@@ -315,17 +372,24 @@ function RouteComponent() {
                 {formattedDateTime.split('.')[0]} <br />
                 {formattedDateTime.split('.')[1]}
               </span>
-              <span className="flex items-center gap-2">
+              <span
+                className="flex items-center gap-2"
+                onClick={showEventLocationModal}
+              >
                 <div className="p-3 border border-primary/30 items-center justify-center rounded-xl">
                   <MapPin className="size-6" />{' '}
                 </div>
-                Nigeria, Abuja
+                {countryTracked || 'Nigeria'}, {cityTracked || 'Abuja'}
                 <br />
-                Address of the event
+                {venueFullAddressTracked || 'Address of the event'}
               </span>
             </div>
             <div></div>
-            <RegisterEventCard description={'Add description here'} />
+            <EventDetailsCard
+              form={form}
+              fieldNames={['description', 'tickets', 'capacity', 'community']}
+              description={'Add description here'}
+            />
           </div>
         </div>
       </div>
