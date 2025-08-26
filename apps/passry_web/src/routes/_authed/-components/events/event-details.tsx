@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/tooltip'
 import { useSession } from '@/hooks/session'
 import NiceModal from '@ebay/nice-modal-react'
-import type { AnyFieldApi } from '@tanstack/react-form'
+import { useStore, type AnyFieldApi } from '@tanstack/react-form'
 import { Edit } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -47,7 +47,16 @@ export function EventDetailsCard({
     NiceModal.show(EventTicketsModal, {
       name: 'tickets',
       form,
-      defaultValue: 'free',
+      defaultValue: [
+        {
+          name: 'Free',
+          price: 0,
+          quantity: 0,
+          saleStartDate: undefined,
+          saleEndDate: undefined,
+          isFree: true,
+        },
+      ],
     })
   }
   const showEventCapacityModal = () => {
@@ -64,6 +73,13 @@ export function EventDetailsCard({
       defaultValue: 'whatsapp',
     })
   }
+
+  const ticketsTracked = useStore(
+    form.store,
+    (state: any) => state?.values?.tickets,
+  )
+
+  console.log(ticketsTracked, ':::Tracked tickets')
 
   return (
     <Card className="bg-none">
@@ -117,7 +133,7 @@ export function EventDetailsCard({
           >
             <span>Tickets</span>
             <Badge variant="secondary">
-              Free <Edit />
+              {ticketsTracked[0]?.name || 'Free'} <Edit />
             </Badge>
           </Button>
           <Button
@@ -128,7 +144,7 @@ export function EventDetailsCard({
           >
             <span>Capacity</span>
             <Badge variant="secondary">
-              Unlimited <Edit />
+              {ticketsTracked[0]?.quantity === 0 && 'Unlimited'} <Edit />
             </Badge>
           </Button>
           <Button
