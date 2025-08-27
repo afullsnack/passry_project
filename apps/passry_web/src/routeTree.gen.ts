@@ -23,7 +23,7 @@ import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthedEventsIndexRouteImport } from './routes/_authed/events.index'
 import { Route as AuthedEventsNewRouteImport } from './routes/_authed/events.new'
 import { Route as AuthedEventsIdRouteImport } from './routes/_authed/events.$id'
-import { Route as AuthedEIdRouteImport } from './routes/_authed/e/$id'
+import { Route as AuthEIdRouteImport } from './routes/_auth/e/$id'
 
 const DiscoverRoute = DiscoverRouteImport.update({
   id: '/discover',
@@ -94,10 +94,10 @@ const AuthedEventsIdRoute = AuthedEventsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AuthedEventsRoute,
 } as any)
-const AuthedEIdRoute = AuthedEIdRouteImport.update({
-  id: '/e/$id',
+const AuthEIdRoute = AuthEIdRouteImport.update({
+  id: '/_auth/e/$id',
   path: '/e/$id',
-  getParentRoute: () => AuthedRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -111,7 +111,7 @@ export interface FileRoutesByFullPath {
   '/explore': typeof AuthedExploreRoute
   '/stats': typeof AuthedStatsRoute
   '/team': typeof AuthedTeamRoute
-  '/e/$id': typeof AuthedEIdRoute
+  '/e/$id': typeof AuthEIdRoute
   '/events/$id': typeof AuthedEventsIdRoute
   '/events/new': typeof AuthedEventsNewRoute
   '/events/': typeof AuthedEventsIndexRoute
@@ -126,7 +126,7 @@ export interface FileRoutesByTo {
   '/explore': typeof AuthedExploreRoute
   '/stats': typeof AuthedStatsRoute
   '/team': typeof AuthedTeamRoute
-  '/e/$id': typeof AuthedEIdRoute
+  '/e/$id': typeof AuthEIdRoute
   '/events/$id': typeof AuthedEventsIdRoute
   '/events/new': typeof AuthedEventsNewRoute
   '/events': typeof AuthedEventsIndexRoute
@@ -144,7 +144,7 @@ export interface FileRoutesById {
   '/_authed/explore': typeof AuthedExploreRoute
   '/_authed/stats': typeof AuthedStatsRoute
   '/_authed/team': typeof AuthedTeamRoute
-  '/_authed/e/$id': typeof AuthedEIdRoute
+  '/_auth/e/$id': typeof AuthEIdRoute
   '/_authed/events/$id': typeof AuthedEventsIdRoute
   '/_authed/events/new': typeof AuthedEventsNewRoute
   '/_authed/events/': typeof AuthedEventsIndexRoute
@@ -194,7 +194,7 @@ export interface FileRouteTypes {
     | '/_authed/explore'
     | '/_authed/stats'
     | '/_authed/team'
-    | '/_authed/e/$id'
+    | '/_auth/e/$id'
     | '/_authed/events/$id'
     | '/_authed/events/new'
     | '/_authed/events/'
@@ -207,6 +207,7 @@ export interface RootRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
   AuthVerify_codeRoute: typeof AuthVerify_codeRoute
+  AuthEIdRoute: typeof AuthEIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -309,12 +310,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedEventsIdRouteImport
       parentRoute: typeof AuthedEventsRoute
     }
-    '/_authed/e/$id': {
-      id: '/_authed/e/$id'
+    '/_auth/e/$id': {
+      id: '/_auth/e/$id'
       path: '/e/$id'
       fullPath: '/e/$id'
-      preLoaderRoute: typeof AuthedEIdRouteImport
-      parentRoute: typeof AuthedRouteRoute
+      preLoaderRoute: typeof AuthEIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -341,7 +342,6 @@ interface AuthedRouteRouteChildren {
   AuthedExploreRoute: typeof AuthedExploreRoute
   AuthedStatsRoute: typeof AuthedStatsRoute
   AuthedTeamRoute: typeof AuthedTeamRoute
-  AuthedEIdRoute: typeof AuthedEIdRoute
 }
 
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
@@ -350,7 +350,6 @@ const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
   AuthedExploreRoute: AuthedExploreRoute,
   AuthedStatsRoute: AuthedStatsRoute,
   AuthedTeamRoute: AuthedTeamRoute,
-  AuthedEIdRoute: AuthedEIdRoute,
 }
 
 const AuthedRouteRouteWithChildren = AuthedRouteRoute._addFileChildren(
@@ -364,6 +363,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
   AuthVerify_codeRoute: AuthVerify_codeRoute,
+  AuthEIdRoute: AuthEIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
