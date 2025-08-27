@@ -40,22 +40,11 @@ export default function CategorySelect({ name, form, defaultValue }: IProps) {
   const [value, setValue] = useState(defaultValue)
 
   return (
-    // <Dialog
-    //   open={modal.visible}
-    //   onOpenChange={(open) => (open ? modal.show() : modal.hide())}
-    //   modal
-    // >
-    //   <DialogContent className='min-h-[]'>
-    //     <DialogHeader>
-    //       <DialogDescription className="text-start">
-    //         Pick a category for your event or create a new one.
-    //       </DialogDescription>
-    //     </DialogHeader>
     <form.Field
       name={name || 'category'}
       children={(field: AnyFieldApi) => (
         <>
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={open} onOpenChange={setOpen} modal>
             <PopoverTrigger asChild>
               <Badge
                 className="rounded-2xl lg:h-6 flex gap-3 justify-between capitalize"
@@ -64,15 +53,6 @@ export default function CategorySelect({ name, form, defaultValue }: IProps) {
                 {value ? value : 'Select category...'}
                 <ChevronsUpDown className="opacity-50" />
               </Badge>
-              {/*<Button
-                variant="outline"
-                role="combobox"
-                // aria-expanded={open}
-                className="w-[200px] justify-between capitalize"
-              >
-                {value ? value : 'Select category...'}
-                <ChevronsUpDown className="opacity-50" />
-              </Button>*/}
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0">
               <Command>
@@ -92,7 +72,7 @@ export default function CategorySelect({ name, form, defaultValue }: IProps) {
                             currentValue === value ? '' : currentValue, // deselect if value was previously selected
                           )
                           field.handleChange(currentValue)
-                          // setOpen(false)
+                          setOpen(false)
                         }}
                       >
                         {category}
@@ -114,8 +94,5 @@ export default function CategorySelect({ name, form, defaultValue }: IProps) {
         </>
       )}
     />
-    //     <Button onClick={() => modal.hide()}>Set category</Button>
-    //   </DialogContent>
-    // </Dialog>
   )
 }

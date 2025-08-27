@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
+import { useStore } from '@tanstack/react-form'
 import type { AnyFieldApi } from '@tanstack/react-form'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -20,7 +21,10 @@ import {
 interface IProps {
   name: string // form field name
   form: any
-  defaultValue?: string
+  defaultValue?: Array<{
+    link: string
+    id: string
+  }>
 }
 
 export default NiceModal.create(({ name, form, defaultValue }: IProps) => {
@@ -40,56 +44,40 @@ export default NiceModal.create(({ name, form, defaultValue }: IProps) => {
         </DialogHeader>
         <form.Field
           name={name || 'title'}
+          mode="array"
           children={(field: AnyFieldApi) => (
             <>
               <Label>Community</Label>
               <Tabs>
                 <TabsList>
-                  <TabsTrigger value="whatsapp">
-                    <IconBrandWhatsapp />
-                  </TabsTrigger>
-                  <TabsTrigger value="telegram">
-                    <IconBrandTelegram />
-                  </TabsTrigger>
-                  <TabsTrigger value="instagram">
-                    <IconBrandInstagram />
-                  </TabsTrigger>
-                  <TabsTrigger value="facebook">
-                    <IconBrandFacebook />
-                  </TabsTrigger>
+                  {defaultValue?.map(({ id }: any, i: number) => (
+                    <TabsTrigger key={i} value={id || 'whatsapp'}>
+                      {id === 'whatsapp' && <IconBrandWhatsapp />}
+                      {id === 'telegram' && <IconBrandTelegram />}
+                      {id === 'instagram' && <IconBrandInstagram />}
+                      {id === 'facebook' && <IconBrandFacebook />}
+                    </TabsTrigger>
+                  ))}
                 </TabsList>
-                <TabsContent value="whatsapp">
-                  <div>
-                    <Input
-                      placeholder="Enter whatsapp community link"
-                      type="text"
-                    />
-                  </div>
-                </TabsContent>
-                <TabsContent value="telegram">
-                  <div>
-                    <Input
-                      placeholder="Enter telegram community link"
-                      type="text"
-                    />
-                  </div>
-                </TabsContent>
-                <TabsContent value="instagram">
-                  <div>
-                    <Input
-                      placeholder="Enter instgram community link"
-                      type="text"
-                    />
-                  </div>
-                </TabsContent>
-                <TabsContent value="facebook">
-                  <div>
-                    <Input
-                      placeholder="Enter facebook community link"
-                      type="text"
-                    />
-                  </div>
-                </TabsContent>
+                {field.state.value.map(({ id }: any, i: number) => (
+                  <form.Field key={id} name={`community[${i}].link`}>
+                    {(subField: AnyFieldApi) => (
+                      <TabsContent value={id || 'whatsapp'}>
+                        <div>
+                          <Input
+                            value={subField.state.value}
+                            onBlur={subField.handleBlur}
+                            placeholder={`Enter ${id} community link`}
+                            onChange={(e) =>
+                              subField.handleChange(e.target.value)
+                            }
+                            type="text"
+                          />
+                        </div>
+                      </TabsContent>
+                    )}
+                  </form.Field>
+                ))}
               </Tabs>
             </>
           )}
