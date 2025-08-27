@@ -21,9 +21,18 @@ import {
 } from '@/components/ui/tooltip'
 import { useSession } from '@/hooks/session'
 import NiceModal from '@ebay/nice-modal-react'
-import { useStore, type AnyFieldApi } from '@tanstack/react-form'
+import { useStore } from '@tanstack/react-form'
+import type { AnyFieldApi } from '@tanstack/react-form'
 import { Edit } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import {
+  IconBrandFacebook,
+  IconBrandFacebookFilled,
+  IconBrandInstagram,
+  IconBrandInstagramFilled,
+  IconBrandTelegram,
+  IconBrandWhatsappFilled,
+} from '@tabler/icons-react'
 
 export function EventDetailsCard({
   description,
@@ -43,15 +52,29 @@ export function EventDetailsCard({
     }
   }, [session])
 
+  const ticketsTracked = useStore(
+    form.store,
+    (state: any) => state?.values?.tickets,
+  )
+  const communityTracked: Array<any> = useStore(
+    form.store,
+    (state: any) => state?.values?.community,
+  )
+
+  // const capacityTracked = useStore(
+  //   form.store,
+  //   (state: any) => state?.values?.capacity,
+  // )
+
   const showEventTicketsModal = () => {
     NiceModal.show(EventTicketsModal, {
       name: 'tickets',
       form,
-      defaultValue: [
+      defaultValue: ticketsTracked || [
         {
           name: 'Free',
           price: 0,
-          quantity: 0,
+          quantity: Infinity,
           saleStartDate: undefined,
           saleEndDate: undefined,
           isFree: true,
@@ -63,23 +86,58 @@ export function EventDetailsCard({
     NiceModal.show(EventCapacityModal, {
       name: 'capacity',
       form,
-      defaultValue: 50,
+      defaultValue: Infinity,
     })
   }
   const showEventCommunityModal = () => {
     NiceModal.show(EventCommunityModal, {
       name: 'community',
       form,
-      defaultValue: 'whatsapp',
+      defaultValue: [
+        {
+          link: '',
+          id: 'whatsapp',
+        },
+        {
+          link: '',
+          id: 'telegram',
+        },
+        {
+          link: '',
+          id: 'facebook',
+        },
+        {
+          link: '',
+          id: 'instagram',
+        },
+      ],
     })
   }
 
-  const ticketsTracked = useStore(
-    form.store,
-    (state: any) => state?.values?.tickets,
-  )
+  const getSocialCommunityUpdates = useCallback(() => {
+    const withLink = communityTracked.filter(({ link }) => !!link)
+    if (!withLink.length) return 'Social icons'
+    return withLink.map(({ id }) => {
+      if (id === 'whatsapp') return <IconBrandWhatsappFilled />
+      if (id === 'telegram') return <IconBrandTelegram />
+      if (id === 'instagram') return <IconBrandInstagramFilled />
+      if (id === 'facebook') return <IconBrandFacebookFilled />
+    })
+  }, [communityTracked])
 
-  console.log(ticketsTracked, ':::Tracked tickets')
+  const getTotalCapacity = useCallback(() => {
+    if (ticketsTracked.length > 1) {
+      const totalCapacity = ticketsTracked.reduce(
+        (acc: number, ticket: any) => acc + ticket.quantity,
+        0,
+      )
+      return totalCapacity
+    } else {
+      return ticketsTracked[0]?.quantity === Infinity
+        ? 'Unlimited'
+        : ticketsTracked[0]?.quantity
+    }
+  }, [ticketsTracked])
 
   return (
     <Card className="bg-none">
@@ -140,11 +198,12 @@ export function EventDetailsCard({
             className="w-full flex items-center justify-between"
             variant="outline"
             size="sm"
+            disabled={ticketsTracked.length > 1}
             onClick={showEventCapacityModal}
           >
             <span>Capacity</span>
             <Badge variant="secondary">
-              {ticketsTracked[0]?.quantity === 0 && 'Unlimited'} <Edit />
+              {getTotalCapacity()} <Edit />
             </Badge>
           </Button>
           <Button
@@ -155,12 +214,19 @@ export function EventDetailsCard({
           >
             <span>Communities</span>
             <Badge variant="secondary">
-              Social icons <Edit />
+              {getSocialCommunityUpdates()} <Edit />
             </Badge>
           </Button>
         </div>
         <CardFooter className="w-full flex gap-4 px-0">
-          <Button>Publish Event</Button>
+          <Button
+            onClick={() => {
+              console.log('This is being clikced')
+              form.handleSubmit()
+            }}
+          >
+            Publish Event
+          </Button>
         </CardFooter>
       </CardContent>
     </Card>
