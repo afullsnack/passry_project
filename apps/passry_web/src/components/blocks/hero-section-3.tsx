@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Mail, SendHorizonal, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
-import { Link } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import { InfiniteSlider } from '@/components/ui/infinite-slider'
 import { ProgressiveBlur } from '@/components/ui/progressive-blur'
 import type { Variants } from 'framer-motion'
@@ -16,6 +16,20 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { subscribe } from '@/actions/subscribe'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { useSession } from '@/hooks/session'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu'
+import { IconLogout, IconLogout2 } from '@tabler/icons-react'
+import { authClient } from '@/lib/auth-client'
 
 const transitionVariants: Variants = {
   hidden: {
@@ -292,9 +306,66 @@ const menuItems: Array<any> = [
   // { name: 'About', href: '#link' },
 ]
 
+function AvatarMenu({ user }: { user: any }) {
+  const [username, setUsername] = useState<Array<string>>(['Cornor'])
+  const router = useRouter()
+
+  useEffect(() => {
+    if (user.name) {
+      const splitVals = user.name.split(' ')
+      setUsername(splitVals)
+    }
+  }, [user, setUsername])
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Avatar>
+          <AvatarImage src={user?.image} alt="Profile image" />
+          <AvatarFallback>
+            {username.length > 1
+              ? username[0].charAt(0) + username[1].charAt(0)
+              : username[0].charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="start">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            onClick={() => {
+              router.navigate({ to: '/explore' })
+            }}
+          >
+            Profile
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="justify-between text-red-500"
+            onClick={async () => {
+              await authClient.signOut()
+              router.invalidate()
+              router.navigate({
+                to: '/',
+                replace: true,
+                resetScroll: true,
+                ignoreBlocker: true,
+                reloadDocument: true,
+              })
+            }}
+          >
+            Log out
+            <IconLogout className="text-red-500" />
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
 const HeroHeader = () => {
   const [menuState, setMenuState] = React.useState(false)
   const [isScrolled, setIsScrolled] = React.useState(false)
+  const { data: session } = useSession()
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -327,16 +398,20 @@ const HeroHeader = () => {
                 <Logo />
               </Link>
 
-              <div className="flex justify-center gap-4">
+              <div className="flex items-center justify-center gap-4">
                 <ThemeToggle className="lg:hidden" />
-                <Button
-                  asChild
-                  variant="outline"
-                  size="sm"
-                  className="lg:hidden"
-                >
-                  <Link to="/login">Sign In</Link>
-                </Button>
+                {session ? (
+                  <AvatarMenu user={session.user} />
+                ) : (
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="lg:hidden"
+                  >
+                    <Link to="/login">Sign In</Link>
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -370,7 +445,7 @@ const HeroHeader = () => {
                   ))}
                 </ul>
               </div>
-              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
+              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:items-center sm:gap-3 sm:space-y-0 md:w-fit">
                 {/* <Button
                   asChild
                   variant="outline"
@@ -382,9 +457,13 @@ const HeroHeader = () => {
                   </a>
                 </Button> */}
                 <ThemeToggle />
-                <Button asChild variant="outline" size="sm">
-                  <Link to="/login">Sign In</Link>
-                </Button>
+                {session ? (
+                  <AvatarMenu user={session.user} />
+                ) : (
+                  <Button asChild variant="outline" size="sm">
+                    <Link to="/login">Sign In</Link>
+                  </Button>
+                )}
 
                 {/* <Button
                   asChild
