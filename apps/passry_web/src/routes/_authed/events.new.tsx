@@ -4,10 +4,8 @@ import { Calendar, Heart, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { formatDate } from '@/lib/date-formatter'
 import { EventDetailsCard } from './-components/events/event-details'
-import { Badge } from '@/components/ui/badge'
 import NiceModal from '@ebay/nice-modal-react'
 import EventDateTimeModal from './-components/events/dialogs/event-datetime'
-import EventCategoryModal from './-components/events/dialogs/event-category'
 import EventLocationModal from './-components/events/dialogs/event-location'
 import { useForm, useStore } from '@tanstack/react-form'
 import z from 'zod'
@@ -22,6 +20,7 @@ import {
 } from '@/components/ui/shadcn-io/dropzone'
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
+import CategorySelect from './-components/events/dialogs/event-category'
 
 export const Route = createFileRoute('/_authed/events/new')({
   loader: async () => {
@@ -57,20 +56,38 @@ function RouteComponent() {
   const form = useForm({
     defaultValues: {
       title: '',
-      category: '',
+      category: 'party',
       description: '',
       dateTime: new Date(),
-      venueName: '',
+      venueName: undefined,
       venueFullAddress: '',
       city: '',
       country: '',
-      coverImage: new File([], ''),
-      // capacity: 0,
+      coverImage: undefined, //new File([], ''),
+      capacity: Infinity,
+      community: [
+        {
+          link: undefined,
+          id: 'whatsapp',
+        },
+        {
+          link: undefined,
+          id: 'telegram',
+        },
+        {
+          link: undefined,
+          id: 'facebook',
+        },
+        {
+          link: undefined,
+          id: 'instagram',
+        },
+      ],
       tickets: [
         {
           name: 'Free',
           price: 0,
-          quantity: 0,
+          quantity: Infinity,
           saleStartDate: undefined,
           saleEndDate: undefined,
           isFree: true,
@@ -80,15 +97,23 @@ function RouteComponent() {
     validators: {
       onChange: z.object({
         title: z.string().min(6),
-        category: z.string().min(6),
+        category: z.string(),
         description: z.string().min(13),
         dateTime: z.date().min(new Date()),
-        venueName: z.string().min(6),
+        venueName: z.string().min(6).nullable().optional(),
         venueFullAddress: z.string().min(12),
         city: z.string().min(3),
         country: z.string().min(3),
         coverImage: z.instanceof(File),
-        // capacity: z.number().min(0),
+        capacity: z.number(),
+        community: z
+          .array(
+            z.object({
+              link: z.string().url().optional().nullable(),
+              id: z.string(),
+            }),
+          )
+          .optional(),
         tickets: z.array(
           z.object({
             name: z.string().min(4),
@@ -103,6 +128,7 @@ function RouteComponent() {
     },
     onSubmit: async ({ value }) => {
       console.log(value, ':::Values to submit')
+      return
       if (session && session.org) {
         // Upload cover image first
         if (!value.coverImage.name) {
@@ -208,12 +234,15 @@ function RouteComponent() {
     },
   })
 
+  console.log(form.getAllErrors(), 'Errors')
+  console.log(form.state.errorMap, form.state.errors, 'Error map')
+
   const titleTracked = useStore(form.store, (state) => state.values.title)
   const categoryTracked = useStore(form.store, (state) => state.values.category)
   const { dateTime: dateTimeTracked } = useStore(form.store, (state) => {
     return { dateTime: state.values.dateTime }
   })
-  const ticketsTracked = useStore(form.store, (state) => state.values.tickets)
+  // const ticketsTracked = useStore(form.store, (state) => state.values.tickets)
   const countryTracked = useStore(form.store, (state) => state.values.country)
   const cityTracked = useStore(form.store, (state) => state.values.city)
   const venueFullAddressTracked = useStore(
@@ -235,14 +264,6 @@ function RouteComponent() {
     })
   }
 
-  const showEventCategoryModal = () => {
-    NiceModal.show(EventCategoryModal, {
-      name: 'category',
-      form,
-      defaultValue: categoryTracked,
-    })
-  }
-
   const showEventLocationModal = () => {
     NiceModal.show(EventLocationModal, {
       fieldNames: ['country', 'city', 'venueFullAddress'],
@@ -258,11 +279,9 @@ function RouteComponent() {
   const [filePreview, setFilePreview] = useState<string | undefined>()
 
   const handleDrop = (fileList: Array<File>) => {
-    console.log('Files list', fileList)
     setFiles(fileList)
 
     if (fileList.length > 0) {
-      console.log('Reader init')
       const reader = new FileReader()
       reader.onload = (e) => {
         if (typeof e.target?.result === 'string') {
@@ -354,13 +373,11 @@ function RouteComponent() {
                   )}
                 />
               </h1>
-              <Badge
-                className="rounded-2xl lg:h-6"
-                variant="secondary"
-                onClick={showEventCategoryModal}
-              >
-                {'party'}
-              </Badge>
+              <CategorySelect
+                defaultValue={categoryTracked}
+                form={form}
+                name="category"
+              />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <span
@@ -388,7 +405,7 @@ function RouteComponent() {
             <div></div>
             <EventDetailsCard
               form={form}
-              fieldNames={['description', 'tickets', 'capacity', 'community']}
+              fieldNames={['description', 'tickets', 'community']}
               description={'Add description here'}
             />
           </div>

@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Plus } from 'lucide-react'
-import NiceModal from '@ebay/nice-modal-react'
 
 export const Route = createFileRoute('/_authed/events')({
   component: RouteComponent,
@@ -40,9 +39,7 @@ function RouteComponent() {
             )}
           </div>
           <div className="flex flex-col gap-4 overflow-auto">
-            <NiceModal.Provider>
-              <Outlet />
-            </NiceModal.Provider>
+            <Outlet />
           </div>
         </div>
       </div>

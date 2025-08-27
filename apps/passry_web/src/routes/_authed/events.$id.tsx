@@ -127,7 +127,11 @@ function RouteComponent() {
               </span>
             </div>
             <div></div>
-            <RegisterEventCard description={event?.description} />
+            <RegisterEventCard
+              description={event?.description}
+              coverUrl={`${env.VITE_API_URL}/upload?key=${event.coverUrlKey}`}
+              shareUrl={`${env.VITE_APP_URL}/e/${event?.id}`}
+            />
           </div>
         </div>
       </div>
