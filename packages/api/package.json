@@ -17,8 +17,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development pnpm with-env tsx watch src/index.ts",
     "start": "node ./dist/src/index.cjs",
-    "db:generate": "pnpm with-env-prod npx drizzle-kit generate --config=./dist/drizzle.config.cjs",
-    "db:migrate": "pnpm with-env-prod npx drizzle-kit migrate --config=./dist/drizzle.config.cjs",
+    "db:generate": "pnpm with-env-prod npx drizzle-kit generate --config=./dist/drizzle.config.mjs",
+    "db:migrate": "pnpm with-env-prod npx drizzle-kit migrate --config=./dist/drizzle.config.mjs",
     "db:generate-dev": "pnpm with-env npx drizzle-kit generate",
     "db:migrate-dev": "pnpm with-env npx drizzle-kit migrate",
     "studio": "pnpm with-env npx drizzle-kit studio",
