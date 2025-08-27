@@ -115,6 +115,40 @@ export const insertTicketSchema = createInsertSchema(ticket, {
   });
 export const patchTicketSchema = insertEventSchema.partial();
 
+export const community = sqliteTable("community", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  orgId: text("org_id")
+    .references(() => organization.id, { onDelete: "cascade" }),
+  eventId: text("event_id")
+    .references(() => event.id, { onDelete: "cascade" }),
+  socialNetworkId: text("social_network_id").notNull(),
+  socialNetworkLabel: text("social_network_label").notNull(),
+  url: text("url"),
+  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+});
+
+export const selectCommunitySchema = createSelectSchema(community);
+export const insertCommunitySchema = createInsertSchema(community, {
+  url: schema => schema.url()
+})
+  .required({
+    orgId: true,
+    eventId: true,
+    socialNetworkId: true,
+    socialNetworkLabel: true,
+  })
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  });
+export const patchCommunitySchema = insertCommunitySchema.partial();
+
 export const organizationRelations = relations(organization, ({ one }) => ({
   owner: one(user, {
     fields: [organization.ownerId],
