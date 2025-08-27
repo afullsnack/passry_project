@@ -27,7 +27,7 @@
     "lint:fix": "npm run lint --fix",
     "test": "cross-env NODE_ENV=test vitest",
     "build": "cross-env NODE_ENV=staging tsup && tsc-alias",
-    "with-env": "dotenv -e .env.local -e .env --",
+    "with-env": "dotenv -e .env.local --",
     "with-env-prod": "dotenv -e .env.prod -e .env --"
   },
   "dependencies": {

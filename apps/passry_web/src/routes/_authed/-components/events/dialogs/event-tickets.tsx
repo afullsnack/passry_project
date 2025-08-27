@@ -8,11 +8,9 @@ import { Button } from '@/components/ui/button'
 import NiceModal, { useModal } from '@ebay/nice-modal-react'
 import { useStore } from '@tanstack/react-form'
 import type { AnyFieldApi } from '@tanstack/react-form'
-import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useState } from 'react'
-import { Switch } from '@/components/ui/switch'
 import { Check, ChevronsUpDown, X } from 'lucide-react'
 import {
   Popover,

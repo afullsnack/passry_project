@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { Calendar, Heart, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { formatDate } from '@/lib/date-formatter'
@@ -52,6 +52,7 @@ function RouteComponent() {
   const countries = Route.useLoaderData()
   const { data: session } = useSession()
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   const form = useForm({
     defaultValues: {
@@ -63,7 +64,7 @@ function RouteComponent() {
       venueFullAddress: '',
       city: '',
       country: '',
-      coverImage: undefined, //new File([], ''),
+      coverImage: new File([], ''),
       capacity: Infinity,
       community: [
         {
@@ -100,7 +101,7 @@ function RouteComponent() {
         category: z.string(),
         description: z.string().min(13),
         dateTime: z.date().min(new Date()),
-        venueName: z.string().min(6).nullable().optional(),
+        venueName: z.string().optional(),
         venueFullAddress: z.string().min(12),
         city: z.string().min(3),
         country: z.string().min(3),
@@ -109,7 +110,7 @@ function RouteComponent() {
         community: z
           .array(
             z.object({
-              link: z.string().url().optional().nullable(),
+              link: z.string().url().optional(),
               id: z.string(),
             }),
           )
@@ -128,14 +129,18 @@ function RouteComponent() {
     },
     onSubmit: async ({ value }) => {
       console.log(value, ':::Values to submit')
-      return
       if (session && session.org) {
         // Upload cover image first
-        if (!value.coverImage.name) {
+        if (
+          typeof value.coverImage !== 'undefined' &&
+          !(value.coverImage as any)?.name
+        ) {
           return toast.warning('A cover image for the event is required')
         }
+
+        const coverImage = value.coverImage as unknown as File
         const formData = new FormData()
-        formData.append('file', value.coverImage)
+        formData.append('file', coverImage)
         formData.append('type', 'event-cover')
         formData.append(
           'identifier',
@@ -164,7 +169,8 @@ function RouteComponent() {
               category: value.category,
               country: value.country,
               city: value.city,
-              venueName: value.venueName,
+              venueName:
+                typeof value.venueName === 'undefined' ? '' : value.venueName,
               address: value.venueFullAddress,
               coverUrl: result.link,
               coverUrlKey: result.key,
@@ -182,7 +188,7 @@ function RouteComponent() {
                   json: {
                     name: ticket.name,
                     price: ticket.price,
-                    quantity: ticket.quantity,
+                    quantity: isFinite(ticket.quantity) ? ticket.quantity : 0,
                     eventId: eventResult.id,
                     orgId: session.org.id,
                     saleStart: ticket.saleStartDate,
@@ -195,6 +201,33 @@ function RouteComponent() {
 
             const promiseSettleTicketResults = await Promise.allSettled(
               promiseSetlledTicketResponses.map((settledResponse) => {
+                if (
+                  settledResponse.status === 'fulfilled' &&
+                  settledResponse.value.ok
+                ) {
+                  return settledResponse.value.json()
+                }
+              }),
+            )
+
+            const promiseSettledCommunityRespnses = await Promise.allSettled(
+              value.community
+                .filter(({ link }) => typeof link === 'string')
+                .map((com) => {
+                  return client.community.$post({
+                    json: {
+                      eventId: eventResult.id,
+                      orgId: session.org.id,
+                      socialNetworkLabel: com.id,
+                      socialNetworkId: com.id,
+                      url: com.link as unknown as string,
+                    },
+                  })
+                }),
+            )
+
+            await Promise.allSettled(
+              promiseSettledCommunityRespnses.map((settledResponse) => {
                 if (
                   settledResponse.status === 'fulfilled' &&
                   settledResponse.value.ok
@@ -222,10 +255,12 @@ function RouteComponent() {
           return
         }
 
+        form.clearFieldValues('community')
+        form.clearFieldValues('tickets')
         form.reset()
         // setStep(0)
         // setEventFormOpen(false)
-        // router.invalidate()
+        router.navigate({ to: '/events' })
       } else {
         toast.error(
           'You must be logged in or create an organization to create an event',
@@ -302,34 +337,42 @@ function RouteComponent() {
         >
           <div className="relative w-full">
             <div>
-              <Dropzone
-                maxSize={1024 * 1024 * 10}
-                maxFiles={1}
-                accept={{ 'image/*': ['.png', '.jpg', '.jpeg'] }}
-                onDrop={handleDrop}
-                className="w-full h-full z-50"
-                src={files}
-                onError={(error) => {
-                  console.error('Error getting file', error)
-                  toast.error('Error getting image', {
-                    description: error.message,
-                  })
-                }}
-              >
-                <DropzoneEmptyState />
-                <DropzoneContent>
-                  {filePreview && (
-                    <div className="h-[400px] w-[400px] aspect-square relative">
-                      <h1>File should Preview</h1>
-                      <img
-                        src={filePreview}
-                        alt="Preview"
-                        className="object-cover absolute inset-0 h-full w-full"
-                      />
-                    </div>
-                  )}
-                </DropzoneContent>
-              </Dropzone>
+              <form.Field
+                name="coverImage"
+                children={(field) => (
+                  <Dropzone
+                    maxSize={1024 * 1024 * 10}
+                    maxFiles={1}
+                    accept={{ 'image/*': ['.png', '.jpg', '.jpeg'] }}
+                    onDrop={(files) => {
+                      handleDrop(files)
+                      field.handleChange(files && files[0])
+                    }}
+                    className="w-full h-full z-50"
+                    src={files}
+                    onError={(error) => {
+                      console.error('Error getting file', error)
+                      toast.error('Error getting image', {
+                        description: error.message,
+                      })
+                    }}
+                  >
+                    <DropzoneEmptyState />
+                    <DropzoneContent>
+                      {filePreview && (
+                        <div className="h-[400px] w-[400px] aspect-square relative">
+                          <h1>File should Preview</h1>
+                          <img
+                            src={filePreview}
+                            alt="Preview"
+                            className="object-cover absolute inset-0 h-full w-full"
+                          />
+                        </div>
+                      )}
+                    </DropzoneContent>
+                  </Dropzone>
+                )}
+              />
               <div className="absolute inset-0 bg-black/20" />
               <Button
                 variant="ghost"

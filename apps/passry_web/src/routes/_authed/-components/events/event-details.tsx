@@ -219,14 +219,25 @@ export function EventDetailsCard({
           </Button>
         </div>
         <CardFooter className="w-full flex gap-4 px-0">
-          <Button
-            onClick={() => {
-              console.log('This is being clikced')
-              form.handleSubmit()
-            }}
-          >
-            Publish Event
-          </Button>
+          <form.Subscribe
+            selector={(state: any) => [state.isSubmitting, state.canSubmit]}
+            children={([isSubmitting, canSubmit]: Array<boolean>) => (
+              <Button
+                disabled={!canSubmit}
+                onClick={() => {
+                  console.log('This is being clicked')
+                  console.log(
+                    'Error before submit',
+                    form.state.errorMap,
+                    form.state.errors,
+                  )
+                  form.handleSubmit()
+                }}
+              >
+                {isSubmitting ? 'Publishing...' : 'Publish Event'}
+              </Button>
+            )}
+          />
         </CardFooter>
       </CardContent>
     </Card>

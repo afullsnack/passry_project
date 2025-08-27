@@ -6,6 +6,7 @@ import events from "@/routes/events/events.index";
 import index from "@/routes/index.route";
 import orgs from "@/routes/organization/organization.index";
 import tickets from "@/routes/tickets/tickets.index";
+import community from "@/routes/communities/community.index";
 import uploads from "@/routes/uploads.index";
 import { TigrisClient } from "@/lib/asset-storage";
 import env from "@/env";
@@ -20,6 +21,7 @@ const routes = [
   events,
   tickets,
   uploads,
+  community
 ] as const;
 
 app.on(["POST", "GET", "DELETE", "PUT"], "/api/auth/*", async c => await auth.handler(c.req.raw));

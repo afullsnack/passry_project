@@ -100,7 +100,7 @@ export const ticket = sqliteTable("ticket", {
 
 export const selectTicketSchema = createSelectSchema(ticket);
 export const insertTicketSchema = createInsertSchema(ticket, {
-  name: schema => schema.min(6),
+  name: schema => schema.min(1),
 })
   .required({
     price: true,
@@ -149,16 +149,38 @@ export const insertCommunitySchema = createInsertSchema(community, {
   });
 export const patchCommunitySchema = insertCommunitySchema.partial();
 
-export const organizationRelations = relations(organization, ({ one }) => ({
+export const organizationRelations = relations(organization, ({ one, many }) => ({
   owner: one(user, {
     fields: [organization.ownerId],
     references: [user.id],
   }),
+  communities: many(community),
+  events: many(event)
 }));
 
-export const eventRelations = relations(event, ({ one }) => ({
+export const eventRelations = relations(event, ({ one, many }) => ({
   organization: one(organization, {
     fields: [event.orgId],
     references: [organization.id],
   }),
+  tickets: many(ticket),
+  communities: many(community)
 }));
+
+export const ticketRelations = relations(ticket, ({one}) => ({
+  event: one(event, {
+    fields: [ticket.eventId],
+    references: [event.id]
+  })
+}))
+
+export const communityRelations = relations(community, ({one}) => ({
+  event: one(event, {
+    fields: [community.eventId],
+    references: [event.id]
+  }),
+  organization: one(organization, {
+    fields: [community.orgId],
+    references: [organization.id]
+  })
+}))

@@ -17,6 +17,10 @@ export const getOne: AppRouteHandler<GetOneEvent> = async (c) => {
       where(fields, ops) {
         return ops.eq(fields.id, id);
       },
+      with: {
+        tickets: true,
+        communities: true
+      }
     });
 
     return c.json(event, HttpStatusCodes.OK);
@@ -37,6 +41,10 @@ export const list: AppRouteHandler<ListEvents> = async (c) => {
       //   }
       //   return operators.eq(event.orgId, session?.org?.id);
       // },
+      with: {
+        tickets: true,
+        communities: true
+      }
     });
     return c.json(events, HttpStatusCodes.OK);
   }
