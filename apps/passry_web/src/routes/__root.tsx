@@ -18,6 +18,8 @@ import type { QueryClient } from '@tanstack/react-query'
 import { Layout } from '@/components/craft.tsx'
 import { ThemeProvider } from '@/components/theme-provider.tsx'
 
+import NiceModal from '@ebay/nice-modal-react'
+
 import FaviconLogoMark from '@/assets/PASSRY_LogoMark.svg?url'
 import { Toaster } from '@/components/ui/sonner.tsx'
 import { seo } from '@/lib/utils.ts'
@@ -73,15 +75,17 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <Layout className="transition-all duration-100 min-h-screen">
-        <head>
-          <HeadContent />
-        </head>
-        <body>
-          {children}
-          <Scripts />
-        </body>
-      </Layout>
+      <NiceModal.Provider>
+        <Layout className="transition-all duration-100 min-h-screen">
+          <head>
+            <HeadContent />
+          </head>
+          <body>
+            {children}
+            <Scripts />
+          </body>
+        </Layout>
+      </NiceModal.Provider>
     </ThemeProvider>
   )
 }
