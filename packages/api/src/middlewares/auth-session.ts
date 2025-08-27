@@ -10,7 +10,7 @@ export const authSession = createMiddleware(async (c, next) => {
 
   console.log("Session", session)
 
-  if(!session) {
+  if(!session && !(c.req.path.includes('event') || c.req.path.includes('upload') && c.req.method === 'GET')) {
     return c.json({message: "Not Authorized"}, HttpStatusCodes.UNAUTHORIZED)
   }
 
