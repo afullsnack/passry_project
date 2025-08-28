@@ -41,29 +41,33 @@ export default function ExploreCards({ events }: IProps) {
             className="overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow !p-0"
           >
             <div className="relative">
-              <div
+              {/*<div
                 className="h-40 bg-cover bg-center"
                 style={{
                   backgroundImage: `url(${env.VITE_API_URL}/upload?key=${event.coverUrlKey})`,
                 }}
+              >*/}
+              <img
+                src={`${env.VITE_API_URL}/upload?key=${event.coverUrlKey}`}
+                className="h-40 bg-cover bg-center rounded-lg mx-auto"
+              />
+              <div className="absolute inset-0 bg-black/20" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-2 right-2 h-8 w-8 bg-white/20 hover:bg-white/30 backdrop-blur-sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setLiked((_prevLiked) => !_prevLiked)
+                }}
               >
-                <div className="absolute inset-0 bg-black/20" />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 h-8 w-8 bg-white/20 hover:bg-white/30 backdrop-blur-sm"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setLiked((_prevLiked) => !_prevLiked)
-                  }}
-                >
-                  <Heart
-                    className={cn(`h-4 w-4 text-white`, {
-                      'fill-red-500 text-red-500': liked,
-                    })}
-                  />
-                </Button>
-              </div>
+                <Heart
+                  className={cn(`h-4 w-4 text-white`, {
+                    'fill-red-500 text-red-500': liked,
+                  })}
+                />
+              </Button>
+              {/*</div>*/}
             </div>
             <CardContent className="p-4">
               <h3 className="font-semibold dark:text-gray-300 mb-2 line-clamp-1">

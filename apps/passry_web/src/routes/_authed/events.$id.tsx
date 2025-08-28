@@ -76,7 +76,7 @@ function RouteComponent() {
             <div>
               <img
                 src={`${env.VITE_API_URL}/upload?key=${event.coverUrlKey}`}
-                className="h-[400px] bg-cover bg-center aspect-square rounded-lg mx-auto"
+                className="h-[400px] bg-cover bg-center rounded-lg mx-auto"
               />
               <div className="absolute inset-0 bg-black/20" />
               <Button
