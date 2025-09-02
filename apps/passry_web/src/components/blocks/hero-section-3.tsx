@@ -319,7 +319,7 @@ function AvatarMenu({ user }: { user: any }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar>
+        <Avatar className="hover:cursor-pointer">
           <AvatarImage src={user?.image} alt="Profile image" />
           <AvatarFallback>
             {username.length > 1

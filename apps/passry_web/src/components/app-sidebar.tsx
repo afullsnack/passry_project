@@ -7,14 +7,14 @@ import {
   IconFileAi,
   IconFileDescription,
   // IconFileWord,
-  IconFolder,
+  // IconFolder,
   // IconHelp,
   // IconInnerShadowTop,
   IconListDetails,
   // IconReport,
   // IconSearch,
   IconSettings,
-  IconUsers,
+  // IconUsers,
 } from '@tabler/icons-react'
 
 // import { NavDocuments } from '@/components/nav-documents'
@@ -56,16 +56,16 @@ const data = {
       url: '/events',
       icon: IconChartBar,
     },
-    {
-      title: 'Stats',
-      url: '/stats',
-      icon: IconFolder,
-    },
-    {
-      title: 'Team',
-      url: '/team',
-      icon: IconUsers,
-    },
+    // {
+    //   title: 'Stats',
+    //   url: '/stats',
+    //   icon: IconFolder,
+    // },
+    // {
+    //   title: 'Team',
+    //   url: '/team',
+    //   icon: IconUsers,
+    // },
   ],
   navClouds: [
     {
