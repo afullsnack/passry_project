@@ -14,6 +14,7 @@ import { Route as AuthedRouteRouteImport } from './routes/_authed/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedTeamRouteImport } from './routes/_authed/team'
 import { Route as AuthedStatsRouteImport } from './routes/_authed/stats'
+import { Route as AuthedProfileRouteImport } from './routes/_authed/profile'
 import { Route as AuthedExploreRouteImport } from './routes/_authed/explore'
 import { Route as AuthedEventsRouteImport } from './routes/_authed/events'
 import { Route as AuthedAnalyticsRouteImport } from './routes/_authed/analytics'
@@ -23,7 +24,11 @@ import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthedEventsIndexRouteImport } from './routes/_authed/events.index'
 import { Route as AuthedEventsNewRouteImport } from './routes/_authed/events.new'
 import { Route as AuthedEventsIdRouteImport } from './routes/_authed/events.$id'
+import { Route as AuthedSettingsSettingsRouteImport } from './routes/_authed/_settings/settings'
 import { Route as AuthEIdRouteImport } from './routes/_auth/e/$id'
+import { Route as AuthedSettingsSettingsPreferencesRouteImport } from './routes/_authed/_settings/settings.preferences'
+import { Route as AuthedSettingsSettingsPaymentRouteImport } from './routes/_authed/_settings/settings.payment'
+import { Route as AuthedSettingsSettingsAccountRouteImport } from './routes/_authed/_settings/settings.account'
 
 const DiscoverRoute = DiscoverRouteImport.update({
   id: '/discover',
@@ -47,6 +52,11 @@ const AuthedTeamRoute = AuthedTeamRouteImport.update({
 const AuthedStatsRoute = AuthedStatsRouteImport.update({
   id: '/stats',
   path: '/stats',
+  getParentRoute: () => AuthedRouteRoute,
+} as any)
+const AuthedProfileRoute = AuthedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => AuthedRouteRoute,
 } as any)
 const AuthedExploreRoute = AuthedExploreRouteImport.update({
@@ -94,11 +104,34 @@ const AuthedEventsIdRoute = AuthedEventsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AuthedEventsRoute,
 } as any)
+const AuthedSettingsSettingsRoute = AuthedSettingsSettingsRouteImport.update({
+  id: '/_settings/settings',
+  path: '/settings',
+  getParentRoute: () => AuthedRouteRoute,
+} as any)
 const AuthEIdRoute = AuthEIdRouteImport.update({
   id: '/_auth/e/$id',
   path: '/e/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedSettingsSettingsPreferencesRoute =
+  AuthedSettingsSettingsPreferencesRouteImport.update({
+    id: '/preferences',
+    path: '/preferences',
+    getParentRoute: () => AuthedSettingsSettingsRoute,
+  } as any)
+const AuthedSettingsSettingsPaymentRoute =
+  AuthedSettingsSettingsPaymentRouteImport.update({
+    id: '/payment',
+    path: '/payment',
+    getParentRoute: () => AuthedSettingsSettingsRoute,
+  } as any)
+const AuthedSettingsSettingsAccountRoute =
+  AuthedSettingsSettingsAccountRouteImport.update({
+    id: '/account',
+    path: '/account',
+    getParentRoute: () => AuthedSettingsSettingsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -109,12 +142,17 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AuthedAnalyticsRoute
   '/events': typeof AuthedEventsRouteWithChildren
   '/explore': typeof AuthedExploreRoute
+  '/profile': typeof AuthedProfileRoute
   '/stats': typeof AuthedStatsRoute
   '/team': typeof AuthedTeamRoute
   '/e/$id': typeof AuthEIdRoute
+  '/settings': typeof AuthedSettingsSettingsRouteWithChildren
   '/events/$id': typeof AuthedEventsIdRoute
   '/events/new': typeof AuthedEventsNewRoute
   '/events/': typeof AuthedEventsIndexRoute
+  '/settings/account': typeof AuthedSettingsSettingsAccountRoute
+  '/settings/payment': typeof AuthedSettingsSettingsPaymentRoute
+  '/settings/preferences': typeof AuthedSettingsSettingsPreferencesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -124,12 +162,17 @@ export interface FileRoutesByTo {
   '/verify_code': typeof AuthVerify_codeRoute
   '/analytics': typeof AuthedAnalyticsRoute
   '/explore': typeof AuthedExploreRoute
+  '/profile': typeof AuthedProfileRoute
   '/stats': typeof AuthedStatsRoute
   '/team': typeof AuthedTeamRoute
   '/e/$id': typeof AuthEIdRoute
+  '/settings': typeof AuthedSettingsSettingsRouteWithChildren
   '/events/$id': typeof AuthedEventsIdRoute
   '/events/new': typeof AuthedEventsNewRoute
   '/events': typeof AuthedEventsIndexRoute
+  '/settings/account': typeof AuthedSettingsSettingsAccountRoute
+  '/settings/payment': typeof AuthedSettingsSettingsPaymentRoute
+  '/settings/preferences': typeof AuthedSettingsSettingsPreferencesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -142,12 +185,17 @@ export interface FileRoutesById {
   '/_authed/analytics': typeof AuthedAnalyticsRoute
   '/_authed/events': typeof AuthedEventsRouteWithChildren
   '/_authed/explore': typeof AuthedExploreRoute
+  '/_authed/profile': typeof AuthedProfileRoute
   '/_authed/stats': typeof AuthedStatsRoute
   '/_authed/team': typeof AuthedTeamRoute
   '/_auth/e/$id': typeof AuthEIdRoute
+  '/_authed/_settings/settings': typeof AuthedSettingsSettingsRouteWithChildren
   '/_authed/events/$id': typeof AuthedEventsIdRoute
   '/_authed/events/new': typeof AuthedEventsNewRoute
   '/_authed/events/': typeof AuthedEventsIndexRoute
+  '/_authed/_settings/settings/account': typeof AuthedSettingsSettingsAccountRoute
+  '/_authed/_settings/settings/payment': typeof AuthedSettingsSettingsPaymentRoute
+  '/_authed/_settings/settings/preferences': typeof AuthedSettingsSettingsPreferencesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -160,12 +208,17 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/events'
     | '/explore'
+    | '/profile'
     | '/stats'
     | '/team'
     | '/e/$id'
+    | '/settings'
     | '/events/$id'
     | '/events/new'
     | '/events/'
+    | '/settings/account'
+    | '/settings/payment'
+    | '/settings/preferences'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -175,12 +228,17 @@ export interface FileRouteTypes {
     | '/verify_code'
     | '/analytics'
     | '/explore'
+    | '/profile'
     | '/stats'
     | '/team'
     | '/e/$id'
+    | '/settings'
     | '/events/$id'
     | '/events/new'
     | '/events'
+    | '/settings/account'
+    | '/settings/payment'
+    | '/settings/preferences'
   id:
     | '__root__'
     | '/'
@@ -192,12 +250,17 @@ export interface FileRouteTypes {
     | '/_authed/analytics'
     | '/_authed/events'
     | '/_authed/explore'
+    | '/_authed/profile'
     | '/_authed/stats'
     | '/_authed/team'
     | '/_auth/e/$id'
+    | '/_authed/_settings/settings'
     | '/_authed/events/$id'
     | '/_authed/events/new'
     | '/_authed/events/'
+    | '/_authed/_settings/settings/account'
+    | '/_authed/_settings/settings/payment'
+    | '/_authed/_settings/settings/preferences'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -245,6 +308,13 @@ declare module '@tanstack/react-router' {
       path: '/stats'
       fullPath: '/stats'
       preLoaderRoute: typeof AuthedStatsRouteImport
+      parentRoute: typeof AuthedRouteRoute
+    }
+    '/_authed/profile': {
+      id: '/_authed/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthedProfileRouteImport
       parentRoute: typeof AuthedRouteRoute
     }
     '/_authed/explore': {
@@ -310,12 +380,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedEventsIdRouteImport
       parentRoute: typeof AuthedEventsRoute
     }
+    '/_authed/_settings/settings': {
+      id: '/_authed/_settings/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthedSettingsSettingsRouteImport
+      parentRoute: typeof AuthedRouteRoute
+    }
     '/_auth/e/$id': {
       id: '/_auth/e/$id'
       path: '/e/$id'
       fullPath: '/e/$id'
       preLoaderRoute: typeof AuthEIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authed/_settings/settings/preferences': {
+      id: '/_authed/_settings/settings/preferences'
+      path: '/preferences'
+      fullPath: '/settings/preferences'
+      preLoaderRoute: typeof AuthedSettingsSettingsPreferencesRouteImport
+      parentRoute: typeof AuthedSettingsSettingsRoute
+    }
+    '/_authed/_settings/settings/payment': {
+      id: '/_authed/_settings/settings/payment'
+      path: '/payment'
+      fullPath: '/settings/payment'
+      preLoaderRoute: typeof AuthedSettingsSettingsPaymentRouteImport
+      parentRoute: typeof AuthedSettingsSettingsRoute
+    }
+    '/_authed/_settings/settings/account': {
+      id: '/_authed/_settings/settings/account'
+      path: '/account'
+      fullPath: '/settings/account'
+      preLoaderRoute: typeof AuthedSettingsSettingsAccountRouteImport
+      parentRoute: typeof AuthedSettingsSettingsRoute
     }
   }
 }
@@ -336,20 +434,43 @@ const AuthedEventsRouteWithChildren = AuthedEventsRoute._addFileChildren(
   AuthedEventsRouteChildren,
 )
 
+interface AuthedSettingsSettingsRouteChildren {
+  AuthedSettingsSettingsAccountRoute: typeof AuthedSettingsSettingsAccountRoute
+  AuthedSettingsSettingsPaymentRoute: typeof AuthedSettingsSettingsPaymentRoute
+  AuthedSettingsSettingsPreferencesRoute: typeof AuthedSettingsSettingsPreferencesRoute
+}
+
+const AuthedSettingsSettingsRouteChildren: AuthedSettingsSettingsRouteChildren =
+  {
+    AuthedSettingsSettingsAccountRoute: AuthedSettingsSettingsAccountRoute,
+    AuthedSettingsSettingsPaymentRoute: AuthedSettingsSettingsPaymentRoute,
+    AuthedSettingsSettingsPreferencesRoute:
+      AuthedSettingsSettingsPreferencesRoute,
+  }
+
+const AuthedSettingsSettingsRouteWithChildren =
+  AuthedSettingsSettingsRoute._addFileChildren(
+    AuthedSettingsSettingsRouteChildren,
+  )
+
 interface AuthedRouteRouteChildren {
   AuthedAnalyticsRoute: typeof AuthedAnalyticsRoute
   AuthedEventsRoute: typeof AuthedEventsRouteWithChildren
   AuthedExploreRoute: typeof AuthedExploreRoute
+  AuthedProfileRoute: typeof AuthedProfileRoute
   AuthedStatsRoute: typeof AuthedStatsRoute
   AuthedTeamRoute: typeof AuthedTeamRoute
+  AuthedSettingsSettingsRoute: typeof AuthedSettingsSettingsRouteWithChildren
 }
 
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
   AuthedAnalyticsRoute: AuthedAnalyticsRoute,
   AuthedEventsRoute: AuthedEventsRouteWithChildren,
   AuthedExploreRoute: AuthedExploreRoute,
+  AuthedProfileRoute: AuthedProfileRoute,
   AuthedStatsRoute: AuthedStatsRoute,
   AuthedTeamRoute: AuthedTeamRoute,
+  AuthedSettingsSettingsRoute: AuthedSettingsSettingsRouteWithChildren,
 }
 
 const AuthedRouteRouteWithChildren = AuthedRouteRoute._addFileChildren(
