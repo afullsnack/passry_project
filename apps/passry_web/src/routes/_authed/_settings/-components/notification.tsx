@@ -26,7 +26,7 @@ export const Notification: React.FC<Props> = ({
         <div className="flex-1 items-center justify-start">
           <div className="flex gap-3 items-center justify-start">
             {prefixIcon}
-            <span className="text-sm font-medium text-white">{title}</span>
+            <span className="text-sm font-medium text-primary">{title}</span>
           </div>
         </div>
         <SelectValue placeholder={defaultValue} />

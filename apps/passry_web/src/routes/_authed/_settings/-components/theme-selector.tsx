@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Check, Monitor, Sun, Moon } from 'lucide-react'
+import { Check, Monitor, Moon, Sun } from 'lucide-react'
 import { useTheme } from '@/components/theme-provider'
 
 type Theme = 'system' | 'light' | 'dark'
@@ -83,9 +83,9 @@ export function ThemeSelector() {
   }, [selectedTheme])
 
   return (
-    <div className="py-6 bg-transparent text-white rounded-lg">
+    <div className="w-full py-6 bg-transparent text-white rounded-lg">
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Display</h2>
+        <h2 className="text-2xl font-semibold mb-2 text-primary">Display</h2>
         <p className="text-gray-400">Choose your desired Passry interface.</p>
       </div>
 
