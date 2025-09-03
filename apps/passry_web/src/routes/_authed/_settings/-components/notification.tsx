@@ -21,32 +21,28 @@ export const Notification: React.FC<Props> = ({
   prefixIcon,
 }) => {
   return (
-    <div>
-      <div className="w-full">
-        <Select defaultValue={defaultValue}>
-          <SelectTrigger className="flex w-full items-center justify-center">
-            <div className="flex-1 items-center justify-start">
-              <div className="flex gap-3 items-center justify-start">
-                {prefixIcon}
-                <span className="text-sm font-medium text-white">{title}</span>
-              </div>
-            </div>
-            <SelectValue placeholder={defaultValue} />
-          </SelectTrigger>
-          <SelectContent
-            side="bottom"
-            position="popper"
-            align="end"
-            className="w-[180px]"
-          >
-            {options.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
+    <Select defaultValue={defaultValue}>
+      <SelectTrigger className="w-full flex items-center justify-center my-1">
+        <div className="flex-1 items-center justify-start">
+          <div className="flex gap-3 items-center justify-start">
+            {prefixIcon}
+            <span className="text-sm font-medium text-white">{title}</span>
+          </div>
+        </div>
+        <SelectValue placeholder={defaultValue} />
+      </SelectTrigger>
+      <SelectContent
+        side="bottom"
+        position="popper"
+        align="end"
+        className="w-[180px]"
+      >
+        {options.map((option) => (
+          <SelectItem key={option} value={option}>
+            {option}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   )
 }

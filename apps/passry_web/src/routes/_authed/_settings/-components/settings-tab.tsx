@@ -26,12 +26,8 @@ export const SettingsTabs: React.FC<{
           <TabsTrigger value="payment">Payment</TabsTrigger>
         </TabsList>
       </div>
-      <TabsContent value="account" className="">
-        {children}
-      </TabsContent>
-      <TabsContent value="preferences" className="w-full min-w-4xl">
-        {children}
-      </TabsContent>
+      <TabsContent value="account">{children}</TabsContent>
+      <TabsContent value="preferences">{children}</TabsContent>
       <TabsContent value="payment">{children}</TabsContent>
     </Tabs>
   )

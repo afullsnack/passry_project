@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Check, Monitor, Sun, Moon } from 'lucide-react'
+import { useTheme } from '@/components/theme-provider'
 
 type Theme = 'system' | 'light' | 'dark'
 
 export function ThemeSelector() {
-  const [selectedTheme, setSelectedTheme] = useState<Theme>('system')
+  const { setTheme, theme } = useTheme()
+  const [selectedTheme, setSelectedTheme] = useState<Theme>(theme)
 
   const themes = [
     {
@@ -76,14 +78,18 @@ export function ThemeSelector() {
     },
   ]
 
+  useEffect(() => {
+    setTheme(selectedTheme)
+  }, [selectedTheme])
+
   return (
-    <div className="w-full py-6 bg-transparent text-white rounded-lg">
+    <div className="py-6 bg-transparent text-white rounded-lg">
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">Display</h2>
         <p className="text-gray-400">Choose your desired Passry interface.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4  px-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:px-6">
         {themes.map((theme) => {
           const Icon = theme.icon
           const isSelected = selectedTheme === theme.id
