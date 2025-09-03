@@ -84,9 +84,11 @@ const productNotifications = {
 function RouteComponent() {
   return (
     <div>
-      <ThemeSelector />
+      <div className="md:w-2xl lg:w-3xl sm:w-xl">
+        <ThemeSelector />
+      </div>
 
-      <div className="rounded-lg overflow-hidden mb-12 py-6">
+      <div className="rounded-lg overflow-hidden mb-12 py-6 md:max-w-xl">
         <h2 className="text-2xl font-semibold mb-2" id="notifications">
           Notifications
         </h2>
