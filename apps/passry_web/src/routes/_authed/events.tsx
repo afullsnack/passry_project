@@ -118,7 +118,8 @@ function RouteComponent() {
                   }
                 }}
               >
-                Create event <Plus className="ml-2 size-4" />
+                <span className="hidden md:inline">Create event</span>{' '}
+                <Plus className="md:ml-2 size-4" />
               </Button>
             )}
           </div>

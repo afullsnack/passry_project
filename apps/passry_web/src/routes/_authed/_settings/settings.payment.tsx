@@ -85,7 +85,8 @@ function RouteComponent() {
             description="Let attendees know about your refund policy"
             suffix={
               <Button variant="ghost" size="sm">
-                Upload <Upload className="size-4 ml-2" />
+                <span className="hidden md:inline">Upload</span>{' '}
+                <Upload className="size-4 ml-2" />
               </Button>
             }
           />

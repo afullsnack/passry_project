@@ -102,7 +102,7 @@ function RouteComponent() {
                 size="sm"
                 className="flex items-center justify-center gap-2"
               >
-                Add member
+                <span className="hidden md:inline">Add member</span>
                 <Plus className="w-5 h-5" />
               </Button>
             }
