@@ -5,7 +5,6 @@ import {
 } from '@/components/ui/shadcn-io/dropzone'
 import Avvvatars from 'avvvatars-react'
 import { useState } from 'react'
-import type { ChangeEvent } from 'react'
 import { toast } from 'sonner'
 import {
   ImageCrop,
@@ -15,9 +14,12 @@ import {
 } from '@/components/ui/shadcn-io/image-crop'
 import { Check, XIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { client } from '@/lib/api-client'
+import { authClient } from '@/lib/auth-client'
+import { env } from '@/env'
 
 interface Props {
-  url?: string
+  url?: string | null
   label: string
 }
 
@@ -29,18 +31,20 @@ export const ProfileUpload: React.FC<Props> = ({
   // const [filePreview, setFilePreview] = useState<string | undefined>()
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [croppedImage, setCroppedImage] = useState<string | undefined>(null)
+  const [croppedImage, setCroppedImage] = useState<string | undefined>(
+    undefined,
+  )
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      setSelectedFile(file)
-      setCroppedImage(null)
-    }
-  }
+  // const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0]
+  //   if (file) {
+  //     setSelectedFile(file)
+  //     setCroppedImage(undefined)
+  //   }
+  // }
   const handleReset = () => {
     setSelectedFile(null)
-    setCroppedImage(null)
+    setCroppedImage(undefined)
   }
 
   const handleDrop = (fileList: Array<File>) => {
@@ -48,15 +52,7 @@ export const ProfileUpload: React.FC<Props> = ({
 
     if (fileList.length > 0) {
       setSelectedFile(fileList[0])
-      setCroppedImage(null)
-      // const reader = new FileReader()
-      // reader.onload = (e) => {
-      //   if (typeof e.target?.result === 'string') {
-      //     setFilePreview(e.target.result)
-      //   }
-      // }
-
-      // reader.readAsDataURL(fileList[0])
+      setCroppedImage(undefined)
     }
   }
 
@@ -86,7 +82,11 @@ export const ProfileUpload: React.FC<Props> = ({
                 {!url && !croppedImage && <Avvvatars value={label} />}
                 {(croppedImage || url) && (
                   <img
-                    src={url || croppedImage}
+                    src={
+                      url
+                        ? `${env.VITE_API_URL}/upload?key=${url}`
+                        : croppedImage
+                    }
                     alt="Preview"
                     className="object-cover p-3 absolute inset-0 h-full mx-auto"
                   />
@@ -110,14 +110,46 @@ export const ProfileUpload: React.FC<Props> = ({
                   <XIcon className="size-4" />
                 </Button>
                 <Button
-                  onClick={() => {
-                    // TODO: Implement actual upload and update userData
-                    // handleSave(croppedImage);
-                    toast.success('Profile updated', {
-                      description: `Your profile has been updated successfully.`,
+                  onClick={async () => {
+                    const formData = new FormData()
+                    formData.append('file', selectedFile)
+                    formData.append('type', 'profile')
+                    formData.append(
+                      'identifier',
+                      `${label}-v${Date.now()}`.toLowerCase(),
+                    )
+
+                    const response = await fetch(client.upload.$url().href, {
+                      body: formData,
+                      method: 'POST',
+                      credentials: 'include',
                     })
-                    console.log('Cropped image', croppedImage)
-                    console.log('Selected file', selectedFile)
+
+                    if (response.ok) {
+                      const result = await response.json()
+                      const { data, error } = await authClient.updateUser({
+                        image: result?.key,
+                      })
+                      if (data?.status) {
+                        toast.success(result.message, {
+                          description: 'Profile photo updated successfully.',
+                        })
+                        setSelectedFile(null)
+                      } else {
+                        toast.error('Failed upload', {
+                          description: error?.message,
+                          action: {
+                            label: 'Retry',
+                            onClick: async () => {},
+                          },
+                        })
+                      }
+                    } else {
+                      toast.error('Upload failed', {
+                        description:
+                          response.statusText || 'Please try again later.',
+                      })
+                    }
                   }}
                   size="icon"
                   type="button"

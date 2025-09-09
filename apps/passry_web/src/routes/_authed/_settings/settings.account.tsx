@@ -10,6 +10,7 @@ import Avvvatars from 'avvvatars-react'
 import {
   Calendar,
   HousePlusIcon,
+  Loader2,
   Lock,
   LockKeyholeOpen,
   MinusCircle,
@@ -26,17 +27,23 @@ import { authClient } from '@/lib/auth-client'
 import type { Session, User } from 'better-auth'
 import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
+import { UAParser } from 'ua-parser-js'
+import NiceModal from '@ebay/nice-modal-react'
+import ChangePasswordModal from './-components-account/dialogs/change-password'
+import ChangeOrgNameDialog from './-components-account/dialogs/change-org-name'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export const Route = createFileRoute('/_authed/_settings/settings/account')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const isMobile = useIsMobile()
   const [is2FADisabled, setIs2FADisabled] = useState<boolean>(false)
-  // const [activeSessions, setActiveSessions] = useState<
-  //   Array<{ session: Session; user: User }>
-  // >([])
   const { data: session } = useSession()
+
+  const showChangePassword = () => NiceModal.show(ChangePasswordModal)
+  const showChangeOrgName = () => NiceModal.show(ChangeOrgNameDialog)
 
   const {
     data: activeSessions,
@@ -45,10 +52,9 @@ function RouteComponent() {
   } = useQuery({
     queryKey: ['list-device-sessions'],
     queryFn: async () => {
-      const { data, error } = await authClient.multiSession.listDeviceSessions()
-      if (error) throw error
-
-      console.log('Sessions', data)
+      const { data, error: listSessionsError } =
+        await authClient.multiSession.listDeviceSessions()
+      if (listSessionsError) throw listSessionsError
 
       return data
     },
@@ -60,19 +66,6 @@ function RouteComponent() {
     })
   }
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //     // const { data, error } = await authClient.multiSession.listDeviceSessions()
-  //     // if (error) {
-  //     //   return toast.error(error.message, {
-  //     //     description: `${JSON.stringify(error, null, 3)}`,
-  //     //   })
-  //     // }
-  //     // console.log('Sessions', data)
-  //     // setActiveSessions(data)
-  //   })()
-  // }, [session, activeSessions, setActiveSessions])
-
   return (
     <div>
       <div className="rounded-lg overflow-hidden mb-12 py-6">
@@ -80,9 +73,9 @@ function RouteComponent() {
         <p className="text-gray-400">
           Update your personal and organization information.
         </p>
-        <div className="flex my-6">
+        <div className="grid my-6">
           <ProfileUpload
-            label="miraclef60@gmail.com"
+            label={session?.user.email || 'miraclef60@gmail.com'}
             url={session?.user.image}
           />
         </div>
@@ -105,7 +98,11 @@ function RouteComponent() {
             title="Change accounts password"
             description="Follow link sent to your email to complete password change"
             suffix={
-              <Button variant="secondary" size="sm">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={showChangePassword}
+              >
                 Change password
               </Button>
             }
@@ -122,13 +119,19 @@ function RouteComponent() {
               />
             }
           />
-          <Notification
-            title="Choose default 2 factor authentication method"
-            options={['Authenticator app', 'Email']}
-            defaultValue={'Authenticator app'}
-            prefixIcon={undefined}
-            disabled={is2FADisabled}
-          />
+          <div>
+            <Notification
+              title={
+                isMobile
+                  ? 'Choose default 2FA method'
+                  : 'Choose default 2 factor authentication method'
+              }
+              options={['Authenticator app', 'Email']}
+              defaultValue={'Authenticator app'}
+              prefixIcon={undefined}
+              disabled={is2FADisabled}
+            />
+          </div>
         </List>
       </div>
 
@@ -149,7 +152,7 @@ function RouteComponent() {
             title="Change organization name"
             description="Update the name of your organization"
             suffix={
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" size="sm" onClick={showChangeOrgName}>
                 Change name
               </Button>
             }
@@ -188,24 +191,37 @@ function RouteComponent() {
         </div>
 
         <List>
-          {activeSessions?.map((session, index) => {
-            return (
-              <ListItem
-                prefix={<IconDeviceDesktop className="w-5 h-5" />}
-                title={session.session.userAgent || 'Device name'}
-                description={
-                  session.session.ipAddress || 'Lagos, NG - location'
-                }
-                suffix={
-                  index > 0 && (
-                    <Button variant="ghost" size="icon">
-                      <MinusCircle className="w-5 h-5" />
-                    </Button>
-                  )
-                }
-              />
-            )
-          })}
+          {isLoading && (
+            <ListItem
+              prefix={<IconDeviceDesktop className="w-5 h-5" />}
+              title="Loading..."
+              description="Please wait..."
+              suffix={<Loader2 className="w-5 h-5 animate-spin" />}
+            />
+          )}
+          {!isLoading &&
+            activeSessions?.map((session, index) => {
+              return (
+                <ListItem
+                  key={index}
+                  prefix={<IconDeviceDesktop className="w-5 h-5" />}
+                  title={
+                    UAParser(session.session.userAgent!).device.model ||
+                    'Device name'
+                  }
+                  description={
+                    session.session.ipAddress || 'Lagos, NG - location' // TODO: Implement location lookup using IP
+                  }
+                  suffix={
+                    index > 0 && (
+                      <Button variant="ghost" size="icon">
+                        <MinusCircle className="w-5 h-5" />
+                      </Button>
+                    )
+                  }
+                />
+              )
+            })}
         </List>
       </div>
     </div>
