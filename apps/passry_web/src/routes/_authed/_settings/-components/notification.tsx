@@ -12,6 +12,7 @@ interface Props {
   defaultValue: string
   title: string
   prefixIcon: React.ReactNode
+  disabled?: boolean
 }
 
 export const Notification: React.FC<Props> = ({
@@ -19,9 +20,10 @@ export const Notification: React.FC<Props> = ({
   defaultValue,
   title,
   prefixIcon,
+  disabled = false,
 }) => {
   return (
-    <Select defaultValue={defaultValue}>
+    <Select defaultValue={defaultValue} disabled={disabled}>
       <SelectTrigger className="w-full flex items-center justify-center my-1">
         <div className="flex-1 items-center justify-start">
           <div className="flex gap-3 items-center justify-start">

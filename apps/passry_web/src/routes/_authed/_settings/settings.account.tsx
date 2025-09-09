@@ -10,17 +10,69 @@ import Avvvatars from 'avvvatars-react'
 import {
   Calendar,
   HousePlusIcon,
+  Lock,
+  LockKeyholeOpen,
   MinusCircle,
   Plus,
   RefreshCw,
 } from 'lucide-react'
 import { PiEmpty } from 'react-icons/pi'
+import { ProfileUpload } from './-components-account/avatar-upload'
+import { Notification } from './-components/notification'
+import { Switch } from '@/components/ui/switch'
+import { useEffect, useState } from 'react'
+import { useSession } from '@/hooks/session'
+import { authClient } from '@/lib/auth-client'
+import type { Session, User } from 'better-auth'
+import { toast } from 'sonner'
+import { useQuery } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/_authed/_settings/settings/account')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const [is2FADisabled, setIs2FADisabled] = useState<boolean>(false)
+  // const [activeSessions, setActiveSessions] = useState<
+  //   Array<{ session: Session; user: User }>
+  // >([])
+  const { data: session } = useSession()
+
+  const {
+    data: activeSessions,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['list-device-sessions'],
+    queryFn: async () => {
+      const { data, error } = await authClient.multiSession.listDeviceSessions()
+      if (error) throw error
+
+      console.log('Sessions', data)
+
+      return data
+    },
+  })
+
+  if (error) {
+    return toast.error(error.message, {
+      description: `${JSON.stringify(error, null, 3)}`,
+    })
+  }
+
+  // useEffect(() => {
+  //   ;(async () => {
+  //     // const { data, error } = await authClient.multiSession.listDeviceSessions()
+  //     // if (error) {
+  //     //   return toast.error(error.message, {
+  //     //     description: `${JSON.stringify(error, null, 3)}`,
+  //     //   })
+  //     // }
+  //     // console.log('Sessions', data)
+  //     // setActiveSessions(data)
+  //   })()
+  // }, [session, activeSessions, setActiveSessions])
+
   return (
     <div>
       <div className="rounded-lg overflow-hidden mb-12 py-6">
@@ -29,7 +81,10 @@ function RouteComponent() {
           Update your personal and organization information.
         </p>
         <div className="flex my-6">
-          <Avvvatars value={'miraclef60@gmail.com'} size={120} />
+          <ProfileUpload
+            label="miraclef60@gmail.com"
+            url={session?.user.image}
+          />
         </div>
       </div>
 
@@ -57,14 +112,22 @@ function RouteComponent() {
           />
 
           <ListItem
-            prefix={<RefreshCw className="w-5 h-5" />}
+            prefix={<LockKeyholeOpen className="w-5 h-5" />}
             title="Enable 2FA Login"
             description="Secure your account with two-factor authentication"
             suffix={
-              <Button variant="default" size="sm">
-                Enable 2FA
-              </Button>
+              <Switch
+                onCheckedChange={(checked) => setIs2FADisabled(!checked)}
+                defaultChecked={!is2FADisabled}
+              />
             }
+          />
+          <Notification
+            title="Choose default 2 factor authentication method"
+            options={['Authenticator app', 'Email']}
+            defaultValue={'Authenticator app'}
+            prefixIcon={undefined}
+            disabled={is2FADisabled}
           />
         </List>
       </div>
@@ -125,22 +188,24 @@ function RouteComponent() {
         </div>
 
         <List>
-          <ListItem
-            prefix={<IconDeviceDesktop className="w-5 h-5" />}
-            title="Device name"
-            description="Lagos, NG - location"
-          />
-
-          <ListItem
-            prefix={<IconDeviceDesktop className="w-5 h-5" />}
-            title="Device name"
-            description="Lagos, NG - location"
-            suffix={
-              <Button variant="ghost" size="icon">
-                <MinusCircle className="w-5 h-5" />
-              </Button>
-            }
-          />
+          {activeSessions?.map((session, index) => {
+            return (
+              <ListItem
+                prefix={<IconDeviceDesktop className="w-5 h-5" />}
+                title={session.session.userAgent || 'Device name'}
+                description={
+                  session.session.ipAddress || 'Lagos, NG - location'
+                }
+                suffix={
+                  index > 0 && (
+                    <Button variant="ghost" size="icon">
+                      <MinusCircle className="w-5 h-5" />
+                    </Button>
+                  )
+                }
+              />
+            )
+          })}
         </List>
       </div>
     </div>
