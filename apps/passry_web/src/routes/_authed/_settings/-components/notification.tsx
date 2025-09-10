@@ -10,6 +10,7 @@ import {
 interface Props {
   options: Array<string>
   defaultValue: string
+  onValueChange?: (value: string) => void
   title: string
   prefixIcon: React.ReactNode
   disabled?: boolean
@@ -18,12 +19,17 @@ interface Props {
 export const Notification: React.FC<Props> = ({
   options,
   defaultValue,
+  onValueChange,
   title,
   prefixIcon,
   disabled = false,
 }) => {
   return (
-    <Select defaultValue={defaultValue} disabled={disabled}>
+    <Select
+      defaultValue={defaultValue}
+      disabled={disabled}
+      onValueChange={onValueChange}
+    >
       <SelectTrigger className="w-full flex items-center justify-center my-1">
         <div className="flex-1 items-center justify-start">
           <div className="flex gap-3 items-center justify-start">

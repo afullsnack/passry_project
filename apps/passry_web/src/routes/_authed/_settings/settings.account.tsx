@@ -32,6 +32,16 @@ import NiceModal from '@ebay/nice-modal-react'
 import ChangePasswordModal from './-components-account/dialogs/change-password'
 import ChangeOrgNameDialog from './-components-account/dialogs/change-org-name'
 import { useIsMobile } from '@/hooks/use-mobile'
+import Toggle2FAModal from './-components-account/dialogs/toggle-2fa-modal'
+import { QRCode } from '@/components/ui/shadcn-io/qr-code'
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from '@/components/ui/input-otp'
+import { REGEXP_ONLY_DIGITS } from 'input-otp'
+import { Separator } from '@/components/ui/separator'
 
 export const Route = createFileRoute('/_authed/_settings/settings/account')({
   component: RouteComponent,
@@ -39,11 +49,25 @@ export const Route = createFileRoute('/_authed/_settings/settings/account')({
 
 function RouteComponent() {
   const isMobile = useIsMobile()
-  const [is2FADisabled, setIs2FADisabled] = useState<boolean>(false)
   const { data: session } = useSession()
+  const [is2FAEnabled, setIs2FAEnabled] = useState<boolean>(
+    session?.user?.twoFactorEnabled,
+  )
+
+  useEffect(() => {
+    if (session) {
+      setIs2FAEnabled(session.user?.twoFactorEnabled)
+    }
+  }, [session, setIs2FAEnabled])
+  const [totpUrl, setTotpUri] = useState<string | undefined>()
+  const [otpValue, setOTPValue] = useState<string>()
+
+  const on2FAEnabled = (totpUri: string) => setTotpUri(totpUri)
 
   const showChangePassword = () => NiceModal.show(ChangePasswordModal)
   const showChangeOrgName = () => NiceModal.show(ChangeOrgNameDialog)
+  const show2FAToggleModal = (enabled: boolean) =>
+    NiceModal.show(Toggle2FAModal, { enabled, on2FAEnabled })
 
   const {
     data: activeSessions,
@@ -114,8 +138,11 @@ function RouteComponent() {
             description="Secure your account with two-factor authentication"
             suffix={
               <Switch
-                onCheckedChange={(checked) => setIs2FADisabled(!checked)}
-                defaultChecked={!is2FADisabled}
+                onCheckedChange={(checked) => {
+                  setIs2FAEnabled(checked)
+                  show2FAToggleModal(checked)
+                }}
+                defaultChecked={is2FAEnabled}
               />
             }
           />
@@ -126,11 +153,76 @@ function RouteComponent() {
                   ? 'Choose default 2FA method'
                   : 'Choose default 2 factor authentication method'
               }
-              options={['Authenticator app', 'Email']}
-              defaultValue={'Authenticator app'}
+              options={['Authenticator', 'Email']}
+              defaultValue={'Authenticator'}
               prefixIcon={undefined}
-              disabled={is2FADisabled}
+              disabled={!is2FAEnabled}
+              onValueChange={async (value) => {
+                // TODO: update method on user
+                console.log('Authentocator method', value)
+                await authClient.updateUser({
+                  twoFactorMethod: value.toLowerCase(),
+                } as any)
+              }}
             />
+            {totpUrl && (
+              <div className="grid items-center justify-center my-6">
+                <QRCode
+                  foreground="#000000"
+                  background="#FFFFFF"
+                  className="size-48 mx-auto my-4 rounded-sm border bg-white text-black p-2 shadow-xs"
+                  data={totpUrl}
+                />
+                <Separator className="my-3" />
+                <InputOTP
+                  maxLength={6}
+                  pattern={REGEXP_ONLY_DIGITS}
+                  value={otpValue}
+                  onChange={(value) => setOTPValue(value)}
+                  className="mx-auto p-4"
+                >
+                  <InputOTPGroup>
+                    <InputOTPSlot index={0} />
+                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={2} />
+                  </InputOTPGroup>
+                  <InputOTPSeparator />
+                  <InputOTPGroup>
+                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
+                  </InputOTPGroup>
+                </InputOTP>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="mt-4"
+                  onClick={async () => {
+                    console.log('Fusion drives', otpValue)
+                    if (otpValue) {
+                      const { error: otpVerificationError } =
+                        await authClient.twoFactor.verifyTotp(
+                          {
+                            code: otpValue,
+                            trustDevice: true,
+                          },
+                          { credentials: 'include' },
+                        )
+
+                      if (otpVerificationError) {
+                        return toast.error('Failed to verify OTP', {
+                          description: otpVerificationError.message,
+                        })
+                      }
+
+                      toast.success('OTP verified successfully')
+                    }
+                  }}
+                >
+                  Verify Code
+                </Button>
+              </div>
+            )}
           </div>
         </List>
       </div>
