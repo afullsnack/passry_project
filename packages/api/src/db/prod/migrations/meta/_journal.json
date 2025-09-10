@@ -15,6 +15,13 @@
       "when": 1756297726067,
       "tag": "0001_red_master_chief",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1757491015347,
+      "tag": "0002_smooth_magus",
+      "breakpoints": true
     }
   ]
 }

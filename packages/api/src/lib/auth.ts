@@ -2,7 +2,7 @@ import type { BetterAuthOptions } from "better-auth";
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { customSession, emailOTP, phoneNumber, multiSession, twoFactor() } from "better-auth/plugins";
+import { customSession, emailOTP, phoneNumber, multiSession, twoFactor } from "better-auth/plugins";
 
 import db from "@/db";
 import * as appSchema from "@/db/schema/app-schema";
@@ -57,7 +57,16 @@ export const auth = betterAuth({
         return undefined;
       });
 
-      if (!org) {
+      const userFromDb = await db.query.user.findFirst({
+        where(fields, ops) {
+          return ops.eq(fields.id, user.id);
+        }
+      }).catch((error: any) => {
+        console.log('Error fatching user', error)
+        return undefined
+      })
+
+      if (!org || !userFromDb) {
         return {
           user,
           session,
@@ -69,6 +78,8 @@ export const auth = betterAuth({
         user: {
           ...user,
           orgId: org.id,
+          twoFactorEnabled: userFromDb.twoFactorEnabled,
+          twoFactorMethod: userFromDb.twoFactorMethod,
         },
         session,
       };
@@ -95,7 +106,25 @@ export const auth = betterAuth({
     multiSession({
       maximumSessions: 5
     }),
-    twoFactor()
+    twoFactor({
+      issuer: "Passry",
+      totpOptions: {
+        digits: 6,
+      },
+      otpOptions: {
+        sendOTP: async ({ user, otp }, request) => {
+          console.warn("Sending OTP to email:", user.email);
+          console.warn("OTP:", otp);
+
+          await sendEmail({
+            to: user.email,
+            subject: "Verify OTP Code",
+            body: `Your OTP is <b>${otp}</b>`,
+            name: "Passry"
+          });
+        }
+      }
+    })
   ],
   trustedOrigins: ["*", "http://localhost:3000", "https://passry.com", "https://www.passry.com"],
   advanced: {
