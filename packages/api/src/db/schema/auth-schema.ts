@@ -14,6 +14,7 @@ export const user = sqliteTable("user", {
   image: text("image"),
   phoneNumber: text("phone_number").unique(),
   phoneNumberVerified: integer("phone_number_verified", { mode: "boolean" }),
+  twoFactorEnabled: integer("two_factor_enabled", { mode: "boolean" }),
   createdAt: integer("created_at", { mode: "timestamp" })
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
@@ -69,6 +70,13 @@ export const verification = sqliteTable("verification", {
     () => /* @__PURE__ */ new Date(),
   ),
 });
+
+export const twoFactor = sqliteTable("two_factor", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  secret: text("secret"),
+  backupCodes: text("backup_codes")
+})
 
 export const usersRelations = relations(user, ({ many }) => ({
   tickets: many(ticket),

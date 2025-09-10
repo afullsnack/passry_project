@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { createAuthClient } from "better-auth/react";
-import {customSessionClient, emailOTPClient,multiSessionClient, phoneNumberClient} from "better-auth/client/plugins"
+import {customSessionClient, emailOTPClient,multiSessionClient, phoneNumberClient, twoFactorClient} from "better-auth/client/plugins"
 import type {AuthType} from "@passry/api/auth-type"
 
 export const authClient = createAuthClient({
@@ -10,6 +10,7 @@ export const authClient = createAuthClient({
     customSessionClient<AuthType>(),
     phoneNumberClient(),
     emailOTPClient(),
-    multiSessionClient()
+    multiSessionClient(),
+    twoFactorClient()
   ]
 })

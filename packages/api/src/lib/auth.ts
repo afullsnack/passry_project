@@ -2,7 +2,7 @@ import type { BetterAuthOptions } from "better-auth";
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { customSession, emailOTP, phoneNumber, multiSession } from "better-auth/plugins";
+import { customSession, emailOTP, phoneNumber, multiSession, twoFactor() } from "better-auth/plugins";
 
 import db from "@/db";
 import * as appSchema from "@/db/schema/app-schema";
@@ -94,7 +94,8 @@ export const auth = betterAuth({
     }),
     multiSession({
       maximumSessions: 5
-    })
+    }),
+    twoFactor()
   ],
   trustedOrigins: ["*", "http://localhost:3000", "https://passry.com", "https://www.passry.com"],
   advanced: {
