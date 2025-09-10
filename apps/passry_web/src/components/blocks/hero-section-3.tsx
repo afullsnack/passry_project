@@ -30,6 +30,7 @@ import {
 } from '../ui/dropdown-menu'
 import { IconLogout, IconLogout2 } from '@tabler/icons-react'
 import { authClient } from '@/lib/auth-client'
+import { env } from '@/env'
 
 const transitionVariants: Variants = {
   hidden: {
@@ -306,7 +307,7 @@ const menuItems: Array<any> = [
   // { name: 'About', href: '#link' },
 ]
 
-function AvatarMenu({ user }: { user: any }) {
+function AvatarMenu({ user, className }: { user: any; className?: string }) {
   const [username, setUsername] = useState<Array<string>>(['Cornor'])
   const router = useRouter()
 
@@ -318,9 +319,16 @@ function AvatarMenu({ user }: { user: any }) {
   }, [user, setUsername])
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className={className}>
         <Avatar className="hover:cursor-pointer">
-          <AvatarImage src={user?.image} alt="Profile image" />
+          <AvatarImage
+            src={
+              user?.image
+                ? `${env.VITE_API_URL}/upload?key=${user?.image}`
+                : undefined
+            }
+            alt="Profile image"
+          />
           <AvatarFallback>
             {username.length > 1
               ? username[0].charAt(0) + username[1].charAt(0)
@@ -401,7 +409,7 @@ const HeroHeader = () => {
               <div className="flex items-center justify-center gap-4">
                 <ThemeToggle className="lg:hidden" />
                 {session ? (
-                  <AvatarMenu user={session.user} />
+                  <AvatarMenu user={session.user} className="lg:hidden" />
                 ) : (
                   <Button
                     asChild
