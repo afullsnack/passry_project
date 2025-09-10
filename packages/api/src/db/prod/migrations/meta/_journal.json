@@ -22,6 +22,13 @@
       "when": 1757491015347,
       "tag": "0002_smooth_magus",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1757511046481,
+      "tag": "0003_unique_sleepwalker",
+      "breakpoints": true
     }
   ]
 }
