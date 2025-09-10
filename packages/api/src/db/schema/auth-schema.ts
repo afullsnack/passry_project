@@ -14,7 +14,7 @@ export const user = sqliteTable("user", {
   image: text("image"),
   phoneNumber: text("phone_number").unique(),
   phoneNumberVerified: integer("phone_number_verified", { mode: "boolean" }),
-  twoFactorEnabled: integer("two_factor_enabled", { mode: "boolean" }).default(false),
+  twoFactorEnabled: integer("two_factor_enabled", { mode: "boolean" }).$defaultFn(() => false),
   twoFactorMethod: text("two_factor_method", { enum: ["authenticator", "email"] }).default("authenticator"),
   createdAt: integer("created_at", { mode: "timestamp" })
     .$defaultFn(() => /* @__PURE__ */ new Date())
