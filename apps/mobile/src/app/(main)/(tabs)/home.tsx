@@ -1,4 +1,4 @@
-import { Screen, Text } from "@/components"
+import { Screen, Text, TextField } from "@/components"
 import ExploreStickyHeader from "@/components/StickyHeader/Explore"
 import { ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils/useAppTheme"
@@ -11,23 +11,34 @@ export default function HomeScreen() {
   return (
     <Screen
       safeAreaEdges={["top"]}
-      contentContainerStyle={themed($container)}
+      // contentContainerStyle={}
       preset="auto"
       ScrollViewProps={{
         scrollEnabled: true,
         stickyHeaderIndices: [0],
-        StickyHeaderComponent: () => <ExploreStickyHeader logo={passryLogoText} />,
-        invertStickyHeaders: true,
+        StickyHeaderComponent: () => [
+          <ExploreStickyHeader key={1} logo={passryLogoText} />,
+          <View key={2} style={themed($screenContainer)}>
+            {Array.from({ length: 25 }).map((_, index) => (
+              <Text key={index} text="Home screen" />
+            ))}
+          </View>,
+        ],
+        stickyHeaderHiddenOnScroll: true,
+        invertStickyHeaders: false,
+        contentContainerStyle: themed($container),
       }}
-    >
-      <View>
-        {Array(25).map((_, index) => (
-          <Text key={index} text="Home screen" />
-        ))}
-      </View>
-    </Screen>
+    ></Screen>
   )
 }
+
+const $screenContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+  flexShrink: 1,
+  flexGrow: 1,
+  flexBasis: "60%",
+  justifyContent: "center",
+  paddingHorizontal: spacing.lg,
+})
 
 const $container: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   // flex: 1,

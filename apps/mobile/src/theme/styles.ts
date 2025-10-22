@@ -15,6 +15,16 @@ export const $styles = {
     overflow: "hidden",
   } as ViewStyle,
 
+  textLogoMark: {
+    height: 40,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    // position: "absolute",
+    // top: -2,
+    // left: -2,
+  } as ImageStyle,
+
   topConfetti: {
     height: 110,
     width: 210,

@@ -43,6 +43,7 @@
     "plugins": [
       "expo-localization",
       "expo-font",
+      "expo-asset",
       [
         "expo-splash-screen",
         {
@@ -63,7 +64,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "1ab95c51-c56b-4381-b0e2-e9ba1516dbdf"
+        "projectId": "4727c294-9bd1-4fd0-a6c2-c0e37e0cb311"
       }
     }
   },

@@ -25,7 +25,8 @@ export function SignUpForm() {
   const [confirmPasswordHidden, setConfirmPasswordHidden] = useState(true)
 
   const togglePasswordHidden = () => setPasswordHidden((_prev) => !_prev)
-  const toggleConfirmPasswordHidden = () => setConfirmPasswordHidden((_prev) => !_prev)
+  const toggleConfirmPasswordHidden = () =>
+    setConfirmPasswordHidden((_prev) => !_prev)
 
   const handleSocialSignUp = async (provider: string) => {
     try {
@@ -44,7 +45,7 @@ export function SignUpForm() {
       phone: '',
       password: '',
       confirmPassword: '',
-      accountType: '',
+      // accountType: '',
     },
     validators: {
       onChange: z.object({
@@ -53,7 +54,7 @@ export function SignUpForm() {
         phone: z.string().min(10),
         password: z.string().min(8),
         confirmPassword: z.string().min(8),
-        accountType: z.enum(['attendee', 'organizer']),
+        // accountType: z.enum(['attendee', 'organizer']),
       }),
     },
     onSubmit: async ({ value }) => {
@@ -154,13 +155,22 @@ export function SignUpForm() {
             children={(field) => (
               <FatInput
                 id="password"
-                type={passwordHidden? "password" : "text"}
+                type={passwordHidden ? 'password' : 'text'}
                 placeholder="Enter your password"
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
-                suffix={<Button type='button' variant="link" size="sm" onClick={togglePasswordHidden}>{!passwordHidden? <EyeOff /> : <Eye />}</Button>}
+                suffix={
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    onClick={togglePasswordHidden}
+                  >
+                    {!passwordHidden ? <EyeOff /> : <Eye />}
+                  </Button>
+                }
                 className="h-12"
               />
             )}
@@ -174,20 +184,29 @@ export function SignUpForm() {
             children={(field) => (
               <FatInput
                 id="confirmPassword"
-                type={confirmPasswordHidden? "password" : "text"}
+                type={confirmPasswordHidden ? 'password' : 'text'}
                 placeholder="Confirm your password"
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 required
-                suffix={<Button type='button' variant="link" size="sm" onClick={toggleConfirmPasswordHidden}>{!confirmPasswordHidden? <EyeOff /> : <Eye />}</Button>}
+                suffix={
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    onClick={toggleConfirmPasswordHidden}
+                  >
+                    {!confirmPasswordHidden ? <EyeOff /> : <Eye />}
+                  </Button>
+                }
                 className="h-12"
               />
             )}
           />
         </div>
 
-        <div className="space-y-2">
+        {/*<div className="space-y-2">
           <Label htmlFor="confirm-password">Signing Up As*</Label>
           <form.Field
             name="accountType"
@@ -215,7 +234,7 @@ export function SignUpForm() {
               </>
             )}
           />
-        </div>
+        </div>*/}
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}

@@ -147,7 +147,7 @@ const $bottomContainer: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   justifyContent: "space-evenly",
 })
 
-const $welcomeSlider: ThemedStyle<ImageStyle> = ({}) => ({
+const $welcomeSlider: ThemedStyle<ImageStyle> = ({ colors }) => ({
   height: 200,
   width: "100%",
   marginBottom: -125,
@@ -178,4 +178,4 @@ const $skipIconContainer: ViewStyle = {
 }
 
 const $subTextStyle: TextStyle = { textAlign: "center" }
-const $buttonWidth: ViewStyle = { width: "100%" }
+const $buttonWidth: ViewStyle = { width: "100%", marginVertical: 20 }

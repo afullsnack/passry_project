@@ -6,7 +6,7 @@ import { useMemo, useState } from "react"
 import { Alert, Image, Pressable, TextStyle, View, ViewStyle } from "react-native"
 import { Dropdown } from "react-native-element-dropdown"
 
-const topConfetti = require("../../../assets/images/onboarding-slider-top.png")
+const passryTextMarkLogo = require("../../../assets/images/passry-logo-text.png")
 
 export default function SignupScreen() {
   const { themed } = useAppTheme()
@@ -34,26 +34,36 @@ export default function SignupScreen() {
       preset="auto"
     >
       <View style={themed($screenContainer)}>
-        <Image style={$styles.topConfetti} source={topConfetti} resizeMode="contain" />
+        <Image
+          style={[$styles.textLogoMark, { marginVertical: 10 }]}
+          source={passryTextMarkLogo}
+          resizeMode="contain"
+        />
         <View style={$formView}>
-          <Text preset="heading" text="SIGN UP" />
-          <Text preset="subheading" text="Create an account and join passry today!" />
+          <Text preset="subheading" text="Sign Up" />
+          <Text preset="default" text="Create your account" />
 
           <TextField
-            label="Name"
-            placeholder="Enter info"
-            inputMode="email"
+            label="Full Name"
+            placeholder="Enter your name"
+            inputMode="text"
             containerStyle={[themed($textInputStyle)]}
           />
           <TextField
             label="Email"
-            placeholder="Enter info"
+            placeholder="Enter your email"
             inputMode="email"
             containerStyle={[themed($textInputStyle)]}
           />
           <TextField
+            label="Phone"
+            placeholder="Enter your phone number"
+            inputMode="tel"
+            containerStyle={[themed($textInputStyle)]}
+          />
+          <TextField
             label="Password"
-            placeholder="Enter info"
+            placeholder="Enter your password"
             inputMode="text"
             secureTextEntry
             containerStyle={[themed($textInputStyle)]}
@@ -65,7 +75,7 @@ export default function SignupScreen() {
             secureTextEntry
             containerStyle={[themed($textInputStyle)]}
           />
-          <Dropdown
+          {/*<Dropdown
             style={[themed($textInputStyle), isFocused && $dropdownFocusStyle]}
             data={userTypes}
             labelField="label"
@@ -79,18 +89,18 @@ export default function SignupScreen() {
               setUserType(item.value)
               setIsFocused(false)
             }}
-          />
+          />*/}
           <Button
-            text="Create account"
-            preset="reversed"
+            text="Sign Up"
             style={themed($ctaStyle)}
+            textStyle={{ color: "white", fontWeight: "light" }}
             onPress={() => {
               router.push("/(onboarding)/verify-code")
             }}
           />
           <View style={[$styles.row, { alignItems: "center", marginBottom: 40 }]}>
             <Text text="Already have an account? - " preset="default" style={{ fontSize: 14 }} />
-            <Pressable onPress={() => Alert.alert("Sure you want to signin?")}>
+            <Pressable onPress={() => router.push("/(onboarding)/signin")}>
               <Text text="Sign in" preset="subheading" style={themed($signUpStyle)} />
             </Pressable>
           </View>
@@ -130,6 +140,7 @@ export default function SignupScreen() {
 const $container: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   backgroundColor: colors.background,
   paddingBottom: spacing.xxl,
+  justifyContent: "flex-start",
 })
 
 const $screenContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
@@ -142,18 +153,19 @@ const $screenContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
 
 const $textInputStyle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   width: "100%",
-  marginVertical: spacing.md,
+  marginVertical: spacing.xs,
 })
-const $ctaStyle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+const $ctaStyle: ThemedStyle<ViewStyle> = ({ spacing, colors }) => ({
   width: "100%",
-  marginVertical: spacing.sm,
+  marginVertical: spacing.lg,
+  backgroundColor: colors.palette.primary200,
 })
-const $formView: ViewStyle = { flexDirection: "column", alignItems: "center", marginTop: "40%" }
+const $formView: ViewStyle = { flexDirection: "column", alignItems: "center" }
 const $dropdownFocusStyle: ViewStyle = { borderColor: "blue" }
 const $signUpStyle: ThemedStyle<TextStyle> = ({ colors }) => ({
-  color: colors.palette.primary500,
+  color: colors.palette.primary200,
   fontSize: 14,
-  fontWeight: "bold",
+  fontWeight: "light",
   textDecorationLine: "underline",
 })
 const $socialButtonsContainerStyle: ViewStyle = {

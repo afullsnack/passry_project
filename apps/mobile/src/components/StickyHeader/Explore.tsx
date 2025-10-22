@@ -67,8 +67,11 @@ const $stickyBarStyle: ThemedStyle<ViewStyle> = () => ({
 })
 const $stickyContainerStyle: ThemedStyle<ViewStyle> = ({ colors }) => ({
   backgroundColor: colors.background,
-  minHeight: "33%",
+  maxHeight: 200,
+  borderWidth: 1,
+  borderColor: colors.border,
 })
+
 const $textInputStyle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   width: "100%",
   marginTop: spacing.xs,

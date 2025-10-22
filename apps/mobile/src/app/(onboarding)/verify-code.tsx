@@ -7,7 +7,7 @@ import { Alert, Image, Pressable, TextStyle, View, ViewStyle } from "react-nativ
 import { OtpInput } from "react-native-otp-entry"
 import { useModal } from "react-native-modalfy"
 
-const topConfetti = require("../../../assets/images/onboarding-slider-top.png")
+const passryTextMarkLogo = require("../../../assets/images/passry-logo-text.png")
 
 export default function VerifyCodeScreen() {
   const { themed, theme } = useAppTheme()
@@ -19,10 +19,14 @@ export default function VerifyCodeScreen() {
   return (
     <Screen safeAreaEdges={["top"]} contentContainerStyle={[$styles.flex1, themed($container)]}>
       <View style={themed($screenContainer)}>
-        <Image style={$styles.topConfetti} source={topConfetti} resizeMode="contain" />
+        <Image
+          style={[$styles.textLogoMark, { marginVertical: 30 }]}
+          source={passryTextMarkLogo}
+          resizeMode="contain"
+        />
 
         <View style={$formView}>
-          <Text preset="heading" text="VERIFY IDENTITY" />
+          <Text preset="subheading" text="Verify Email" />
           <Text preset="default" text="Enter the 4-digit code sent to your email." />
 
           <OtpInput
@@ -53,15 +57,15 @@ export default function VerifyCodeScreen() {
 
           <View style={[$styles.row, $styles.alignCenter]}>
             <Text text="Resend code in: " preset="default" style={$resentTextStyle} />
-            <Pressable onPress={() => Alert.alert("Sure you want to signup?")}>
-              <Text text="00:15" preset="subheading" style={themed($signUpStyle)} />
+            <Pressable onPress={() => {}}>
+              <Text text="00:15" style={themed($timerStyle)} />
             </Pressable>
           </View>
 
           <Button
             text="Verify Code"
-            preset="reversed"
             style={themed($ctaStyle)}
+            textStyle={{ fontWeight: "light", fontSize: 16, color: "#FFFFFF" }}
             onPress={verificationSuccessful}
           />
         </View>
@@ -82,16 +86,17 @@ const $screenContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   paddingHorizontal: spacing.lg,
 })
 
-const $ctaStyle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+const $ctaStyle: ThemedStyle<ViewStyle> = ({ spacing, colors }) => ({
   width: "100%",
   marginVertical: spacing.sm,
+  backgroundColor: colors.palette.primary200,
 })
 
-const $resentTextStyle: TextStyle = { fontSize: 14 }
-const $signUpStyle: ThemedStyle<TextStyle> = ({ colors }) => ({
-  color: colors.palette.primary500,
+const $resentTextStyle: TextStyle = { fontSize: 14, color: "#FFFFFF" }
+const $timerStyle: ThemedStyle<TextStyle> = ({ colors }) => ({
+  color: colors.palette.primary200,
   fontSize: 14,
-  fontWeight: "bold",
+  fontWeight: "light",
   textDecorationLine: "underline",
 })
 

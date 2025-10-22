@@ -26,7 +26,7 @@ export { ErrorBoundary } from "@/components/ErrorBoundary/ErrorBoundary"
 export default function Root() {
   const [fontsLoaded, fontError] = useFonts(customFontsToLoad)
   const [isI18nInitialized, setIsI18nInitialized] = useState(false)
-  const { themeScheme, setThemeContextOverride, ThemeProvider } = useThemeProvider("light")
+  const { themeScheme, setThemeContextOverride, ThemeProvider } = useThemeProvider("dark")
 
   useEffect(() => {
     initI18n()
