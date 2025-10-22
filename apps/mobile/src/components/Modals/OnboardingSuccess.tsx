@@ -22,7 +22,7 @@ export default function OnboardingSuccessModal({ modal: { closeModal, params } }
         style={{ marginVertical: 20, backgroundColor: theme.colors.palette.primary200 }}
         onPress={() => {
           closeModal()
-          router.replace("/(main)/(tabs)/home")
+          router.replace("/(main)/(tabs)/explore")
         }}
       />
     </View>

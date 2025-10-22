@@ -11,9 +11,9 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="explore"
         options={{
-          title: "Home",
+          title: "Explore",
           tabBarIcon: ({ size, focused, color }) => (
             <Icon
               icon={focused ? "home-selected" : "home"}
@@ -25,9 +25,9 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="analytics"
         options={{
-          title: "Explore",
+          title: "Analytics",
           tabBarIcon: ({ size, focused, color }) => (
             <Icon
               icon={focused ? "explore-selected" : "explore"}
@@ -39,9 +39,9 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="favorite"
+        name="events"
         options={{
-          title: "Liked",
+          title: "Events",
           tabBarIcon: ({ size, focused, color }) => (
             <Icon
               icon={focused ? "favorite-selected" : "favorite"}

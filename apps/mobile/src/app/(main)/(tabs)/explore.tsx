@@ -1,23 +1,48 @@
-import { Button, Screen, Text, PressableIcon } from "@/components"
+import { Card, Screen, Text, TextField } from "@/components"
+import ExploreStickyHeader from "@/components/StickyHeader/Explore"
 import { ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils/useAppTheme"
-import { ViewStyle } from "react-native"
+import { View, ViewStyle } from "react-native"
 
-export default function ExploreScreen() {
+const passryLogoText = require("../../../../assets/images/passry-logo-text.png")
+
+export default function HomeScreen() {
   const { themed } = useAppTheme()
   return (
     <Screen
       safeAreaEdges={["top"]}
-      contentContainerStyle={themed($container)}
+      // contentContainerStyle={}
       preset="auto"
-      ScrollViewProps={{ horizontal: false, scrollEnabled: true }}
-    >
-      <Text text="Explore screen" />
-    </Screen>
+      ScrollViewProps={{
+        scrollEnabled: true,
+        stickyHeaderIndices: [0],
+        StickyHeaderComponent: () => [
+          <ExploreStickyHeader key={1} logo={passryLogoText} />,
+          <View key={2} style={themed($screenContainer)}>
+            {Array.from({ length: 25 }).map((_, index) => (
+              <Card key={index} style={{ marginVertical: 8, shadowOpacity: 0.4 }}>
+                <View></View>
+              </Card>
+            ))}
+          </View>,
+        ],
+        stickyHeaderHiddenOnScroll: true,
+        invertStickyHeaders: false,
+        contentContainerStyle: themed($container),
+      }}
+    ></Screen>
   )
 }
 
-const $container: ThemedStyle<ViewStyle> = ({ colors }) => ({
-  flex: 1,
+const $screenContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+  flexShrink: 1,
+  flexGrow: 1,
+  flexBasis: "60%",
+  justifyContent: "center",
+  padding: spacing.md,
+})
+
+const $container: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
+  // flex: 1,
   backgroundColor: colors.background,
 })

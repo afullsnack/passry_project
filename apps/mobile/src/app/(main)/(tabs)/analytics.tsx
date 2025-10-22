@@ -3,11 +3,16 @@ import { ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils/useAppTheme"
 import { ViewStyle } from "react-native"
 
-export default function FavoriteScreen() {
+export default function ExploreScreen() {
   const { themed } = useAppTheme()
   return (
-    <Screen safeAreaEdges={["top"]} contentContainerStyle={themed($container)}>
-      <Text text="Favorite screen" />
+    <Screen
+      safeAreaEdges={["top"]}
+      contentContainerStyle={themed($container)}
+      preset="auto"
+      ScrollViewProps={{ horizontal: false, scrollEnabled: true }}
+    >
+      <Text text="Explore screen" />
     </Screen>
   )
 }
