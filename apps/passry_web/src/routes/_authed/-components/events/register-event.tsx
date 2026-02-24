@@ -69,7 +69,7 @@ export function RegisterEventCard({
         <CardDescription>
           {shouldAdmit? 'Access granted to event' : 'Register for this event to gain access.'}
           <div className="flex items-center justify-start gap-3">
-            Event created by{'Empire Events'}
+            Event created by {'Empire Events'}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Avatar className="size-6 items-center justify-center">

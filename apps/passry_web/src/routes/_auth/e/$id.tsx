@@ -36,7 +36,7 @@ function RouteComponent() {
 
   useEffect(() => {
     if (event) {
-      document.title = 'Passry Event | ' + event?.title
+      document.title = 'Passry Event - ' + event?.title
     }
   }, [event])
 
