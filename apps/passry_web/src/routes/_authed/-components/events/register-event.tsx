@@ -92,7 +92,7 @@ export function RegisterEventCard({
           <span>{description}</span>
         </div>
         <CardFooter className="w-full flex gap-4 px-0">
-          <Button onClick={buyTicketsDialog}>Buy Ticket</Button>
+          {!shouldAdmit && <Button onClick={buyTicketsDialog}>Buy Ticket</Button>}
           <Button onClick={showShareDialog}>Share Event</Button>
         </CardFooter>
       </CardContent>
