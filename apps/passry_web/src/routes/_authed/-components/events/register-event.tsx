@@ -22,10 +22,12 @@ export function RegisterEventCard({
   description,
   coverUrl,
   shareUrl,
+  shouldAdmit
 }: {
   description: string
   coverUrl: string
   shareUrl: string
+  shouldAdmit: boolean
 }) {
   const { data: session } = useSession()
   const [orgName, setOrgName] = useState<Array<string>>(['Default'])
@@ -63,9 +65,9 @@ export function RegisterEventCard({
   return (
     <Card className="bg-none">
       <CardContent className="bg-none">
-        <CardTitle>Registration</CardTitle>
+        <CardTitle>{shouldAdmit? 'Access Granted' : 'Registration'}</CardTitle>
         <CardDescription>
-          Register for this event to gain access.
+          {shouldAdmit? 'Access granted to event' : 'Register for this event to gain access.'}
           <div className="flex items-center justify-start gap-3">
             Event created by{' '}
             <Tooltip>

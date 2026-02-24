@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { env } from '@/env'
-import { createFileRoute, useParams } from '@tanstack/react-router'
+import { createFileRoute, useParams, useRouter } from '@tanstack/react-router'
 import {
   AlertCircleIcon,
   Calendar,
@@ -23,6 +23,8 @@ export const Route = createFileRoute('/_auth/e/$id')({
 })
 
 function RouteComponent() {
+  const router = useRouter()
+  const hash = router.state.location.hash;
   const { id } = useParams({ from: '/_auth/e/$id' })
   const {
     data: event,
@@ -138,6 +140,7 @@ function RouteComponent() {
               description={event?.description}
               coverUrl={`${env.VITE_API_URL}/upload?key=${event.coverUrlKey}`}
               shareUrl={`${env.VITE_APP_URL}/e/${event?.id}`}
+              shouldAdmin={hash.slice(0).match('admit')}
             />
           </div>
         </div>
