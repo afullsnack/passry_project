@@ -16,7 +16,7 @@ import { useSession } from '@/hooks/session'
 import NiceModal from '@ebay/nice-modal-react'
 import ShareModal from './dialogs/share-events'
 import BuyTicketsModal from './dialogs/buy-tickets'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export function RegisterEventCard({
   description,
@@ -30,13 +30,13 @@ export function RegisterEventCard({
   shouldAdmit: boolean
 }) {
   const { data: session } = useSession()
-  const [orgName, setOrgName] = useState<Array<string>>(['Empire', 'Events'])
+  const [orgName, _setOrgName] = useState<Array<string>>(['Empire', 'Events'])
 
-  useEffect(() => {
-    if (session?.org) {
-      setOrgName(session.org.name.split(' '))
-    }
-  }, [session])
+  // useEffect(() => {
+  //   if (session?.org) {
+  //     setOrgName(session.org.name.split(' '))
+  //   }
+  // }, [session])
 
   const showShareDialog = async () => {
     try {
