@@ -65,8 +65,7 @@ export function RegisterEventCard({
       <CardContent className="bg-none">
         <CardTitle>Registration</CardTitle>
         <CardDescription>
-          Register for this event to gain access to exclusive content and
-          networking opportunities.
+          Register for this event to gain access.
           <div className="flex items-center justify-start gap-3">
             Event created by{' '}
             <Tooltip>
